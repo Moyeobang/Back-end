@@ -11,24 +11,25 @@
 	
 	<resultMap type="memberDto" id="memberAll" extends="member">
 		<result column="user_password" property="userPwd"/>
-		<result column="address" property="address"/>
-		<result column="phone_number" property="userPwd"/>
-		<result column="authority" property="userPwd"/>
+		<result column="email_id" property="emailId"/>
+		<result column="email_domain" property="emailDomain"/>
+		<result column="join_date" property="joinDate"/>
+		<result column="user_class" property="userClass"/>
 	</resultMap>
 
 	<select id="idCheck" parameterType="String" resultType="int">
 		select count(user_id)
 		from members
-		where user_id = #{userid}
+		where user_id = #{userId}
 	</select>
 
 	<insert id="joinMember" parameterType="memberDto">
-		insert into members (user_id, user_name, user_password, address, phone_number, authority)
-		values (#{userId}, #{userName}, #{userPwd}, #{address}, #{phoneNumber}, now())
+		insert into members (user_name, user_id, user_password, email_id, email_domain, join_date, user_class)
+		values (#{userName}, #{userId}, #{userPwd}, #{emailId}, #{emailDomain}, now(), ${userClass})
 	</insert>
 
-	<select id="loginMember" parameterType="map" resultMap="member">
-		select user_id, user_name
+	<select id="loginMember" parameterType="map" resultMap="memberAll">
+		select user_id, user_name, user_class, email_id, email_domain
 		from members
 		where user_id = #{userid} and user_password = #{userpwd}
 	</select>

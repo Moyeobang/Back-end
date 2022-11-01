@@ -1,4 +1,4 @@
-package com.ssafy.member.model.dao;
+package com.ssafy.member.model.mapper;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -12,16 +12,16 @@ import com.ssafy.board.model.BoardDto;
 import com.ssafy.member.model.MemberDto;
 import com.ssafy.util.DBUtil;
 
-public class MemberDaoImpl implements MemberDao {
+public class MemberDaoImpl implements MemberMapper {
 	
-	private static MemberDao memberDao = new MemberDaoImpl();
+	private static MemberMapper memberDao = new MemberDaoImpl();
 	private DBUtil dbUtil;
 	
 	private MemberDaoImpl() {
 		dbUtil = DBUtil.getInstance();
 	}
 	
-	public static MemberDao getMemberDao() {
+	public static MemberMapper getMemberDao() {
 		return memberDao;
 	}
 
@@ -72,7 +72,7 @@ public class MemberDaoImpl implements MemberDao {
 	}
 
 	@Override
-	public MemberDto loginMember(String userId, String userPwd) throws SQLException {
+	public MemberDto loginMember(Map<String, String> map) throws SQLException {
 		MemberDto memberDto = null;
 		Connection conn = null;
 		PreparedStatement pstmt = null;
@@ -84,8 +84,8 @@ public class MemberDaoImpl implements MemberDao {
 			sql.append("from members \n");
 			sql.append("where user_id = ? and user_password = ?");
 			pstmt = conn.prepareStatement(sql.toString());
-			pstmt.setString(1, userId);
-			pstmt.setString(2, userPwd);
+			pstmt.setString(1, map.get("userid"));
+			pstmt.setString(2, map.get("userpwd"));
 			rs = pstmt.executeQuery();
 			if(rs.next()) {
 				memberDto = new MemberDto();
