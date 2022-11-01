@@ -1,0 +1,41 @@
+* {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.content-list {
+	display: inline-block;
+	width: 40%;
+}
+
+.top {
+	background-color: rgb(62, 62, 62);
+	/* height:40px; */
+}
+
+.top-button {
+	background-color: rgb(0, 0, 0);
+	color: white;
+	padding-left: 5px;
+	padding-right: 7px;
+	margin-right: 5px;
+	height: 30px;
+}
+
+.top > ul {
+	padding-top: 5px;
+	padding-right: 10px;
+	float: right;
+}
+
+.top > ul > li {
+	display: inline;
+}
+
+#jumbotron {
+	-webkit-background-size: cover;
+	-moz-background-size: cover;
+	-o-background-size: cover;
+	background-size: cover;
+}
