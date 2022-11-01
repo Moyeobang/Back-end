@@ -1,0 +1,301 @@
+package com.ssafy.housedeal.controller;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLEncoder;
+import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ssafy.house.model.HouseDto;
+import com.ssafy.house.model.service.HouseService;
+import com.ssafy.house.model.service.HouseServiceImpl;
+import com.ssafy.housedeal.HouseDealDto;
+import com.ssafy.housedeal.model.service.HouseDealService;
+import com.ssafy.housedeal.model.service.HouseDealServiceImpl;
+import com.ssafy.member.model.MemberDto;
+import com.ssafy.util.ParameterCheck;
+
+@WebServlet("/housedeal")
+public class HouseDealController extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+
+	private static final String serviceKey = "W8tskb3ozBWJaXxxw5I%2FVKzmrJ53268CjU%2BcNrKjqwATnE8Y0NQjsSzuxuzf%2FzqDq%2B2joOsA4Q3HR347slp2Yg%3D%3D";
+
+	private HouseDealService houseDealService;
+	private HouseService houseService;
+
+	private Map<String, String> map;
+
+	public void init() {
+		houseDealService = HouseDealServiceImpl.getInstance();
+		houseService = HouseServiceImpl.getInstance();
+	}
+
+	protected void doGet(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		response.setContentType("text/plain;charset=utf-8");
+		String path = "/index.jsp";
+
+		String act = request.getParameter("act");
+		int pgNo = ParameterCheck.notNumberToOne(request.getParameter("pgno"));
+		String sidoCode = ParameterCheck.nullToBlank(request.getParameter("sidoCode"));
+		String gugunCode = ParameterCheck.nullToBlank(request.getParameter("gugunCode"));
+		String dongCode = ParameterCheck.nullToBlank(request.getParameter("dongCode"));
+		String name = ParameterCheck.nullToBlank(request.getParameter("apartmentName"));
+
+		map = new HashMap<>();
+		map.put("pgno", pgNo + "");
+		map.put("sidoCode", sidoCode);
+		map.put("gugunCode", gugunCode);
+		map.put("dongCode", dongCode);
+		map.put("apartmentName", name);
+
+		if ("searchAll".equals(act)) {
+			path = searchAll(request, response);
+			if (path != null) {
+				forward(request, response, path);
+			}
+		} else if ("mv-modify".equals(act)) {
+			path = moveModifyPage(request, response);
+			forward(request, response, path);
+		} else if ("modify".equals(act)) {
+			path = modify(request, response);
+			forward(request, response, path);
+		} else if ("view".equals(act)) {
+			path = getHouseDeal(request, response);
+			forward(request, response, path);
+		} else if ("delete".equals(act)) {
+			path = deleteHouseDeal(request, response);
+			forward(request, response, path);
+		} else {
+			redirect(request, response, path);
+		}
+	}
+
+	private void forward(HttpServletRequest request, HttpServletResponse response, String path)
+			throws ServletException, IOException {
+		RequestDispatcher dispatcher = request.getRequestDispatcher(path);
+		dispatcher.forward(request, response);
+	}
+
+	private void redirect(HttpServletRequest request, HttpServletResponse response, String path) throws IOException {
+		response.sendRedirect(request.getContextPath() + path);
+	}
+
+	protected void doPost(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		request.setCharacterEncoding("utf-8");
+		doGet(request, response);
+	}
+
+	private String searchAll(HttpServletRequest request, HttpServletResponse response) {
+		List<HouseDealDto> list = null;
+		int pgNo = ParameterCheck.notNumberToOne(request.getParameter("pgno"));
+		int size = 0;
+
+		try {
+			list = houseDealService.listHouseDeal(map);
+			size = houseDealService.totalHouseDealCount(map);
+			PrintWriter out = response.getWriter();
+			ObjectMapper mapper = new ObjectMapper();
+			if (list == null || list.size() == 0) {
+				out.println("{\"size\" : 0}");
+			} else {
+				StringBuilder sb = new StringBuilder();
+				sb.append("{ \"size\" : ").append(size).append(", ");
+				sb.append("\"pgno\" : ").append(pgNo).append(", ");
+				sb.append("\"datas\" : [");
+
+				Map<Long, HouseDto> map = new HashMap<>();
+				for (int i = 0; i < list.size(); i++) {
+					sb.append(mapper.writeValueAsString(list.get(i))).append(",");
+					HouseDto houseDto = houseService.getHouse(list.get(i).getAptCode());
+					if (houseDto != null) {
+						Long aptCode = list.get(i).getAptCode();
+						map.put(aptCode, houseDto);
+					}
+				}
+
+				sb.setLength(sb.toString().length() - 1);
+				sb.append("], ");
+
+				if (map.size() > 0) {
+					sb.append(" \"position\" : [");
+					for (Long key : map.keySet()) {
+						sb.append(mapper.writeValueAsString(map.get(key))).append(",");
+					}
+					sb.setLength(sb.toString().length() - 1);
+					sb.append("]}");
+					out.println(sb);
+				} else {
+					sb.append("\"position\" : []}");
+					out.println(sb);
+				}
+			}
+		} catch (SQLException | IOException e) {
+			e.printStackTrace();
+			request.setAttribute("msg", "실매매가 조회 목록 중 에러발생!!!");
+			return "/error/error.jsp";
+		}
+
+		return null;
+	}
+
+	private String getHouseDeal(HttpServletRequest request, HttpServletResponse response) {
+		HttpSession session = request.getSession();
+		MemberDto memberDto = (MemberDto) session.getAttribute("userinfo");
+		if (memberDto == null || !memberDto.getUserClass().equals("관리자")) {
+			request.setAttribute("msg", "접근권한이 없습니다.");
+			return "/user/login.jsp";
+		}
+		Long no = Long.parseLong(request.getParameter("no"));
+		try {
+			request.setAttribute("houseDealInfo", houseDealService.getHouseDeal(no));
+		} catch (SQLException e) {
+			e.printStackTrace();
+			request.setAttribute("msg", "실매매가 조회 목록 중 에러발생!!!");
+			return "/error/error.jsp";
+		}
+		return "/housedeal/view.jsp";
+	}
+
+	private String moveModifyPage(HttpServletRequest request, HttpServletResponse response) {
+		HttpSession session = request.getSession();
+		MemberDto memberDto = (MemberDto) session.getAttribute("userinfo");
+		if (memberDto == null || !memberDto.getUserClass().equals("관리자")) {
+			request.setAttribute("msg", "접근권한이 없습니다.");
+			return "/user/login.jsp";
+		}
+		Long no = Long.parseLong(request.getParameter("no"));
+		try {
+			request.setAttribute("houseDealInfo", houseDealService.getHouseDeal(no));
+		} catch (SQLException e) {
+			e.printStackTrace();
+			request.setAttribute("msg", "실매매가 수정페이지 이동중 에러발생!!!");
+			return "/error/error.jsp";
+		}
+		return "/housedeal/modify.jsp";
+	}
+
+	private String modify(HttpServletRequest request, HttpServletResponse response) {
+		HttpSession session = request.getSession();
+		MemberDto memberDto = (MemberDto) session.getAttribute("userinfo");
+		if (memberDto == null || !memberDto.getUserClass().equals("관리자")) {
+			request.setAttribute("msg", "접근권한이 없습니다.");
+			return "/user/login.jsp";
+		}
+		HouseDealDto houseDeal = new HouseDealDto();
+		houseDeal.setDealAmount(ParameterCheck.nullToBlank(request.getParameter("dealAmount")));
+		houseDeal.setDealYear(ParameterCheck.nullToBlank(request.getParameter("dealYear")));
+		houseDeal.setDealMonth(ParameterCheck.nullToBlank(request.getParameter("dealMonth")));
+		houseDeal.setDealDay(ParameterCheck.nullToBlank(request.getParameter("dealDay")));
+		houseDeal.setArea(ParameterCheck.nullToBlank(request.getParameter("area")));
+		houseDeal.setFloor(ParameterCheck.nullToBlank(request.getParameter("floor")));
+		houseDeal.setNo(Long.parseLong(request.getParameter("no")));
+		try {
+			request.setAttribute("houseDealInfo", houseDealService.updateHouseDeal(houseDeal));
+		} catch (SQLException e) {
+			e.printStackTrace();
+			request.setAttribute("msg", "실매매가 수정 중 에러발생!!!");
+			return "/error/error.jsp";
+		}
+		return "/housedeal/list.jsp";
+	}
+
+	private String deleteHouseDeal(HttpServletRequest request, HttpServletResponse response) {
+		HttpSession session = request.getSession();
+		MemberDto memberDto = (MemberDto) session.getAttribute("userinfo");
+		if (memberDto == null || !memberDto.getUserClass().equals("관리자")) {
+			request.setAttribute("msg", "접근권한이 없습니다.");
+			return "/user/login.jsp";
+		}
+		Long no = Long.parseLong(request.getParameter("no"));
+		try {
+			houseDealService.deleteHouseDeal(no);
+		} catch (SQLException e) {
+			e.printStackTrace();
+			request.setAttribute("msg", "실매매가 삭제 중 에러발생!!!");
+			return "/error/error.jsp";
+		}
+		return "/housedeal/list.jsp";
+	}
+
+	private String addHouseDeal(HttpServletRequest request, HttpServletResponse response) {
+		String regCode = request.getParameter("regCode");
+		String dealYM = request.getParameter("dealYM");
+
+		StringBuilder urlBuilder = new StringBuilder(
+				"http://openapi.molit.go.kr/OpenAPI_ToolInstallPackage/service/rest/RTMSOBJSvc/getRTMSDataSvcAptTradeDev"); // URL
+
+		BufferedReader rd = null;
+		HttpURLConnection conn = null;
+		StringBuilder sb = new StringBuilder();
+
+		try {
+			urlBuilder.append("?" + URLEncoder.encode("serviceKey", "UTF-8") + "=" + serviceKey);
+			urlBuilder.append("&" + URLEncoder.encode("LAWD_CD", "UTF-8") + "=" + URLEncoder.encode(regCode, "UTF-8"));
+			urlBuilder.append("&" + URLEncoder.encode("DEAL_YMD", "UTF-8") + "=" + URLEncoder.encode(dealYM, "UTF-8"));
+			urlBuilder.append(
+					"&" + URLEncoder.encode("pageNo", "UTF-8") + "=" + URLEncoder.encode("1", "UTF-8")); /* 페이지번호 */
+			urlBuilder.append("&" + URLEncoder.encode("numOfRows", "UTF-8") + "="
+					+ URLEncoder.encode("30", "UTF-8")); /* 페이지당건수 */
+
+			URL url = new URL(urlBuilder.toString());
+			conn = (HttpURLConnection) url.openConnection();
+			conn.setRequestMethod("GET");
+			conn.setRequestProperty("Content-type", "application/xml");
+
+//			System.out.println("Response code: " + conn.getResponseCode());
+
+			if (conn.getResponseCode() >= 200 && conn.getResponseCode() <= 300) {
+				rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+			} else {
+				rd = new BufferedReader(new InputStreamReader(conn.getErrorStream()));
+			}
+
+			String line;
+			while ((line = rd.readLine()) != null) {
+				sb.append(line);
+			}
+
+		} catch (IOException e) {
+			e.printStackTrace();
+			request.setAttribute("msg", "실매매가 추가 중 에러발생!!!");
+			return "/error/error.jsp";
+		} finally {
+
+			try {
+				if (rd != null)
+					rd.close();
+				if (conn != null)
+					conn.disconnect();
+			} catch (IOException e) {
+				e.printStackTrace();
+				request.setAttribute("msg", "실매매가 추가 중 에러발생!!!");
+				return "/error/error.jsp";
+			}
+		}
+
+		return "";
+	}
+
+}
