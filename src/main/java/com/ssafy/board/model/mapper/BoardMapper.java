@@ -18,5 +18,6 @@ public interface BoardMapper {
 	void updateHit(int articleNo) throws SQLException;
 	void modifyArticle(BoardDto boardDto) throws SQLException;
 	void deleteArticle(int articleNo) throws SQLException;
+	List<BoardDto> searchArticle(Map<String, String> m);
 	
 }

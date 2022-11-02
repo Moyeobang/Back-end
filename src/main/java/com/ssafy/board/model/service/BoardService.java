@@ -14,5 +14,6 @@ public interface BoardService {
 	void updateHit(int articleNo) throws Exception;
 	void modifyArticle(BoardDto boardDto) throws Exception;
 	void deleteArticle(int articleNo) throws Exception;
+	List<BoardDto> searchArticle(Map<String, String> m) throws Exception;
 	
 }

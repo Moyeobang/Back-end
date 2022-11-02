@@ -56,4 +56,9 @@ public class BoardServiceImpl implements BoardService {
 	public int totalArticleCount(Map<String, String> map) throws Exception {
 		return boardDao.totalArticleCount(map);
 	}
+
+	@Override
+	public List<BoardDto> searchArticle(Map<String, String> m) throws Exception {
+		return boardDao.searchArticle(m);
+	}
 }

@@ -109,6 +109,26 @@ public class BoardController extends HttpServlet {
 		}
 
 	}
+	
+	@ResponseBody
+	@GetMapping("/search")
+	public ResponseEntity<?> search(@RequestBody Map<String, String> m) {
+		try {
+			List<BoardDto> list = boardService.searchArticle(m);
+//			int totalSize = boardService.totalArticleCount(map);
+			if (list != null && !list.isEmpty()) {
+//				m.put("articles", list);
+//				m.put("size", totalSize);
+				return new ResponseEntity<List<BoardDto>>(list, HttpStatus.OK);
+			} else {
+				return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			return exceptionHandling(e);
+		}
+
+	}
 
 //	private String list(HttpServletRequest request, HttpServletResponse response) {
 //		HttpSession session = request.getSession();
