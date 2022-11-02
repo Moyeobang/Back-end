@@ -4,9 +4,12 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.ibatis.annotations.Mapper;
+
 import com.ssafy.house.model.HouseDto;
 import com.ssafy.housedeal.model.HouseDealDto;
 
+@Mapper
 public interface HouseDealDao {
 
 	List<HouseDealDto> listHouseDeal(Map<String, String> map) throws SQLException;
