@@ -12,8 +12,8 @@ import com.ssafy.board.model.service.BoardService;
 import com.ssafy.board.model.service.BoardServiceImpl;
 import com.ssafy.house.model.HouseDealDto2;
 import com.ssafy.house.model.HouseDto;
-import com.ssafy.house.model.dao.HouseDao;
-import com.ssafy.house.model.dao.HouseDaoImpl;
+import com.ssafy.house.model.mapper.HouseDaoImpl;
+import com.ssafy.house.model.mapper.HouseMapper;
 import com.ssafy.util.SizeConstant;
 
 @Service
@@ -22,7 +22,7 @@ public class HouseServiceImpl implements HouseService{
 	
 	
 	private static HouseService houseService = new HouseServiceImpl();
-	private HouseDao houseDao;
+	private HouseMapper houseDao;
 	
 	private HouseServiceImpl() {
 		houseDao = HouseDaoImpl.getHouseDao();

@@ -1,4 +1,4 @@
-package com.ssafy.house.model.dao;
+package com.ssafy.house.model.mapper;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -7,7 +7,7 @@ import java.util.Map;
 import com.ssafy.house.model.HouseDealDto2;
 import com.ssafy.house.model.HouseDto;
 
-public interface HouseDao {
+public interface HouseMapper {
 
 	List<HouseDto> listHouse(Map<String, String> map) throws SQLException;
 

@@ -8,15 +8,15 @@ import java.util.Map;
 import org.springframework.stereotype.Service;
 
 import com.ssafy.housedeal.model.HouseDealDto;
-import com.ssafy.housedeal.model.dao.HouseDealDao;
-import com.ssafy.housedeal.model.dao.HouseDealDaoImpl;
+import com.ssafy.housedeal.model.mapper.HouseDealDaoImpl;
+import com.ssafy.housedeal.model.mapper.HouseDealMapper;
 import com.ssafy.util.SizeConstant;
 
 @Service
 public class HouseDealServiceImpl implements HouseDealService {
 
 	private static HouseDealService houseService = new HouseDealServiceImpl();
-	private HouseDealDao houseDealDao;
+	private HouseDealMapper houseDealDao;
 	private static List<HouseDealDto> list;
 
 	private HouseDealServiceImpl() {

@@ -34,6 +34,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -58,7 +59,7 @@ public class HouseDealController extends HttpServlet {
 
 	@Autowired
 	private HouseDealService houseDealService;
-	
+
 	@Autowired
 	private HouseService houseService;
 
@@ -107,105 +108,80 @@ public class HouseDealController extends HttpServlet {
 //		}
 	}
 
-	private void forward(HttpServletRequest request, HttpServletResponse response, String path)
-			throws ServletException, IOException {
-		RequestDispatcher dispatcher = request.getRequestDispatcher(path);
-		dispatcher.forward(request, response);
-	}
 
-	private void redirect(HttpServletRequest request, HttpServletResponse response, String path) throws IOException {
-		response.sendRedirect(request.getContextPath() + path);
-	}
 
-	protected void doPost(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
-		request.setCharacterEncoding("utf-8");
-		doGet(request, response);
-	}
-	
 	@ResponseBody
 	@GetMapping("/housedeal")
-	public ResponseEntity<?> serachAll(@PathVariable int pgno) {
+	public ResponseEntity<?> serachAll(@RequestParam Map<String, String> map) {
 		List<HouseDealDto> list = null;
 		int size = 0;
 		try {
 			list = houseDealService.listHouseDeal(map);
 			size = houseDealService.totalHouseDealCount(map);
-			
-			if(list == null || list.size() == 0) {
-				System.out.println(">> house deal list is Empty");
+
+			if (list != null & !list.isEmpty()) {
+				return new ResponseEntity<List<HouseDealDto>>(list, HttpStatus.OK);
 			} else {
-				Map<Long, HouseDto> map = new HashMap<>();
-				for (int i = 0; i < list.size(); i++) {
-					HouseDto dto = houseService.getHouse(list.get(i).getAptCode());
-					if(dto != null) {
-						Long aptCode = list.get(i).getAptCode();
-						map.put(aptCode, dto);
-					}
-				}
+				return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
 			}
 		} catch (SQLException e) {
-			exceptionHandling(e);
-		}
-		if(list!=null&!list.isEmpty()) {
-			return new ResponseEntity<List<HouseDealDto>>(list, HttpStatus.OK);
-		} else {
-			return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
+			e.printStackTrace();
+			return exceptionHandling(e);
 		}
 	}
 
-//	private String searchAll(HttpServletRequest request, HttpServletResponse response) {
-//		List<HouseDealDto> list = null;
-//		int pgNo = ParameterCheck.notNumberToOne(request.getParameter("pgno"));
-//		int size = 0;
-//
-//		try {
-//			list = houseDealService.listHouseDeal(map);
-//			size = houseDealService.totalHouseDealCount(map);
-//			PrintWriter out = response.getWriter();
-//			ObjectMapper mapper = new ObjectMapper();
-//			if (list == null || list.size() == 0) {
-//				out.println("{\"size\" : 0}");
-//			} else {
-//				StringBuilder sb = new StringBuilder();
-//				sb.append("{ \"size\" : ").append(size).append(", ");
-//				sb.append("\"pgno\" : ").append(pgNo).append(", ");
-//				sb.append("\"datas\" : [");
-//
-//				Map<Long, HouseDto> map = new HashMap<>();
-//				for (int i = 0; i < list.size(); i++) {
-//					sb.append(mapper.writeValueAsString(list.get(i))).append(",");
-//					HouseDto houseDto = houseService.getHouse(list.get(i).getAptCode());
-//					if (houseDto != null) {
-//						Long aptCode = list.get(i).getAptCode();
-//						map.put(aptCode, houseDto);
-//					}
-//				}
-//
-//				sb.setLength(sb.toString().length() - 1);
-//				sb.append("], ");
-//
-//				if (map.size() > 0) {
-//					sb.append(" \"position\" : [");
-//					for (Long key : map.keySet()) {
-//						sb.append(mapper.writeValueAsString(map.get(key))).append(",");
-//					}
-//					sb.setLength(sb.toString().length() - 1);
-//					sb.append("]}");
-//					out.println(sb);
-//				} else {
-//					sb.append("\"position\" : []}");
-//					out.println(sb);
-//				}
-//			}
-//		} catch (SQLException | IOException e) {
-//			e.printStackTrace();
-//			request.setAttribute("msg", "실매매가 조회 목록 중 에러발생!!!");
-//			return "/error/error.jsp";
-//		}
-//
-//		return null;
-//	}
+	private String searchAll(HttpServletRequest request, HttpServletResponse response) {
+		List<HouseDealDto> list = null;
+		int pgNo = ParameterCheck.notNumberToOne(request.getParameter("pgno"));
+		int size = 0;
+
+		try {
+			list = houseDealService.listHouseDeal(map);
+			size = houseDealService.totalHouseDealCount(map);
+			PrintWriter out = response.getWriter();
+			ObjectMapper mapper = new ObjectMapper();
+			if (list == null || list.size() == 0) {
+				out.println("{\"size\" : 0}");
+			} else {
+				StringBuilder sb = new StringBuilder();
+				sb.append("{ \"size\" : ").append(size).append(", ");
+				sb.append("\"pgno\" : ").append(pgNo).append(", ");
+				sb.append("\"datas\" : [");
+
+				Map<Long, HouseDto> map = new HashMap<>();
+				for (int i = 0; i < list.size(); i++) {
+					sb.append(mapper.writeValueAsString(list.get(i))).append(",");
+					HouseDto houseDto = houseService.getHouse(list.get(i).getAptCode());
+					if (houseDto != null) {
+						Long aptCode = list.get(i).getAptCode();
+						map.put(aptCode, houseDto);
+					}
+				}
+
+				sb.setLength(sb.toString().length() - 1);
+				sb.append("], ");
+
+				if (map.size() > 0) {
+					sb.append(" \"position\" : [");
+					for (Long key : map.keySet()) {
+						sb.append(mapper.writeValueAsString(map.get(key))).append(",");
+					}
+					sb.setLength(sb.toString().length() - 1);
+					sb.append("]}");
+					out.println(sb);
+				} else {
+					sb.append("\"position\" : []}");
+					out.println(sb);
+				}
+			}
+		} catch (SQLException | IOException e) {
+			e.printStackTrace();
+			request.setAttribute("msg", "실매매가 조회 목록 중 에러발생!!!");
+			return "/error/error.jsp";
+		}
+
+		return null;
+	}
 
 	@GetMapping("/housedeal/{no}")
 	private String getHouseDeal(HttpServletRequest request, HttpServletResponse response) {
@@ -254,13 +230,13 @@ public class HouseDealController extends HttpServlet {
 		} catch (SQLException e) {
 			return exceptionHandling(e);
 		}
-		if(list!=null && !list.isEmpty()) {
+		if (list != null && !list.isEmpty()) {
 			return new ResponseEntity<List<HouseDealDto>>(list, HttpStatus.OK);
 		} else {
 			return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
 		}
 	}
-	
+
 //	private String modify(HttpServletRequest request, HttpServletResponse response) {
 //		HttpSession session = request.getSession();
 //		MemberDto memberDto = (MemberDto) session.getAttribute("userinfo");
@@ -303,7 +279,7 @@ public class HouseDealController extends HttpServlet {
 //		}
 //		return "housedeal/list";
 //	}
-	
+
 	@ResponseBody
 	@DeleteMapping("/housedeal/{no}")
 	public ResponseEntity<?> delete(@PathVariable Long no) {
@@ -314,13 +290,13 @@ public class HouseDealController extends HttpServlet {
 		} catch (SQLException e) {
 			return exceptionHandling(e);
 		}
-		if(list!=null && !list.isEmpty()) {
+		if (list != null && !list.isEmpty()) {
 			return new ResponseEntity<List<HouseDealDto>>(list, HttpStatus.OK);
 		} else {
 			return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
 		}
 	}
-	
+
 	private String addHouseDeal(HttpServletRequest request, HttpServletResponse response) {
 		String regCode = request.getParameter("regCode");
 		String dealYM = request.getParameter("dealYM");
@@ -379,8 +355,6 @@ public class HouseDealController extends HttpServlet {
 
 		return "";
 	}
-	
-
 
 	private ResponseEntity<String> exceptionHandling(Exception e) {
 		e.printStackTrace();

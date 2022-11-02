@@ -3,7 +3,7 @@
 	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper
-	namespace="com.ssafy.housedeal.model.mapper.HousedealMapper">
+	namespace="com.ssafy.housedeal.model.mapper.HouseDealMapper">
 
 	<resultMap type="housedealDto" id="housedeal">
 		<result column="no" property="no" />
@@ -19,18 +19,18 @@
 
 	<select id="listHouseDeal" parameterMap="Map"
 		resultMap="housedealDto">
-		select d.no,
-		d.dealAmount, d.dealYear, d.dealMonth, d.dealDay, d.area,
-		d.floor,
-		d.aptCode, h.apartmentName, c.sidoName, c.gugunName,
-		c.dongname
-		from
-		housedeal d inner join houseinfo h
-		on d.aptCode =
-		h.aptCode
-		inner join
-		dongCode c
-		on h.dongCode = c.dongCode
+		SELECT D.NO,
+		D.DEALAMOUNT, D.DEALYEAR, D.DEALMONTH, D.DEALDAY, D.AREA,
+		D.FLOOR,
+		D.APTCODE, H.APARTMENTNAME, C.SIDONAME, C.GUGUNNAME,
+		C.DONGNAME
+		FROM
+		HOUSEDEAL D INNER JOIN HOUSEINFO H
+		ON D.APTCODE =
+		H.APTCODE
+		INNER JOIN
+		DONGCODE C
+		ON H.DONGCODE = C.DONGCODE
 		<where>
 			1 = 1
 			<choose>

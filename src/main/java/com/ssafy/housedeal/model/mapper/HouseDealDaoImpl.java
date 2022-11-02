@@ -1,4 +1,4 @@
-package com.ssafy.housedeal.model.dao;
+package com.ssafy.housedeal.model.mapper;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -11,16 +11,16 @@ import java.util.Map;
 import com.ssafy.housedeal.model.HouseDealDto;
 import com.ssafy.util.DBUtil;
 
-public class HouseDealDaoImpl implements HouseDealDao {
+public class HouseDealDaoImpl implements HouseDealMapper {
 
-	private static HouseDealDao houseDeaDao = new HouseDealDaoImpl();
+	private static HouseDealMapper houseDeaDao = new HouseDealDaoImpl();
 	private DBUtil dbUtil;
 
 	private HouseDealDaoImpl() {
 		dbUtil = DBUtil.getInstance();
 	}
 
-	public static HouseDealDao getInstance() {
+	public static HouseDealMapper getInstance() {
 		return houseDeaDao;
 	}
 

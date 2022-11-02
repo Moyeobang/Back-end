@@ -1,4 +1,4 @@
-package com.ssafy.house.model.dao;
+package com.ssafy.house.model.mapper;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -12,17 +12,17 @@ import com.ssafy.house.model.HouseDealDto2;
 import com.ssafy.house.model.HouseDto;
 import com.ssafy.util.DBUtil;
 
-public class HouseDaoImpl implements HouseDao{
+public class HouseDaoImpl implements HouseMapper{
 
 	
-	private static HouseDao houseDao = new HouseDaoImpl();
+	private static HouseMapper houseDao = new HouseDaoImpl();
 	private DBUtil dbUtil;
 	
 	private HouseDaoImpl() {
 		dbUtil = DBUtil.getInstance();
 	}
 
-	public static HouseDao getHouseDao() {
+	public static HouseMapper getHouseDao() {
 		return houseDao;
 	}
 	

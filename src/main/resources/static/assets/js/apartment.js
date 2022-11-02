@@ -60,7 +60,7 @@ function searchBtn(showMap, type){
 	
 	document.querySelector("#aptInfoByDong").style.display = "inline"
 
-	let url = "/backend_exam/housedeal";
+	let url = "/housedeal";
 	
 	let sidoSel = document.querySelector("#sido");
 	let sidoCode = "";
