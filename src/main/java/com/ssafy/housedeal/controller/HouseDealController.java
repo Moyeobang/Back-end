@@ -24,6 +24,17 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ssafy.house.model.HouseDto;
 import com.ssafy.house.model.service.HouseService;
@@ -34,7 +45,11 @@ import com.ssafy.housedeal.model.service.HouseDealServiceImpl;
 import com.ssafy.member.model.MemberDto;
 import com.ssafy.util.ParameterCheck;
 
-@WebServlet("/housedeal")
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
+
+@Controller
+@RequestMapping("/housedeal")
+//@WebServlet("/housedeal")
 public class HouseDealController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
@@ -69,26 +84,23 @@ public class HouseDealController extends HttpServlet {
 		map.put("dongCode", dongCode);
 		map.put("apartmentName", name);
 
-		if ("searchAll".equals(act)) {
-			path = searchAll(request, response);
-			if (path != null) {
-				forward(request, response, path);
-			}
-		} else if ("mv-modify".equals(act)) {
-			path = moveModifyPage(request, response);
-			forward(request, response, path);
-		} else if ("modify".equals(act)) {
-			path = modify(request, response);
-			forward(request, response, path);
-		} else if ("view".equals(act)) {
-			path = getHouseDeal(request, response);
-			forward(request, response, path);
-		} else if ("delete".equals(act)) {
-			path = deleteHouseDeal(request, response);
-			forward(request, response, path);
-		} else {
-			redirect(request, response, path);
-		}
+//		if ("searchAll".equals(act)) {
+//			path = searchAll(request, response);
+//			if (path != null) {
+//				forward(request, response, path);
+//			}
+//		} else if ("mv-modify".equals(act)) {
+//			path = moveModifyPage(request, response);
+//			forward(request, response, path);
+//		} else if ("modify".equals(act)) {
+//			path = modify(request, response);
+//			forward(request, response, path);
+//		} else if ("view".equals(act)) {
+//			path = getHouseDeal(request, response);
+//			forward(request, response, path);
+//		} else {
+//			redirect(request, response, path);
+//		}
 	}
 
 	private void forward(HttpServletRequest request, HttpServletResponse response, String path)
@@ -106,60 +118,92 @@ public class HouseDealController extends HttpServlet {
 		request.setCharacterEncoding("utf-8");
 		doGet(request, response);
 	}
-
-	private String searchAll(HttpServletRequest request, HttpServletResponse response) {
+	
+	@ResponseBody
+	@GetMapping("/housedeal")
+	public ResponseEntity<?> serachAll(@PathVariable int pgno) {
 		List<HouseDealDto> list = null;
-		int pgNo = ParameterCheck.notNumberToOne(request.getParameter("pgno"));
 		int size = 0;
-
 		try {
 			list = houseDealService.listHouseDeal(map);
 			size = houseDealService.totalHouseDealCount(map);
-			PrintWriter out = response.getWriter();
-			ObjectMapper mapper = new ObjectMapper();
-			if (list == null || list.size() == 0) {
-				out.println("{\"size\" : 0}");
+			
+			if(list == null || list.size() == 0) {
+				System.out.println(">> house deal list is Empty");
 			} else {
-				StringBuilder sb = new StringBuilder();
-				sb.append("{ \"size\" : ").append(size).append(", ");
-				sb.append("\"pgno\" : ").append(pgNo).append(", ");
-				sb.append("\"datas\" : [");
-
 				Map<Long, HouseDto> map = new HashMap<>();
 				for (int i = 0; i < list.size(); i++) {
-					sb.append(mapper.writeValueAsString(list.get(i))).append(",");
-					HouseDto houseDto = houseService.getHouse(list.get(i).getAptCode());
-					if (houseDto != null) {
+					HouseDto dto = houseService.getHouse(list.get(i).getAptCode());
+					if(dto != null) {
 						Long aptCode = list.get(i).getAptCode();
-						map.put(aptCode, houseDto);
+						map.put(aptCode, dto);
 					}
-				}
-
-				sb.setLength(sb.toString().length() - 1);
-				sb.append("], ");
-
-				if (map.size() > 0) {
-					sb.append(" \"position\" : [");
-					for (Long key : map.keySet()) {
-						sb.append(mapper.writeValueAsString(map.get(key))).append(",");
-					}
-					sb.setLength(sb.toString().length() - 1);
-					sb.append("]}");
-					out.println(sb);
-				} else {
-					sb.append("\"position\" : []}");
-					out.println(sb);
 				}
 			}
-		} catch (SQLException | IOException e) {
-			e.printStackTrace();
-			request.setAttribute("msg", "실매매가 조회 목록 중 에러발생!!!");
-			return "/error/error.jsp";
+		} catch (SQLException e) {
+			exceptionHandling(e);
 		}
-
-		return null;
+		if(list!=null&!list.isEmpty()) {
+			return new ResponseEntity<List<HouseDealDto>>(list, HttpStatus.OK);
+		} else {
+			return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
+		}
 	}
 
+//	private String searchAll(HttpServletRequest request, HttpServletResponse response) {
+//		List<HouseDealDto> list = null;
+//		int pgNo = ParameterCheck.notNumberToOne(request.getParameter("pgno"));
+//		int size = 0;
+//
+//		try {
+//			list = houseDealService.listHouseDeal(map);
+//			size = houseDealService.totalHouseDealCount(map);
+//			PrintWriter out = response.getWriter();
+//			ObjectMapper mapper = new ObjectMapper();
+//			if (list == null || list.size() == 0) {
+//				out.println("{\"size\" : 0}");
+//			} else {
+//				StringBuilder sb = new StringBuilder();
+//				sb.append("{ \"size\" : ").append(size).append(", ");
+//				sb.append("\"pgno\" : ").append(pgNo).append(", ");
+//				sb.append("\"datas\" : [");
+//
+//				Map<Long, HouseDto> map = new HashMap<>();
+//				for (int i = 0; i < list.size(); i++) {
+//					sb.append(mapper.writeValueAsString(list.get(i))).append(",");
+//					HouseDto houseDto = houseService.getHouse(list.get(i).getAptCode());
+//					if (houseDto != null) {
+//						Long aptCode = list.get(i).getAptCode();
+//						map.put(aptCode, houseDto);
+//					}
+//				}
+//
+//				sb.setLength(sb.toString().length() - 1);
+//				sb.append("], ");
+//
+//				if (map.size() > 0) {
+//					sb.append(" \"position\" : [");
+//					for (Long key : map.keySet()) {
+//						sb.append(mapper.writeValueAsString(map.get(key))).append(",");
+//					}
+//					sb.setLength(sb.toString().length() - 1);
+//					sb.append("]}");
+//					out.println(sb);
+//				} else {
+//					sb.append("\"position\" : []}");
+//					out.println(sb);
+//				}
+//			}
+//		} catch (SQLException | IOException e) {
+//			e.printStackTrace();
+//			request.setAttribute("msg", "실매매가 조회 목록 중 에러발생!!!");
+//			return "/error/error.jsp";
+//		}
+//
+//		return null;
+//	}
+
+	@GetMapping("/housedeal")
 	private String getHouseDeal(HttpServletRequest request, HttpServletResponse response) {
 		HttpSession session = request.getSession();
 		MemberDto memberDto = (MemberDto) session.getAttribute("userinfo");
@@ -183,7 +227,7 @@ public class HouseDealController extends HttpServlet {
 		MemberDto memberDto = (MemberDto) session.getAttribute("userinfo");
 		if (memberDto == null || !memberDto.getUserClass().equals("관리자")) {
 			request.setAttribute("msg", "접근권한이 없습니다.");
-			return "/user/login.jsp";
+			return "user/login";
 		}
 		Long no = Long.parseLong(request.getParameter("no"));
 		try {
@@ -191,54 +235,88 @@ public class HouseDealController extends HttpServlet {
 		} catch (SQLException e) {
 			e.printStackTrace();
 			request.setAttribute("msg", "실매매가 수정페이지 이동중 에러발생!!!");
-			return "/error/error.jsp";
+			return "error/error";
 		}
-		return "/housedeal/modify.jsp";
+		return "housedeal/modify";
 	}
 
-	private String modify(HttpServletRequest request, HttpServletResponse response) {
-		HttpSession session = request.getSession();
-		MemberDto memberDto = (MemberDto) session.getAttribute("userinfo");
-		if (memberDto == null || !memberDto.getUserClass().equals("관리자")) {
-			request.setAttribute("msg", "접근권한이 없습니다.");
-			return "/user/login.jsp";
-		}
-		HouseDealDto houseDeal = new HouseDealDto();
-		houseDeal.setDealAmount(ParameterCheck.nullToBlank(request.getParameter("dealAmount")));
-		houseDeal.setDealYear(ParameterCheck.nullToBlank(request.getParameter("dealYear")));
-		houseDeal.setDealMonth(ParameterCheck.nullToBlank(request.getParameter("dealMonth")));
-		houseDeal.setDealDay(ParameterCheck.nullToBlank(request.getParameter("dealDay")));
-		houseDeal.setArea(ParameterCheck.nullToBlank(request.getParameter("area")));
-		houseDeal.setFloor(ParameterCheck.nullToBlank(request.getParameter("floor")));
-		houseDeal.setNo(Long.parseLong(request.getParameter("no")));
+	@ResponseBody
+	@PutMapping("/housedeal")
+	public ResponseEntity<?> modify(@RequestBody HouseDealDto dto) {
+		List<HouseDealDto> list = null;
 		try {
-			request.setAttribute("houseDealInfo", houseDealService.updateHouseDeal(houseDeal));
+			houseDealService.updateHouseDeal(dto);
+			list = houseDealService.listHouseDeal(map);
 		} catch (SQLException e) {
-			e.printStackTrace();
-			request.setAttribute("msg", "실매매가 수정 중 에러발생!!!");
-			return "/error/error.jsp";
+			return exceptionHandling(e);
 		}
-		return "/housedeal/list.jsp";
+		if(list!=null && !list.isEmpty()) {
+			return new ResponseEntity<List<HouseDealDto>>(list, HttpStatus.OK);
+		} else {
+			return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
+		}
 	}
+	
+//	private String modify(HttpServletRequest request, HttpServletResponse response) {
+//		HttpSession session = request.getSession();
+//		MemberDto memberDto = (MemberDto) session.getAttribute("userinfo");
+//		if (memberDto == null || !memberDto.getUserClass().equals("관리자")) {
+//			request.setAttribute("msg", "접근권한이 없습니다.");
+//			return "user/login";
+//		}
+//		HouseDealDto houseDeal = new HouseDealDto();
+//		houseDeal.setDealAmount(ParameterCheck.nullToBlank(request.getParameter("dealAmount")));
+//		houseDeal.setDealYear(ParameterCheck.nullToBlank(request.getParameter("dealYear")));
+//		houseDeal.setDealMonth(ParameterCheck.nullToBlank(request.getParameter("dealMonth")));
+//		houseDeal.setDealDay(ParameterCheck.nullToBlank(request.getParameter("dealDay")));
+//		houseDeal.setArea(ParameterCheck.nullToBlank(request.getParameter("area")));
+//		houseDeal.setFloor(ParameterCheck.nullToBlank(request.getParameter("floor")));
+//		houseDeal.setNo(Long.parseLong(request.getParameter("no")));
+//		try {
+//			request.setAttribute("houseDealInfo", houseDealService.updateHouseDeal(houseDeal));
+//		} catch (SQLException e) {
+//			e.printStackTrace();
+//			request.setAttribute("msg", "실매매가 수정 중 에러발생!!!");
+//			return "error/error";
+//		}
+//		return "housedeal/list";
+//	}
 
-	private String deleteHouseDeal(HttpServletRequest request, HttpServletResponse response) {
-		HttpSession session = request.getSession();
-		MemberDto memberDto = (MemberDto) session.getAttribute("userinfo");
-		if (memberDto == null || !memberDto.getUserClass().equals("관리자")) {
-			request.setAttribute("msg", "접근권한이 없습니다.");
-			return "/user/login.jsp";
-		}
-		Long no = Long.parseLong(request.getParameter("no"));
+//	private String deleteHouseDeal(HttpServletRequest request, HttpServletResponse response) {
+//		HttpSession session = request.getSession();
+//		MemberDto memberDto = (MemberDto) session.getAttribute("userinfo");
+//		if (memberDto == null || !memberDto.getUserClass().equals("관리자")) {
+//			request.setAttribute("msg", "접근권한이 없습니다.");
+//			return "user/login";
+//		}
+//		Long no = Long.parseLong(request.getParameter("no"));
+//		try {
+//			houseDealService.deleteHouseDeal(no);
+//		} catch (SQLException e) {
+//			e.printStackTrace();
+//			request.setAttribute("msg", "실매매가 삭제 중 에러발생!!!");
+//			return "/WEB-INF/views/error/error";
+//		}
+//		return "housedeal/list";
+//	}
+	
+	@ResponseBody
+	@DeleteMapping("/housedeal/{no}")
+	public ResponseEntity<?> delete(@PathVariable Long no) {
+		List<HouseDealDto> list = null;
 		try {
 			houseDealService.deleteHouseDeal(no);
+			list = houseDealService.listHouseDeal(map);
 		} catch (SQLException e) {
-			e.printStackTrace();
-			request.setAttribute("msg", "실매매가 삭제 중 에러발생!!!");
-			return "/error/error.jsp";
+			return exceptionHandling(e);
 		}
-		return "/housedeal/list.jsp";
+		if(list!=null && !list.isEmpty()) {
+			return new ResponseEntity<List<HouseDealDto>>(list, HttpStatus.OK);
+		} else {
+			return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
+		}
 	}
-
+	
 	private String addHouseDeal(HttpServletRequest request, HttpServletResponse response) {
 		String regCode = request.getParameter("regCode");
 		String dealYM = request.getParameter("dealYM");
@@ -280,7 +358,7 @@ public class HouseDealController extends HttpServlet {
 		} catch (IOException e) {
 			e.printStackTrace();
 			request.setAttribute("msg", "실매매가 추가 중 에러발생!!!");
-			return "/error/error.jsp";
+			return "error/error";
 		} finally {
 
 			try {
@@ -291,11 +369,18 @@ public class HouseDealController extends HttpServlet {
 			} catch (IOException e) {
 				e.printStackTrace();
 				request.setAttribute("msg", "실매매가 추가 중 에러발생!!!");
-				return "/error/error.jsp";
+				return "error/error";
 			}
 		}
 
 		return "";
+	}
+	
+
+
+	private ResponseEntity<String> exceptionHandling(Exception e) {
+		e.printStackTrace();
+		return new ResponseEntity<String>("Error : " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 
 }
