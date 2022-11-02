@@ -8,9 +8,9 @@ public class HouseDealDto extends HouseDto {
 
 	private long no;
 	private String dealAmount;
-	private int dealYear;
-	private int dealMonth;
-	private int dealDay;
+	private Integer dealYear;
+	private Integer dealMonth;
+	private Integer dealDay;
 	private String area;
 	private String floor;
 	private String cancelDealType;

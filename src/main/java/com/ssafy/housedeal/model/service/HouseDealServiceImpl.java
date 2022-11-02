@@ -1,31 +1,24 @@
 package com.ssafy.housedeal.model.service;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.ssafy.housedeal.model.HouseDealDto;
-import com.ssafy.housedeal.model.mapper.HouseDealDaoImpl;
 import com.ssafy.housedeal.model.mapper.HouseDealMapper;
 import com.ssafy.util.SizeConstant;
 
 @Service
 public class HouseDealServiceImpl implements HouseDealService {
 
-	private static HouseDealService houseService = new HouseDealServiceImpl();
-	private HouseDealMapper houseDealDao;
+	@Autowired
+	private HouseDealMapper houseDealMapper;
+
 	private static List<HouseDealDto> list;
 
-	private HouseDealServiceImpl() {
-		houseDealDao = HouseDealDaoImpl.getInstance();
-	}
-
-	public static HouseDealService getInstance() {
-		return houseService;
-	}
 
 	@Override
 	public List<HouseDealDto> listHouseDeal(Map<String, String> map) throws SQLException {
@@ -34,7 +27,7 @@ public class HouseDealServiceImpl implements HouseDealService {
 		int start = (pgno - 1) * spl;
 		map.put("start", start + "");
 		map.put("spl", spl + "");
-		List<HouseDealDto>list = houseDealDao.listHouseDeal(map);
+		List<HouseDealDto>list = houseDealMapper.listHouseDeal(map);
 		
 //		if (list == null) {
 //			list = houseDealDao.listHouseDeal(map);
@@ -69,27 +62,27 @@ public class HouseDealServiceImpl implements HouseDealService {
 
 	@Override
 	public int totalHouseDealCount(Map<String, String> map) throws SQLException {
-		return houseDealDao.totalHouseDealCount(map);
+		return houseDealMapper.totalHouseDealCount(map);
 	}
 
 	@Override
 	public HouseDealDto getHouseDeal(long no) throws SQLException {
-		return houseDealDao.getHouseDeal(no);
+		return houseDealMapper.getHouseDeal(no);
 	}
 
 	@Override
 	public int insertHouseDeal(HouseDealDto houseDealDto) throws SQLException {
-		return houseDealDao.insertHouseDeal(houseDealDto);
+		return houseDealMapper.insertHouseDeal(houseDealDto);
 	}
 
 	@Override
 	public void deleteHouseDeal(long no) throws SQLException {
-		houseDealDao.deleteHouseDeal(no);
+		houseDealMapper.deleteHouseDeal(no);
 	}
 
 	@Override
 	public int updateHouseDeal(HouseDealDto houseDealDto) throws SQLException {
-		return houseDealDao.updateHouseDeal(houseDealDto);
+		return houseDealMapper.updateHouseDeal(houseDealDto);
 	}
 
 }
