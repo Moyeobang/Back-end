@@ -61,7 +61,8 @@
 		resultType="int">
 		select count(d.no)
 		from housedeal d inner join houseinfo h
-		on d.aptCode = h.aptCode
+		on d.aptCode
+		= h.aptCode
 		inner join dongCode c
 		on h.dongCode = c.dongCode
 		<where>
@@ -90,11 +91,14 @@
 
 	<select id="getHouseDeal" parameterType="long"
 		resultType="housedealDto">
-		SELECT D.NO, D.DEALAMOUNT, D.DEALYEAR, D.DEALMONTH, D.DEALDAY, D.AREA,
-		D.FLOOR, D.APTCODE, H.APARTMENTNAME, C.SIDONAME, C.GUGUNNAME,
+		SELECT D.NO, D.DEALAMOUNT, D.DEALYEAR, D.DEALMONTH,
+		D.DEALDAY, D.AREA,
+		D.FLOOR, D.APTCODE, H.APARTMENTNAME, C.SIDONAME,
+		C.GUGUNNAME,
 		C.DONGNAME
 		FROM HOUSEDEAL D INNER JOIN HOUSEINFO H
-		ON D.APTCODE = H.APTCODE
+		ON
+		D.APTCODE = H.APTCODE
 		INNER JOIN DONGCODE C
 		ON H.DONGCODE = C.DONGCODE
 		WHERE D.NO = #{NO}
@@ -108,9 +112,11 @@
 
 	<update id="updateHouseDeal" parameterType="housedealDto">
 		UPDATE HOUSEDEAL
-		SET DEALAMOUNT = #{DEALAMOUNT},
+		SET
+		DEALAMOUNT = #{DEALAMOUNT},
 		DEALYEAR = #{DEALYEAR},
-		DEALMONTH = #{DEALMONTH},
+		DEALMONTH =
+		#{DEALMONTH},
 		DEALDAY = #{DEALDAY},
 		AREA = #{AREA},
 		FLOOR = #{FLOOR}
