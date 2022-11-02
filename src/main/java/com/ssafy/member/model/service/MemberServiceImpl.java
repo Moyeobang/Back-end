@@ -35,21 +35,21 @@ public class MemberServiceImpl implements MemberService {
 	}
 
 	@Override
-	public void deleteMember(MemberDto memberDto) throws Exception {
+	public void deleteMember(String userId) throws Exception {
 		// TODO Auto-generated method stub
-		memberMapper.deleteMember(memberDto);
+		memberMapper.deleteMember(userId);
 	}
 	
 	@Override
-	public void updateMember(MemberDto memberDto, String userName, String userEmailId, String userEmailDomain) throws Exception {
+	public void updateMember(MemberDto memberDto) throws Exception {
 		// TODO Auto-generated method stub
-		memberMapper.updateMember(memberDto, userName, userEmailId, userEmailDomain);
+		memberMapper.updateMember(memberDto);
 	}
 
 	@Override
-	public MemberDto changePassword(MemberDto memberDto, String newPassword) throws SQLException {
+	public MemberDto changePassword(Map<String, String> map) throws SQLException {
 		// TODO Auto-generated method stub
-		return memberMapper.changePassword(memberDto, newPassword);
+		return memberMapper.changePassword(map);
 	}
 
 	@Override
@@ -67,5 +67,10 @@ public class MemberServiceImpl implements MemberService {
 	public int totalMemberCount(Map<String, String> map) throws Exception {
 		// TODO Auto-generated method stub
 		return memberMapper.totalMemberCount(map);
+	}
+
+	@Override
+	public MemberDto getMember(String userId) throws Exception {
+		return memberMapper.getMember(userId);
 	}
 }

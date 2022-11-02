@@ -30,8 +30,8 @@ public class SwaggerConfiguration {
 	public Docket api() {
 		return new Docket(DocumentationType.SWAGGER_2).consumes(getConsumeContentTypes()).produces(getProduceContentTypes())
 					.apiInfo(apiInfo()).groupName(version).select()
-					.apis(RequestHandlerSelectors.basePackage("com.ssafy.admin.controller"))
-					.paths(regex("/admin/.*")).build()
+					.apis(RequestHandlerSelectors.basePackage("com.ssafy.member.controller"))
+					.paths(regex("/user/.*")).build()
 					.useDefaultResponseMessages(false);
 	}
 	

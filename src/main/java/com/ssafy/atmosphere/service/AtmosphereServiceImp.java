@@ -8,7 +8,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import org.json.simple.JSONArray;
@@ -21,7 +20,6 @@ import com.ssafy.atmosphere.dao.AtmosphereDaoImp;
 import com.ssafy.atmosphere.model.AtmosphereDto;
 import com.ssafy.interest.service.InterestService;
 import com.ssafy.interest.service.InterestServiceImp;
-import com.ssafy.member.model.mapper.MemberDaoImpl;
 import com.ssafy.util.DBUtil;
 
 public class AtmosphereServiceImp implements AtmosphereService {
