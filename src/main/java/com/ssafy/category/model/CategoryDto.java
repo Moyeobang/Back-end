@@ -1,5 +1,8 @@
 package com.ssafy.category.model;
 
+import org.springframework.stereotype.Component;
+
+@Component
 public class CategoryDto {
 
 	private int categoryId;

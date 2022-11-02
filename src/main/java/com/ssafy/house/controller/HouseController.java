@@ -21,13 +21,17 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ssafy.house.model.HouseDto;
 import com.ssafy.house.model.service.HouseService;
 import com.ssafy.house.model.service.HouseServiceImpl;
 import com.ssafy.util.ParameterCheck;
 
-@WebServlet("/house")
+@Controller
+//@WebServlet("/house")
 public class HouseController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
@@ -57,7 +61,7 @@ public class HouseController extends HttpServlet {
 		map.put("dongCode", dongCode + "");
 		map.put("apartmentName", name);
 		
-		String path = "/index.jsp";
+		String path = "/index";
 		if ("searchlist".equals(act)) {
 			List<HouseDto> list = null;
 			try {
@@ -121,11 +125,11 @@ public class HouseController extends HttpServlet {
 		try {
 			List<HouseDto> list = houseService.listHouse(map);
 			request.setAttribute("articles", list);
-			return "/board/list.jsp";
+			return "/board/list";
 		} catch (Exception e) {
 			e.printStackTrace();
 			request.setAttribute("msg", "글목록 얻기 중 에러발생!!!");
-			return "/error/error.jsp";
+			return "/error/error";
 		}
 
 	}

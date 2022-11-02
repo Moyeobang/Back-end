@@ -112,4 +112,4 @@
 	</nav>
 </header>
 
-<%@ include file="/interesting/regist.jsp"%>
+<%@ include file="/WEB-INF/views/interesting/regist.jsp"%>

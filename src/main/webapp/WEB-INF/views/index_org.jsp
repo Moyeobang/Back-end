@@ -106,7 +106,7 @@
 </c:if>
 <c:if test="${userinfo ne null}">   
     <div class="container">
-	  <%@ include file="/common/confirm.jsp" %>
+	  <%@ include file="/WEB-INF/views/common/confirm.jsp" %>
       <div class="row justify-content-center">
         <div class="col-lg-8 col-md-10 col-sm-12">
           <h2 class="my-3 py-3 shadow-sm bg-light text-center">

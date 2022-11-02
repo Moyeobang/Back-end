@@ -21,7 +21,7 @@
 	src="//dapi.kakao.com/v2/maps/sdk.js?appkey=a152d2aabef07da25afb167fc3a1a32c&libraries=services"></script>
 </head>
 <body>
-	<%@ include file="/common/header.jsp"%>
+	<%@ include file="/WEB-INF/views/common/header.jsp"%>
 	<c:if test="${empty houseDealInfo || houseDealInfo eq null}">
 		<script type="text/javascript">
 			alert("삭제되었거나 정상적인 URL 접근이 아닙니다.");
@@ -92,7 +92,7 @@
 		</div>
 	</div>
 
-	<%@ include file="/common/footer.jsp"%>
+	<%@ include file="/WEB-INF/views/common/footer.jsp"%>
 	<script type="text/javascript">
 		document.querySelector("#btn-list").addEventListener("click",
 				function() {

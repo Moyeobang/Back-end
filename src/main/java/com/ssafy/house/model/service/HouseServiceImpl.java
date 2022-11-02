@@ -4,22 +4,25 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.stereotype.Service;
+
 import com.ssafy.board.model.dao.BoardDao;
 import com.ssafy.board.model.dao.BoardDaoImpl;
 import com.ssafy.board.model.service.BoardService;
 import com.ssafy.board.model.service.BoardServiceImpl;
-import com.ssafy.house.model.HouseDealDto;
+import com.ssafy.house.model.HouseDealDto2;
 import com.ssafy.house.model.HouseDto;
-import com.ssafy.house.model.dao.HouseDao;
-import com.ssafy.house.model.dao.HouseDaoImpl;
+import com.ssafy.house.model.mapper.HouseDaoImpl;
+import com.ssafy.house.model.mapper.HouseMapper;
 import com.ssafy.util.SizeConstant;
 
+@Service
 public class HouseServiceImpl implements HouseService{
 
 	
 	
 	private static HouseService houseService = new HouseServiceImpl();
-	private HouseDao houseDao;
+	private HouseMapper houseDao;
 	
 	private HouseServiceImpl() {
 		houseDao = HouseDaoImpl.getHouseDao();
@@ -57,7 +60,7 @@ public class HouseServiceImpl implements HouseService{
 	}
 
 	@Override
-	public List<HouseDealDto> listDeal(long aptCode) throws SQLException {
+	public List<HouseDealDto2> listDeal(long aptCode) throws SQLException {
 		// TODO Auto-generated method stub
 		return houseDao.listDeal(aptCode);
 	}

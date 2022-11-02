@@ -51,7 +51,7 @@
 	src="//dapi.kakao.com/v2/maps/sdk.js?appkey=a152d2aabef07da25afb167fc3a1a32c&libraries=services"></script>
 </head>
 <body>
-	<%@ include file="/common/header.jsp"%>
+	<%@ include file="/WEB-INF/views/common/header.jsp"%>
 	
 <div class="map_wrap">
     <div id="map" style="width:100%;height:100%;position:relative;overflow:hidden;"></div>

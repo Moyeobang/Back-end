@@ -1,4 +1,4 @@
-package com.ssafy.housedeal.model.dao;
+package com.ssafy.housedeal.model.mapper;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -8,19 +8,19 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import com.ssafy.housedeal.HouseDealDto;
+import com.ssafy.housedeal.model.HouseDealDto;
 import com.ssafy.util.DBUtil;
 
-public class HouseDealDaoImpl implements HouseDealDao {
+public class HouseDealDaoImpl implements HouseDealMapper {
 
-	private static HouseDealDao houseDeaDao = new HouseDealDaoImpl();
+	private static HouseDealMapper houseDeaDao = new HouseDealDaoImpl();
 	private DBUtil dbUtil;
 
 	private HouseDealDaoImpl() {
 		dbUtil = DBUtil.getInstance();
 	}
 
-	public static HouseDealDao getInstance() {
+	public static HouseDealMapper getInstance() {
 		return houseDeaDao;
 	}
 
@@ -34,7 +34,6 @@ public class HouseDealDaoImpl implements HouseDealDao {
 		try {
 			conn = dbUtil.getConnection();
 			StringBuilder sql = new StringBuilder();
-
 			sql.append(
 					"select d.no, d.dealAmount, d.dealYear, d.dealMonth, d.dealDay, d.area, d.floor, d.aptCode, h.apartmentName, c.sidoName, c.gugunName, c.dongname \n");
 			sql.append("from housedeal d inner join houseinfo h \n");
@@ -91,9 +90,9 @@ public class HouseDealDaoImpl implements HouseDealDao {
 
 				houseDealDto.setNo(rs.getLong(1));
 				houseDealDto.setDealAmount(rs.getString(2));
-				houseDealDto.setDealYear(rs.getString(3));
-				houseDealDto.setDealMonth(rs.getString(4));
-				houseDealDto.setDealDay(rs.getString(5));
+				houseDealDto.setDealYear(rs.getInt(3));
+				houseDealDto.setDealMonth(rs.getInt(4));
+				houseDealDto.setDealDay(rs.getInt(5));
 				houseDealDto.setArea(rs.getString(6));
 				houseDealDto.setFloor(rs.getString(7));
 				houseDealDto.setAptCode(rs.getLong(8));
@@ -200,9 +199,9 @@ public class HouseDealDaoImpl implements HouseDealDao {
 				result = new HouseDealDto();
 				result.setNo(rs.getLong(1));
 				result.setDealAmount(rs.getString(2));
-				result.setDealYear(rs.getString(3));
-				result.setDealMonth(rs.getString(4));
-				result.setDealDay(rs.getString(5));
+				result.setDealYear(rs.getInt(3));
+				result.setDealMonth(rs.getInt(4));
+				result.setDealDay(rs.getInt(5));
 				result.setArea(rs.getString(6));
 				result.setFloor(rs.getString(7));
 				result.setAptCode(rs.getLong(8));
@@ -265,9 +264,9 @@ public class HouseDealDaoImpl implements HouseDealDao {
 			pstmt = conn.prepareStatement(sql.toString());
 			
 			pstmt.setString(1, houseDealDto.getDealAmount());
-			pstmt.setString(2, houseDealDto.getDealYear());
-			pstmt.setString(3, houseDealDto.getDealMonth());
-			pstmt.setString(4, houseDealDto.getDealDay());
+			pstmt.setInt(2, houseDealDto.getDealYear());
+			pstmt.setInt(3, houseDealDto.getDealMonth());
+			pstmt.setInt(4, houseDealDto.getDealDay());
 			pstmt.setString(5, houseDealDto.getArea());
 			pstmt.setString(6, houseDealDto.getFloor());
 			pstmt.setLong(7, houseDealDto.getNo());

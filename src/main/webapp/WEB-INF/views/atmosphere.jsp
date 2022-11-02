@@ -24,7 +24,7 @@
 	src="//dapi.kakao.com/v2/maps/sdk.js?appkey=a152d2aabef07da25afb167fc3a1a32c&libraries=services"></script>
 </head>
 <body>
-	<%@ include file="/common/header.jsp"%>
+	<%@ include file="/WEB-INF/views/common/header.jsp"%>
 	<p style="margin-top: -12px"></p>
 	
 	<div id="map" style="width: 100%; height: 350px;"></div>

@@ -1,6 +1,8 @@
 package com.ssafy.house.model;
 
-public class HouseDealDto {
+import org.springframework.stereotype.Component;
+
+public class HouseDealDto2 {
 	private long no;
 	private String dealAmount;
 	private int dealYear;

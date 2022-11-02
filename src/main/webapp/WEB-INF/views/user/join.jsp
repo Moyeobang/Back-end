@@ -18,7 +18,7 @@
     <title>SSAFY</title>
   </head>
   <body>
-  <%@ include file="/common/header.jsp"%>
+  <%@ include file="/WEB-INF/views/common/header.jsp"%>
     <div class="container">
       <div class="row justify-content-center">
         <div class="col-lg-8 col-md-10 col-sm-12" style="margin-top:40px;">
