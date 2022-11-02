@@ -5,7 +5,7 @@
 <mapper
 	namespace="com.ssafy.housedeal.model.mapper.HouseDealMapper">
 
-	<resultMap type="housedealDto" id="housedeal">
+	<resultMap type="houseDealDto" id="housedeal">
 		<result column="no" property="no" />
 		<result column="dealAmount" property="dealAmount" />
 		<result column="dealYear" property="dealYear" />
@@ -17,109 +17,99 @@
 		<result column="aptCode" property="aptCode" />
 	</resultMap>
 
-	<select id="listHouseDeal" parameterMap="Map"
-		resultMap="housedealDto">
-		SELECT D.NO,
-		D.DEALAMOUNT, D.DEALYEAR, D.DEALMONTH, D.DEALDAY, D.AREA,
-		D.FLOOR,
-		D.APTCODE, H.APARTMENTNAME, C.SIDONAME, C.GUGUNNAME,
-		C.DONGNAME
-		FROM
-		HOUSEDEAL D INNER JOIN HOUSEINFO H
-		ON D.APTCODE =
-		H.APTCODE
-		INNER JOIN
-		DONGCODE C
-		ON H.DONGCODE = C.DONGCODE
+	<select id="listHouseDeal" parameterType="Map" resultType="houseDealDto">
+		select d.no,
+		d.dealamount, d.dealyear, d.dealmonth, d.dealday, d.area,
+		d.floor,
+		d.aptcode, h.apartmentname, c.sidoname, c.gugunname,
+		c.dongname
+		from
+		housedeal d inner join houseinfo h
+		on d.aptcode =
+		h.aptcode
+		inner join
+		dongcode c
+		on h.dongcode = c.dongcode
 		<where>
 			1 = 1
 			<choose>
-				<when test="dongCode== ''">
-					<choose>
-						<when test="gugunCode==''">
-							<choose>
-								<when test="sidoCode!=''">
-									AND H.DONGCODE LIKE CONCAT('%', #{sidoCode},
-									'%')</when>
-							</choose>
-						</when>
-						<otherwise>AND H.DONGCODE LIKE CONCAT('%', #{gugunCode}, '%')
-						</otherwise>
-					</choose>
-				</when>
-				<otherwise>AND H.DONGCODE LIKE CONCAT('%', #{dongCode}, '%')
-				</otherwise>
+				<when test="dongCode != ''">and h.dongcode like concat('%', #{dongCode}, '%')</when>
+				<when test="gugunCode !=''">and h.dongcode like concat('%', #{gugunCode}, '%')</when>
+				<when test="sidoCode != ''">and h.dongcode like concat('%', #{sidoCode}, '%')</when>
 			</choose>
 		</where>
-		<if test="apartmentName!=''">AND h.apartmentName LIKE CONCAT('%', #{apartmentName},
-			'%')</if>
-		order by d.dealYear desc, d.dealMonth desc, d.dealDay desc limit
-		#{start}, #{spl}
+		<if test="apartmentName!=''">and h.apartmentname like concat('%', #{apartmentName}, '%')</if>
+		order by d.dealYear desc, d.dealMonth desc, d.dealDay desc
+		limit ${start}, ${spl}
 	</select>
 
-	<select id="totalHouseDealCount" parameterMap="Map"
-		resultType="int">
-		select count(d.no)
+<!-- 	<select id="totalHouseDealCount" parameterMap="Map" -->
+<!-- 		resultType="int"> -->
+<!-- 		select count(d.no) -->
+<!-- 		from housedeal d inner join houseinfo h -->
+<!-- 		on d.aptCode -->
+<!-- 		= h.aptCode -->
+<!-- 		inner join dongCode c -->
+<!-- 		on h.dongCode = c.dongCode -->
+<!-- 		<where> -->
+<!-- 			1 = 1 -->
+<!-- 			<choose> -->
+<!-- 				<when test="dongCode== ''"> -->
+<!-- 					<choose> -->
+<!-- 						<when test="gugunCode==''"> -->
+<!-- 							<choose> -->
+<!-- 								<when test="sidoCode!=''"> -->
+<!-- 									AND H.DONGCODE LIKE CONCAT('%', #{sidoCode}, -->
+<!-- 									'%')</when> -->
+<!-- 							</choose> -->
+<!-- 						</when> -->
+<!-- 						<otherwise>AND H.DONGCODE LIKE CONCAT('%', #{gugunCode}, '%') -->
+<!-- 						</otherwise> -->
+<!-- 					</choose> -->
+<!-- 				</when> -->
+<!-- 				<otherwise>AND H.DONGCODE LIKE CONCAT('%', #{dongCode}, '%') -->
+<!-- 				</otherwise> -->
+<!-- 			</choose> -->
+<!-- 		</where> -->
+<!-- 		<if test="apartmentName!=''">AND h.apartmentName LIKE CONCAT('%', #{apartmentName}, -->
+<!-- 			'%')</if> -->
+<!-- 	</select> -->
+
+	<select id="getHouseDeal" parameterType="long" resultType="houseDealDto">
+		select d.no, d.dealamount, d.dealyear, d.dealmonth,
+		d.dealday, d.area,
+		d.floor, d.aptcode, h.apartmentname, c.sidoname,
+		c.gugunname,
+		c.dongname
 		from housedeal d inner join houseinfo h
-		on d.aptCode
-		= h.aptCode
-		inner join dongCode c
-		on h.dongCode = c.dongCode
-		<where>
-			1 = 1
-			<choose>
-				<when test="dongCode== ''">
-					<choose>
-						<when test="gugunCode==''">
-							<choose>
-								<when test="sidoCode!=''">
-									AND H.DONGCODE LIKE CONCAT('%', #{sidoCode},
-									'%')</when>
-							</choose>
-						</when>
-						<otherwise>AND H.DONGCODE LIKE CONCAT('%', #{gugunCode}, '%')
-						</otherwise>
-					</choose>
-				</when>
-				<otherwise>AND H.DONGCODE LIKE CONCAT('%', #{dongCode}, '%')
-				</otherwise>
-			</choose>
-		</where>
-		<if test="apartmentName!=''">AND h.apartmentName LIKE CONCAT('%', #{apartmentName},
-			'%')</if>
+		on
+		d.aptcode = h.aptcode
+		inner join dongcode c
+		on h.dongcode = c.dongcode
+		where d.no = #{no}
 	</select>
-
-	<select id="getHouseDeal" parameterType="long"
-		resultType="housedealDto">
-		SELECT D.NO, D.DEALAMOUNT, D.DEALYEAR, D.DEALMONTH,
-		D.DEALDAY, D.AREA,
-		D.FLOOR, D.APTCODE, H.APARTMENTNAME, C.SIDONAME,
-		C.GUGUNNAME,
-		C.DONGNAME
-		FROM HOUSEDEAL D INNER JOIN HOUSEINFO H
-		ON
-		D.APTCODE = H.APTCODE
-		INNER JOIN DONGCODE C
-		ON H.DONGCODE = C.DONGCODE
-		WHERE D.NO = #{NO}
-	</select>
+	
+<!-- 	<insert id="insertHouseDeal" parameterType="housedeal"> -->
+<!-- 		insert into housedeal -->
+<!-- 		value (#{no}, #{dealAmount}, #{dealYear}, #{dealMont}, #{dealDay}, #{area}, #{floor}, #{aptCode}); -->
+<!-- 	</insert> -->
 
 	<delete id="deleteHouseDeal" parameterType="long">
-		DELETE
-		FROM HOUSEDEAL
-		WHERE NO = #{NO}
+		delete
+		from housedeal
+		where no = #{no}
 	</delete>
 
-	<update id="updateHouseDeal" parameterType="housedealDto">
-		UPDATE HOUSEDEAL
-		SET
-		DEALAMOUNT = #{DEALAMOUNT},
-		DEALYEAR = #{DEALYEAR},
-		DEALMONTH =
-		#{DEALMONTH},
-		DEALDAY = #{DEALDAY},
-		AREA = #{AREA},
-		FLOOR = #{FLOOR}
-		WHERE NO = #{NO}
+	<update id="updateHouseDeal" parameterType="houseDealDto">
+		update housedeal
+		<trim prefix="set" suffixOverrides=",">
+			<if test="dealAmount != null">dealamount = #{dealAmount},</if>
+			<if test="dealYear neq null">dealyear = #{dealYear},</if>
+<!-- 			<if test="dealMonth != null">dealmonth = #{dealMonth},</if> -->
+<!-- 			<if test="dealDay != null">dealday = #{dealDay},</if> -->
+<!-- 			<if test="area != null">area = #{area},</if> -->
+<!-- 			<if test="floor != null">floor = #{floor}</if> -->
+		</trim>
+		where no = #{no}
 	</update>
 </mapper>
