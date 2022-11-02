@@ -60,7 +60,7 @@ function searchBtn(showMap, type){
 	
 	document.querySelector("#aptInfoByDong").style.display = "inline"
 
-	let url = "/housedeal";
+	let url = "/housedeal/housedeal";
 	
 	let sidoSel = document.querySelector("#sido");
 	let sidoCode = "";
@@ -88,8 +88,8 @@ function searchBtn(showMap, type){
 	
 	let aptName = document.querySelector("#aptName");
 	
-	let queryParams = encodeURIComponent("act") + "=" + encodeURIComponent("searchAll");
-	queryParams += "&" + encodeURIComponent("sidoCode") + "=" + encodeURIComponent(sidoCode);
+	let queryParams ="?";
+	queryParams += encodeURIComponent("sidoCode") + "=" + encodeURIComponent(sidoCode);
 	queryParams += "&" + encodeURIComponent("gugunCode") + "=" + encodeURIComponent(gugunCode);
 	queryParams += "&" + encodeURIComponent("dongCode") + "=" + encodeURIComponent(dongCode);
 	queryParams += "&" + encodeURIComponent("apartmentName") + "=" + encodeURIComponent(aptName.value); 
