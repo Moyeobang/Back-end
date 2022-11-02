@@ -53,12 +53,12 @@
 	<select id="listMember" parameterType="map" resultMap="memberAll">
 		select user_name, user_id, user_password, email_id, email_domain, join_date, user_class
 		from members
-		order by join_date
 		<where>
 			<if test="key == 'userId'">
 				and user_id like concat('%', #{word}, '%')
 			</if>
 		</where>
+		order by join_date
 	</select>
 	
 	<select id="getMember" parameterType="string" resultMap="memberAll">

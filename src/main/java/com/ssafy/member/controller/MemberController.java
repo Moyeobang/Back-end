@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -192,7 +193,9 @@ public class MemberController extends HttpServlet {
 	// 회원 리스트 조회
 	@GetMapping("/list")
 	@ResponseBody
-	private ResponseEntity<?> userList(Map<String, String> map, HttpSession session) throws Exception {
+	private ResponseEntity<?> userList(@RequestParam Map<String, String> map, HttpSession session) throws Exception {
+		System.out.println(map.get("key"));
+		System.out.println(map.get("word"));
 		MemberDto memberDto = (MemberDto) session.getAttribute("userinfo");
 		if (memberDto != null && memberDto.getUserClass().equals("관리자")) {
 			System.out.println("[관리자] 접근 권한이 확인되었습니다.");
