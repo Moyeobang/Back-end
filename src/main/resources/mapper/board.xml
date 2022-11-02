@@ -23,26 +23,6 @@
 	<select id="listArticle" resultMap="board">
 		SELECT ARTICLE_NO, USER_ID, SUBJECT, CONTENT, HIT, REGISTER_TIME
 		FROM BOARD
-		<!-- <where>
-			<choose>
-				<when test="#{word}==''">
-					<choose>
-						<when test="#{key}=='all'">
-							WHERE SUBJECT LIKE CONCAT('%', #{word},
-							'%') OR USER_ID = #{word}
-						</when>
-						<when test="subject==#{key}">
-							WHERE SUBJECT LIKE CONCAT('%', #{word},
-							'%')
-						</when>
-						<otherwise>
-							WHERE USER_ID = #{word}
-						</otherwise>
-					</choose>
-				</when>
-			</choose>
-		</where> -->
-		<!-- ORDER BY ARTICLE_NO DESC LIMIT #{START}, #{SPL} -->
 	</select>
 	
 	<select id="searchArticle" parameterType="Map" resultMap="board">
