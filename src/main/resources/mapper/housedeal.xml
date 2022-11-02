@@ -5,7 +5,7 @@
 <mapper
 	namespace="com.ssafy.housedeal.model.mapper.HouseDealMapper">
 
-	<resultMap type="housedealDto" id="housedeal">
+	<resultMap type="houseDealDto" id="housedeal">
 		<result column="no" property="no" />
 		<result column="dealAmount" property="dealAmount" />
 		<result column="dealYear" property="dealYear" />
@@ -17,8 +17,8 @@
 		<result column="aptCode" property="aptCode" />
 	</resultMap>
 
-	<select id="listHouseDeal" parameterMap="Map"
-		resultMap="housedealDto">
+	<select id="listHouseDeal" parameterType="Map"
+		resultMap="housedeal">
 		SELECT D.NO,
 		D.DEALAMOUNT, D.DEALYEAR, D.DEALMONTH, D.DEALDAY, D.AREA,
 		D.FLOOR,
@@ -57,7 +57,7 @@
 		#{start}, #{spl}
 	</select>
 
-	<select id="totalHouseDealCount" parameterMap="Map"
+	<select id="totalHouseDealCount" parameterType="Map"
 		resultType="int">
 		select count(d.no)
 		from housedeal d inner join houseinfo h
