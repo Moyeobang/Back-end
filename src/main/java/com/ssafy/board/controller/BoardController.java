@@ -20,8 +20,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -31,8 +33,6 @@ import com.ssafy.board.model.service.BoardServiceImpl;
 import com.ssafy.housedeal.model.HouseDealDto;
 import com.ssafy.member.model.MemberDto;
 import com.ssafy.util.ParameterCheck;
-
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
 
 @Controller
 @RequestMapping("/board")
@@ -237,15 +237,11 @@ public class BoardController extends HttpServlet {
 
 	@ResponseBody
 	@PutMapping("/modify/{articleNo}")
-	public ResponseEntity<?> modify(@RequestBody int articleNo) {
+	public ResponseEntity<?> modify(@RequestBody BoardDto dto, @PathVariable int articleNo) {
 		try {
-			BoardDto dto = boardService.getArticle(articleNo);
+			dto.setArticleNo(articleNo);
 			boardService.modifyArticle(dto);
-			if (dto != null) {
-				return new ResponseEntity<BoardDto>(dto, HttpStatus.OK);
-			} else {
-				return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
-			}
+			return new ResponseEntity<BoardDto>(dto, HttpStatus.OK);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return exceptionHandling(e);
@@ -274,7 +270,7 @@ public class BoardController extends HttpServlet {
 
 	@ResponseBody
 	@DeleteMapping("/delete/{articleNo}")
-	public ResponseEntity<?> write(@RequestBody int articleNo) {
+	public ResponseEntity<?> delete(@PathVariable int articleNo) {
 		try {
 			boardService.deleteArticle(articleNo);
 
