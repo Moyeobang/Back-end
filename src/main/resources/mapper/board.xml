@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ssafy.board.model.mapper.BoardMapper">
+
+	<resultMap type="boardDto" id="board">
+		<result column="article_no" property="articleNo" />
+		<result column="user_id" property="userId" />
+		<result column="user_name" property="userName" />
+		<result column="subject" property="subject" />
+		<result column="content" property="content" />
+		<result column="hit" property="hit" />
+		<result column="register_time" property="registerTime" />
+	</resultMap>
+
+	<insert id="writeArticle" parameterType="boardDto">
+		INSERT INTO
+		BOARD (USER_ID, SUBJECT, CONTENT, HIT, REGISTER_TIME)
+		VALUES (#{userId}, #{subject}, #{content}, 0, now())
+	</insert>
+
+	<select id="listArticle" resultMap="board">
+		SELECT ARTICLE_NO, USER_ID, SUBJECT, CONTENT, HIT, REGISTER_TIME
+		FROM BOARD
+		<!-- <where>
+			<choose>
+				<when test="#{word}==''">
+					<choose>
+						<when test="#{key}=='all'">
+							WHERE SUBJECT LIKE CONCAT('%', #{word},
+							'%') OR USER_ID = #{word}
+						</when>
+						<when test="subject==#{key}">
+							WHERE SUBJECT LIKE CONCAT('%', #{word},
+							'%')
+						</when>
+						<otherwise>
+							WHERE USER_ID = #{word}
+						</otherwise>
+					</choose>
+				</when>
+			</choose>
+		</where> -->
+		<!-- ORDER BY ARTICLE_NO DESC LIMIT #{START}, #{SPL} -->
+	</select>
+	
+	<select id="searchArticle" parameterType="Map" resultMap="board">
+		SELECT ARTICLE_NO, USER_ID, SUBJECT, CONTENT, HIT, REGISTER_TIME
+		FROM BOARD
+		<where>
+			<choose>
+				<when test="word!=''">
+					<choose>
+						<when test="key=='all'">
+							SUBJECT LIKE CONCAT('%', #{word}, '%')
+							OR USER_ID = #{word}
+						</when>
+						<when test="key=='subject'">
+							SUBJECT LIKE CONCAT('%', #{word}, '%')
+						</when>
+						<otherwise>
+							USER_ID = #{word}
+						</otherwise>
+					</choose>
+				</when>
+			</choose>
+		</where>
+		<!-- ORDER BY ARTICLE_NO DESC LIMIT #{START}, #{SPL} -->
+	</select>
+
+	<select id="totalArticleCount" parameterType="Map"
+		resultType="int">
+		SELECT count(ARTICLE_NO)
+		FROM BOARD
+		<where>
+			<choose>
+				<when test="#{word}==''">
+					<choose>
+						<when test="#{key}=='all'">
+							WHERE SUBJECT LIKE CONCAT('%', #{word},
+							'%') OR USER_ID = #{word}
+						</when>
+						<when test="subject==#{key}">
+							WHERE SUBJECT LIKE CONCAT('%', #{word},
+							'%')
+						</when>
+						<otherwise>
+							WHERE USER_ID = #{word}
+						</otherwise>
+					</choose>
+				</when>
+			</choose>
+		</where>
+	</select>
+
+	<select id="getArticle" parameterType="int"
+		resultType="boardDto">
+		select article_no, user_id, subject, content, hit, register_time
+		from board
+		where article_no = #{articleNo}
+	</select>
+
+	<update id="updateHit" parameterType="int">
+		update board
+		set hit = hit + 1
+		where article_no = #{articleNo}
+	</update>
+
+	<update id="modifyArticle" parameterType="boardDto">
+		update board
+		set subject = #{subject}, content = #{content}
+		where article_no = #{articleNo}
+	</update>
+
+	<delete id="deleteArticle" parameterType="int">
+		delete from board
+		where article_no = #{articleNo}
+	</delete>
+</mapper>

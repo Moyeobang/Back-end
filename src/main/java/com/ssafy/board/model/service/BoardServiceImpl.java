@@ -3,23 +3,19 @@ package com.ssafy.board.model.service;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.ssafy.board.model.BoardDto;
-import com.ssafy.board.model.dao.BoardDao;
-import com.ssafy.board.model.dao.BoardDaoImpl;
+import com.ssafy.board.model.mapper.BoardDaoImpl;
+import com.ssafy.board.model.mapper.BoardMapper;
 import com.ssafy.util.SizeConstant;
 
+@Service
 public class BoardServiceImpl implements BoardService {
 	
-	private static BoardService boardService = new BoardServiceImpl();
-	private BoardDao boardDao;
-	
-	private BoardServiceImpl() {
-		boardDao = BoardDaoImpl.getBoardDao();
-	}
-
-	public static BoardService getBoardService() {
-		return boardService;
-	}
+	@Autowired
+	private BoardMapper boardDao;
 
 	@Override
 	public int writeArticle(BoardDto boardDto) throws Exception {
@@ -27,13 +23,13 @@ public class BoardServiceImpl implements BoardService {
 	}
 
 	@Override
-	public List<BoardDto> listArticle(Map<String, String> map) throws Exception {
-		int pgno = Integer.parseInt(map.get("pgno"));
-		int spl = SizeConstant.SIZE_PER_LIST;
-		int start = (pgno - 1) * spl;
-		map.put("start", start + "");
-		map.put("spl", spl + "");
-		return boardDao.listArticle(map);
+	public List<BoardDto> listArticle() throws Exception {
+//		int pgno = Integer.parseInt(map.get("pgno"));
+//		int spl = SizeConstant.SIZE_PER_LIST;
+//		int start = (pgno - 1) * spl;
+//		map.put("start", start + "");
+//		map.put("spl", spl + "");
+		return boardDao.listArticle();
 	}
 
 	@Override
@@ -59,5 +55,10 @@ public class BoardServiceImpl implements BoardService {
 	@Override
 	public int totalArticleCount(Map<String, String> map) throws Exception {
 		return boardDao.totalArticleCount(map);
+	}
+
+	@Override
+	public List<BoardDto> searchArticle(Map<String, String> m) throws Exception {
+		return boardDao.searchArticle(m);
 	}
 }

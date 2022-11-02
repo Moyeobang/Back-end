@@ -107,7 +107,7 @@ public class HouseDealController extends HttpServlet {
 			list = houseDealService.listHouseDeal(map);
 //			size = houseDealService.totalHouseDealCount(map);
 
-			if (list != null & !list.isEmpty()) {
+			if (list != null && !list.isEmpty()) {
 				return new ResponseEntity<List<HouseDealDto>>(list, HttpStatus.OK);
 			} else {
 				return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
