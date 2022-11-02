@@ -134,6 +134,7 @@ public class MemberController extends HttpServlet {
 	@GetMapping("/{userId}")
 	@ResponseBody
 	private ResponseEntity<?> getMember(@PathVariable("userId") String userId) throws Exception {
+		System.out.println(userId);
 		try {
 			MemberDto member = memberService.getMember(userId);
 			if (member != null)
@@ -189,9 +190,9 @@ public class MemberController extends HttpServlet {
 	}
 
 	// 회원 리스트 조회
-	@GetMapping("list")
+	@GetMapping("/list")
 	@ResponseBody
-	private ResponseEntity<?> userList(Map<String, String> map, HttpSession session) {
+	private ResponseEntity<?> userList(Map<String, String> map, HttpSession session) throws Exception {
 		MemberDto memberDto = (MemberDto) session.getAttribute("userinfo");
 		if (memberDto != null && memberDto.getUserClass().equals("관리자")) {
 			System.out.println("[관리자] 접근 권한이 확인되었습니다.");

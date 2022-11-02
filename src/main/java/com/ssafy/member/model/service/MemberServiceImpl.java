@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.ssafy.member.model.MemberDto;
 import com.ssafy.member.model.mapper.MemberMapper;
+import com.ssafy.util.ParameterCheck;
 import com.ssafy.util.SizeConstant;
 
 @Service
@@ -55,7 +56,7 @@ public class MemberServiceImpl implements MemberService {
 	@Override
 	public List<MemberDto> listMember(Map<String, String> map) throws Exception {
 		// TODO Auto-generated method stub
-		int pgno = Integer.parseInt(map.get("pgno"));
+		int pgno = ParameterCheck.notNumberToZero(map.get("pgno"));
 		int spl = SizeConstant.SIZE_PER_LIST;
 		int start = (pgno - 1) * spl;
 		map.put("start", start + "");
