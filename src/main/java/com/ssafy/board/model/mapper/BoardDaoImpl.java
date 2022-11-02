@@ -1,4 +1,4 @@
-package com.ssafy.board.model.dao;
+package com.ssafy.board.model.mapper;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -11,16 +11,16 @@ import java.util.Map;
 import com.ssafy.board.model.BoardDto;
 import com.ssafy.util.DBUtil;
 
-public class BoardDaoImpl implements BoardDao {
+public class BoardDaoImpl implements BoardMapper {
 
-	private static BoardDao boardDao = new BoardDaoImpl();
+	private static BoardMapper boardDao = new BoardDaoImpl();
 	private DBUtil dbUtil;
 	
 	private BoardDaoImpl() {
 		dbUtil = DBUtil.getInstance();
 	}
 
-	public static BoardDao getBoardDao() {
+	public static BoardMapper getBoardDao() {
 		return boardDao;
 	}
 	

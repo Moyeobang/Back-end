@@ -1,12 +1,15 @@
-package com.ssafy.board.model.dao;
+package com.ssafy.board.model.mapper;
 
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.ibatis.annotations.Mapper;
+
 import com.ssafy.board.model.BoardDto;
 
-public interface BoardDao {
+@Mapper
+public interface BoardMapper {
 
 	int writeArticle(BoardDto boardDto) throws SQLException;
 	List<BoardDto> listArticle(Map<String, String> map) throws SQLException;

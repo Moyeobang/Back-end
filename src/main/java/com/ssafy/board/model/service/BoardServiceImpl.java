@@ -3,15 +3,18 @@ package com.ssafy.board.model.service;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.stereotype.Service;
+
 import com.ssafy.board.model.BoardDto;
-import com.ssafy.board.model.dao.BoardDao;
-import com.ssafy.board.model.dao.BoardDaoImpl;
+import com.ssafy.board.model.mapper.BoardDaoImpl;
+import com.ssafy.board.model.mapper.BoardMapper;
 import com.ssafy.util.SizeConstant;
 
+@Service
 public class BoardServiceImpl implements BoardService {
 	
 	private static BoardService boardService = new BoardServiceImpl();
-	private BoardDao boardDao;
+	private BoardMapper boardDao;
 	
 	private BoardServiceImpl() {
 		boardDao = BoardDaoImpl.getBoardDao();
