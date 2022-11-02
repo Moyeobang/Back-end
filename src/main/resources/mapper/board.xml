@@ -20,10 +20,10 @@
 		VALUES (#{userId}, #{subject}, #{content}, 0, now())
 	</insert>
 
-	<select id="listArticle" parameterMap="Map" resultMap="board">
+	<select id="listArticle" resultMap="board">
 		SELECT ARTICLE_NO, USER_ID, SUBJECT, CONTENT, HIT, REGISTER_TIME
 		FROM BOARD
-		<where>
+		<!-- <where>
 			<choose>
 				<when test="#{word}==''">
 					<choose>
@@ -41,13 +41,13 @@
 					</choose>
 				</when>
 			</choose>
-		</where>
-		ORDER BY ARTICLE_NO DESC LIMIT #{START}, #{SPL}
+		</where> -->
+		<!-- ORDER BY ARTICLE_NO DESC LIMIT #{START}, #{SPL} -->
 	</select>
 
-	<select id="totalArticleCount" parameterMap="Map"
+	<select id="totalArticleCount" parameterType="Map"
 		resultType="int">
-		SELECT ARTICLE_NO, USER_ID, SUBJECT, CONTENT, HIT, REGISTER_TIME
+		SELECT count(ARTICLE_NO)
 		FROM BOARD
 		<where>
 			<choose>

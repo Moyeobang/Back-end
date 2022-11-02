@@ -8,7 +8,7 @@ import com.ssafy.board.model.BoardDto;
 public interface BoardService {
 
 	int writeArticle(BoardDto boardDto) throws Exception;
-	List<BoardDto> listArticle(Map<String, String> map) throws Exception;
+	List<BoardDto> listArticle() throws Exception;
 	int totalArticleCount(Map<String, String> map) throws Exception;
 	BoardDto getArticle(int articleNo) throws Exception;
 	void updateHit(int articleNo) throws Exception;

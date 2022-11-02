@@ -42,12 +42,12 @@ public class BoardController extends HttpServlet {
 
 	@Autowired
 	private BoardService boardService;
-	@Autowired
-	private Map<String, String> map;
 
-	public void init() {
-		boardService = BoardServiceImpl.getBoardService();
-	}
+	private Map<String, String> map;
+//
+//	public void init() {
+//		boardService = BoardServiceImpl.getBoardService();
+//	}
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
@@ -94,11 +94,11 @@ public class BoardController extends HttpServlet {
 	public ResponseEntity<?> list() {
 		Map<String, Object> m = new HashMap<String, Object>();
 		try {
-			List<BoardDto> list = boardService.listArticle(map);
-			int totalSize = boardService.totalArticleCount(map);
+			List<BoardDto> list = boardService.listArticle();
+//			int totalSize = boardService.totalArticleCount(map);
 			if (list != null && !list.isEmpty()) {
-				m.put("articles", list);
-				m.put("size", totalSize);
+//				m.put("articles", list);
+//				m.put("size", totalSize);
 				return new ResponseEntity<List<BoardDto>>(list, HttpStatus.OK);
 			} else {
 				return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
@@ -137,11 +137,11 @@ public class BoardController extends HttpServlet {
 			boardService.writeArticle(dto);
 
 			Map<String, Object> m = new HashMap<String, Object>();
-			List<BoardDto> list = boardService.listArticle(map);
-			int totalSize = boardService.totalArticleCount(map);
+			List<BoardDto> list = boardService.listArticle();
+//			int totalSize = boardService.totalArticleCount(map);
 			if (list != null && !list.isEmpty()) {
-				m.put("articles", list);
-				m.put("size", totalSize);
+//				m.put("articles", list);
+//				m.put("size", totalSize);
 				return new ResponseEntity<List<BoardDto>>(list, HttpStatus.OK);
 			} else {
 				return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
@@ -279,11 +279,11 @@ public class BoardController extends HttpServlet {
 			boardService.deleteArticle(articleNo);
 
 			Map<String, Object> m = new HashMap<String, Object>();
-			List<BoardDto> list = boardService.listArticle(map);
-			int totalSize = boardService.totalArticleCount(map);
+			List<BoardDto> list = boardService.listArticle();
+//			int totalSize = boardService.totalArticleCount(map);
 			if (list != null && !list.isEmpty()) {
-				m.put("articles", list);
-				m.put("size", totalSize);
+//				m.put("articles", list);
+//				m.put("size", totalSize);
 				return new ResponseEntity<List<BoardDto>>(list, HttpStatus.OK);
 			} else {
 				return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);

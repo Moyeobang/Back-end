@@ -11,7 +11,7 @@ import java.util.Map;
 import com.ssafy.board.model.BoardDto;
 import com.ssafy.util.DBUtil;
 
-public class BoardDaoImpl implements BoardMapper {
+public class BoardDaoImpl{
 
 	private static BoardMapper boardDao = new BoardDaoImpl();
 	private DBUtil dbUtil;

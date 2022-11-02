@@ -45,10 +45,11 @@ public class WebMvcConfiguration implements WebMvcConfigurer {
 				.maxAge(1800);
 	}
 
-	@Override
-	public void addInterceptors(InterceptorRegistry registry) {
-		registry.addInterceptor(confirmInterceptor).addPathPatterns(patterns);
-	}
+//	@Override
+	/*
+	 * public void addInterceptors(InterceptorRegistry registry) {
+	 * registry.addInterceptor(confirmInterceptor).addPathPatterns(patterns); }
+	 */
 
 	@Override
 	public void addResourceHandlers(ResourceHandlerRegistry registry) {
