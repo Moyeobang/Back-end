@@ -1,31 +1,22 @@
 package com.ssafy.housedeal;
 
+import org.springframework.stereotype.Component;
+
 import com.ssafy.house.model.HouseDto;
 
 public class HouseDealDto extends HouseDto {
 
 	private long no;
-
 	private String dealAmount;
-
 	private String dealYear;
-
 	private String dealMonth;
-
 	private String dealDay;
-
 	private String area;
-
 	private String floor;
-
 	private String cancelDealType;
-
 	private long aptCode;
-
 	private String sidoName;
-
 	private String gugunName;
-
 	private String dongName;
 
 	public long getNo() {

@@ -22,7 +22,7 @@
 </script>
 </head>
 <body>
-	<%@ include file="/common/header.jsp"%>
+	<%@ include file="/WEB-INF/views/common/header.jsp"%>
 	<div class="row justify-content-center">
 		<div class="col-lg-8 col-md-10 col-sm-12"
 			style="margin-top: 40px; margin-bottom: 40px;">
@@ -106,7 +106,7 @@
 		</div>
 
 	</div>
-	<%@ include file="/common/footer.jsp"%>
+	<%@ include file="/WEB-INF/views/common/footer.jsp"%>
 	<script
 		src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js"
 		integrity="sha384-u1OknCvxWvY5kfmNBILK2hRnQC3Pr17a+RTT6rIHI7NnikvbZlHgTPOOmMi466C8"

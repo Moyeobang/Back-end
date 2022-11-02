@@ -1,5 +1,8 @@
 package com.ssafy.board.model;
 
+import org.springframework.stereotype.Component;
+
+@Component
 public class BoardDto {
 
 	private int articleNo;
