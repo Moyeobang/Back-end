@@ -1,4 +1,4 @@
-package com.ssafy.housedeal;
+package com.ssafy.housedeal.model;
 
 import org.springframework.stereotype.Component;
 

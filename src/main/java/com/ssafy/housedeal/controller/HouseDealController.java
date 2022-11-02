@@ -24,6 +24,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -39,7 +40,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ssafy.house.model.HouseDto;
 import com.ssafy.house.model.service.HouseService;
 import com.ssafy.house.model.service.HouseServiceImpl;
-import com.ssafy.housedeal.HouseDealDto;
+import com.ssafy.housedeal.model.HouseDealDto;
 import com.ssafy.housedeal.model.service.HouseDealService;
 import com.ssafy.housedeal.model.service.HouseDealServiceImpl;
 import com.ssafy.member.model.MemberDto;
@@ -55,7 +56,10 @@ public class HouseDealController extends HttpServlet {
 
 	private static final String serviceKey = "W8tskb3ozBWJaXxxw5I%2FVKzmrJ53268CjU%2BcNrKjqwATnE8Y0NQjsSzuxuzf%2FzqDq%2B2joOsA4Q3HR347slp2Yg%3D%3D";
 
+	@Autowired
 	private HouseDealService houseDealService;
+	
+	@Autowired
 	private HouseService houseService;
 
 	private Map<String, String> map;
@@ -203,7 +207,7 @@ public class HouseDealController extends HttpServlet {
 //		return null;
 //	}
 
-	@GetMapping("/housedeal")
+	@GetMapping("/housedeal/{no}")
 	private String getHouseDeal(HttpServletRequest request, HttpServletResponse response) {
 		HttpSession session = request.getSession();
 		MemberDto memberDto = (MemberDto) session.getAttribute("userinfo");

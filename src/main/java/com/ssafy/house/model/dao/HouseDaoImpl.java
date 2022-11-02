@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import com.ssafy.house.model.HouseDealDto;
+import com.ssafy.house.model.HouseDealDto2;
 import com.ssafy.house.model.HouseDto;
 import com.ssafy.util.DBUtil;
 
@@ -207,9 +207,9 @@ public class HouseDaoImpl implements HouseDao{
 	}
 
 	@Override
-	public List<HouseDealDto> listDeal(long aptCode) {
-		List<HouseDealDto> list = new ArrayList<>();
-		HouseDealDto dto = null;
+	public List<HouseDealDto2> listDeal(long aptCode) {
+		List<HouseDealDto2> list = new ArrayList<>();
+		HouseDealDto2 dto = null;
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
@@ -226,7 +226,7 @@ public class HouseDaoImpl implements HouseDao{
 			
 			rs = pstmt.executeQuery();
 			if(rs.next()) {
-				dto = new HouseDealDto();
+				dto = new HouseDealDto2();
 				dto.setNo(rs.getLong(1));
 				dto.setDealAmount(rs.getString(2));
 				dto.setDealYear(rs.getInt(3));

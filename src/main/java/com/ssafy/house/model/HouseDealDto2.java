@@ -2,7 +2,7 @@ package com.ssafy.house.model;
 
 import org.springframework.stereotype.Component;
 
-public class HouseDealDto {
+public class HouseDealDto2 {
 	private long no;
 	private String dealAmount;
 	private int dealYear;

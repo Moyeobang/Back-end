@@ -4,7 +4,7 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 
-import com.ssafy.house.model.HouseDealDto;
+import com.ssafy.house.model.HouseDealDto2;
 import com.ssafy.house.model.HouseDto;
 
 public interface HouseDao {
@@ -17,6 +17,6 @@ public interface HouseDao {
 
 	int insertHouse(HouseDto houseDto) throws SQLException;
 	
-	List<HouseDealDto> listDeal(long aptCode) throws SQLException;
+	List<HouseDealDto2> listDeal(long aptCode) throws SQLException;
 
 }

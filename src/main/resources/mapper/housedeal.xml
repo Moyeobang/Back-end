@@ -1,1 +1,119 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper
+	namespace="com.ssafy.housedeal.model.mapper.HousedealMapper">
+
+	<resultMap type="housedealDto" id="housedeal">
+		<result column="no" property="no" />
+		<result column="dealAmount" property="dealAmount" />
+		<result column="dealYear" property="dealYear" />
+		<result column="dealMonth" property="dealMonth" />
+		<result column="dealDay" property="dealDay" />
+		<result column="area" property="area" />
+		<result column="floor" property="floor" />
+		<result column="cancelDealType" property="cancelDealType" />
+		<result column="aptCode" property="aptCode" />
+	</resultMap>
+
+	<select id="listHouseDeal" parameterMap="Map"
+		resultMap="housedealDto">
+		select d.no,
+		d.dealAmount, d.dealYear, d.dealMonth, d.dealDay, d.area,
+		d.floor,
+		d.aptCode, h.apartmentName, c.sidoName, c.gugunName,
+		c.dongname
+		from
+		housedeal d inner join houseinfo h
+		on d.aptCode =
+		h.aptCode
+		inner join
+		dongCode c
+		on h.dongCode = c.dongCode
+		<where>
+			1 = 1
+			<choose>
+				<when test="dongCode== ''">
+					<choose>
+						<when test="gugunCode==''">
+							<choose>
+								<when test="sidoCode!=''">
+									AND H.DONGCODE LIKE CONCAT('%', #{sidoCode},
+									'%')</when>
+							</choose>
+						</when>
+						<otherwise>AND H.DONGCODE LIKE CONCAT('%', #{gugunCode}, '%')
+						</otherwise>
+					</choose>
+				</when>
+				<otherwise>AND H.DONGCODE LIKE CONCAT('%', #{dongCode}, '%')
+				</otherwise>
+			</choose>
+		</where>
+		<if test="apartmentName!=''">AND h.apartmentName LIKE CONCAT('%', #{apartmentName},
+			'%')</if>
+		order by d.dealYear desc, d.dealMonth desc, d.dealDay desc limit
+		#{start}, #{spl}
+	</select>
+
+	<select id="totalHouseDealCount" parameterMap="Map"
+		resultType="int">
+		select count(d.no)
+		from housedeal d inner join houseinfo h
+		on d.aptCode = h.aptCode
+		inner join dongCode c
+		on h.dongCode = c.dongCode
+		<where>
+			1 = 1
+			<choose>
+				<when test="dongCode== ''">
+					<choose>
+						<when test="gugunCode==''">
+							<choose>
+								<when test="sidoCode!=''">
+									AND H.DONGCODE LIKE CONCAT('%', #{sidoCode},
+									'%')</when>
+							</choose>
+						</when>
+						<otherwise>AND H.DONGCODE LIKE CONCAT('%', #{gugunCode}, '%')
+						</otherwise>
+					</choose>
+				</when>
+				<otherwise>AND H.DONGCODE LIKE CONCAT('%', #{dongCode}, '%')
+				</otherwise>
+			</choose>
+		</where>
+		<if test="apartmentName!=''">AND h.apartmentName LIKE CONCAT('%', #{apartmentName},
+			'%')</if>
+	</select>
+
+	<select id="getHouseDeal" parameterType="long"
+		resultType="housedealDto">
+		SELECT D.NO, D.DEALAMOUNT, D.DEALYEAR, D.DEALMONTH, D.DEALDAY, D.AREA,
+		D.FLOOR, D.APTCODE, H.APARTMENTNAME, C.SIDONAME, C.GUGUNNAME,
+		C.DONGNAME
+		FROM HOUSEDEAL D INNER JOIN HOUSEINFO H
+		ON D.APTCODE = H.APTCODE
+		INNER JOIN DONGCODE C
+		ON H.DONGCODE = C.DONGCODE
+		WHERE D.NO = #{NO}
+	</select>
+
+	<delete id="deleteHouseDeal" parameterType="long">
+		DELETE
+		FROM HOUSEDEAL
+		WHERE NO = #{NO}
+	</delete>
+
+	<update id="updateHouseDeal" parameterType="housedealDto">
+		UPDATE HOUSEDEAL
+		SET DEALAMOUNT = #{DEALAMOUNT},
+		DEALYEAR = #{DEALYEAR},
+		DEALMONTH = #{DEALMONTH},
+		DEALDAY = #{DEALDAY},
+		AREA = #{AREA},
+		FLOOR = #{FLOOR}
+		WHERE NO = #{NO}
+	</update>
+</mapper>
