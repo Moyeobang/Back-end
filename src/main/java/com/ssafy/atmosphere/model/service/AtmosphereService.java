@@ -1,4 +1,4 @@
-package com.ssafy.atmosphere.service;
+package com.ssafy.atmosphere.model.service;
 
 import java.io.File;
 import java.util.List;

@@ -10,7 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.ssafy.store.model.StoreDto;
-import com.ssafy.store.service.StoreService;
+import com.ssafy.store.model.service.StoreService;
 
 public class StoreTest extends SpringbootRestapiApplicationTests {
 

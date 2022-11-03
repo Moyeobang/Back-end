@@ -1,4 +1,4 @@
-package com.ssafy.store.service;
+package com.ssafy.store.model.service;
 
 import com.ssafy.store.model.StoreDto;
 

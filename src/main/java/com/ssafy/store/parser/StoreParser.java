@@ -10,7 +10,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.ssafy.store.model.StoreDto;
-import com.ssafy.store.service.StoreService;
+import com.ssafy.store.model.service.StoreService;
 
 public class StoreParser {
     private String filePath;

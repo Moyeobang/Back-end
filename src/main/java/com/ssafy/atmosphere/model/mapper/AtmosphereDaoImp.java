@@ -1,4 +1,4 @@
-package com.ssafy.atmosphere.dao;
+package com.ssafy.atmosphere.model.mapper;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -10,16 +10,16 @@ import java.util.List;
 import com.ssafy.atmosphere.model.AtmosphereDto;
 import com.ssafy.util.DBUtil;
 
-public class AtmosphereDaoImp implements AtmosphereDao {
+public class AtmosphereDaoImp implements AtmosphereMapper {
 	
-	private static AtmosphereDao dao = new AtmosphereDaoImp();
+	private static AtmosphereMapper dao = new AtmosphereDaoImp();
 	private DBUtil dbUtil;
 	
 	private AtmosphereDaoImp() {
 		dbUtil = DBUtil.getInstance();
 	}
 	
-	public static AtmosphereDao getAtmosphereDao() {
+	public static AtmosphereMapper getAtmosphereDao() {
 		return dao;
 	}
 

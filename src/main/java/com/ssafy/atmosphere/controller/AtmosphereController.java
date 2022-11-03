@@ -7,8 +7,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.ssafy.atmosphere.service.AtmosphereService;
-import com.ssafy.atmosphere.service.AtmosphereServiceImp;
+import com.ssafy.atmosphere.model.service.AtmosphereService;
+import com.ssafy.atmosphere.model.service.AtmosphereServiceImpl;
 import com.ssafy.interest.model.service.InterestService;
 import com.ssafy.interest.model.service.InterestServiceImpl;
 
@@ -18,7 +18,7 @@ import com.ssafy.interest.model.service.InterestServiceImpl;
 @WebServlet("/atmosphere")
 public class AtmosphereController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	AtmosphereService atmosphereService = AtmosphereServiceImp.getInstance();
+	AtmosphereService atmosphereService = AtmosphereServiceImpl.getInstance();
 	InterestService interestService = InterestServiceImpl.getInstance();
        
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
