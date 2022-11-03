@@ -6,10 +6,6 @@ import java.util.Map;
 
 import org.springframework.stereotype.Service;
 
-import com.ssafy.board.model.mapper.BoardDaoImpl;
-import com.ssafy.board.model.mapper.BoardMapper;
-import com.ssafy.board.model.service.BoardService;
-import com.ssafy.board.model.service.BoardServiceImpl;
 import com.ssafy.house.model.HouseDealDto2;
 import com.ssafy.house.model.HouseDto;
 import com.ssafy.house.model.mapper.HouseDaoImpl;

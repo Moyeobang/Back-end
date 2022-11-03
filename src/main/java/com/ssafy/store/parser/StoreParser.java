@@ -7,15 +7,18 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.ssafy.store.StoreDto;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import com.ssafy.store.model.StoreDto;
 import com.ssafy.store.service.StoreService;
-import com.ssafy.store.service.StoreServiceImpl;
 
 public class StoreParser {
     private String filePath;
     private BufferedReader bufferedReader;
     private List<String[]> readCSV;
-    private static StoreService storeService = StoreServiceImpl.getStoreService();
+    
+    @Autowired
+    private static StoreService storeService;
 
     private int index;
 
