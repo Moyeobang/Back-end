@@ -1,4 +1,4 @@
-package com.ssafy.category.service;
+package com.ssafy.category.model.service;
 
 import java.sql.SQLException;
 import java.util.HashMap;
@@ -7,13 +7,13 @@ import java.util.List;
 import java.util.Map;
 
 import com.ssafy.category.model.CategoryDto;
-import com.ssafy.category.model.dao.CategoryDao;
-import com.ssafy.category.model.dao.CategoryDaoImpl;
+import com.ssafy.category.model.mapper.CategoryMapper;
+import com.ssafy.category.model.mapper.CategoryDaoImpl;
 
 public class CategoryServiceImpl implements CategoryService {
 
 	private static CategoryService categoryService = new CategoryServiceImpl();
-	private CategoryDao categoryDao;
+	private CategoryMapper categoryDao;
 
 	private CategoryServiceImpl() {
 		categoryDao = CategoryDaoImpl.getCategoryDao();

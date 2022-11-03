@@ -22,8 +22,8 @@ import org.jsoup.select.Elements;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ssafy.category.model.CategoryDto;
-import com.ssafy.category.service.CategoryService;
-import com.ssafy.category.service.CategoryServiceImpl;
+import com.ssafy.category.model.service.CategoryService;
+import com.ssafy.category.model.service.CategoryServiceImpl;
 import com.ssafy.member.model.service.MemberService;
 import com.ssafy.member.model.service.MemberServiceImpl;
 import com.ssafy.news.model.NewsDto;
