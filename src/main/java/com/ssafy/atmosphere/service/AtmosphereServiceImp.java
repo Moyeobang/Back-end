@@ -18,8 +18,8 @@ import org.json.simple.parser.ParseException;
 import com.ssafy.atmosphere.dao.AtmosphereDao;
 import com.ssafy.atmosphere.dao.AtmosphereDaoImp;
 import com.ssafy.atmosphere.model.AtmosphereDto;
-import com.ssafy.interest.service.InterestService;
-import com.ssafy.interest.service.InterestServiceImp;
+import com.ssafy.interest.model.service.InterestService;
+import com.ssafy.interest.model.service.InterestServiceImpl;
 import com.ssafy.util.DBUtil;
 
 public class AtmosphereServiceImp implements AtmosphereService {
@@ -168,7 +168,7 @@ public class AtmosphereServiceImp implements AtmosphereService {
 
 	@Override
 	public List<AtmosphereDto> list(String id) {
-		InterestService interestService = InterestServiceImp.getInstance();
+		InterestService interestService = InterestServiceImpl.getInstance();
 		String in = interestService.getRegion(id);
 		return dao.listAtmosphere(in);
 	}

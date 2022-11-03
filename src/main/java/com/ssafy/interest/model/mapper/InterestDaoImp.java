@@ -1,4 +1,4 @@
-package com.ssafy.interest.dao;
+package com.ssafy.interest.model.mapper;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -10,15 +10,15 @@ import java.util.List;
 import com.ssafy.interest.model.InterestDto;
 import com.ssafy.util.DBUtil;
 
-public class InterestDaoImp implements InterestDao {
-	private static InterestDao dao = new InterestDaoImp();
+public class InterestDaoImp implements InterestMapper {
+	private static InterestMapper interestMapper = new InterestDaoImp();
 	private DBUtil dbUtil;
 	
 	private InterestDaoImp() {
 		 dbUtil = DBUtil.getInstance();
 	}
-	public static InterestDao getInstance() {
-		return dao;
+	public static InterestMapper getInstance() {
+		return interestMapper;
 	}
 	
 	@Override

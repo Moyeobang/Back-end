@@ -1,17 +1,17 @@
-package com.ssafy.interest.service;
+package com.ssafy.interest.model.service;
 
 import java.util.List;
 
-import com.ssafy.interest.dao.InterestDao;
-import com.ssafy.interest.dao.InterestDaoImp;
 import com.ssafy.interest.model.InterestDto;
+import com.ssafy.interest.model.mapper.InterestMapper;
+import com.ssafy.interest.model.mapper.InterestDaoImp;
 
-public class InterestServiceImp implements InterestService {
+public class InterestServiceImpl implements InterestService {
 
-	private static InterestService interestService = new InterestServiceImp();
-	private InterestDao interestdao;
+	private static InterestService interestService = new InterestServiceImpl();
+	private InterestMapper interestdao;
 	
-	private InterestServiceImp() {
+	private InterestServiceImpl() {
 		interestdao = InterestDaoImp.getInstance();
 	}
 	

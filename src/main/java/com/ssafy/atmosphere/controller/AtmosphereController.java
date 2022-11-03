@@ -9,8 +9,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.ssafy.atmosphere.service.AtmosphereService;
 import com.ssafy.atmosphere.service.AtmosphereServiceImp;
-import com.ssafy.interest.service.InterestService;
-import com.ssafy.interest.service.InterestServiceImp;
+import com.ssafy.interest.model.service.InterestService;
+import com.ssafy.interest.model.service.InterestServiceImpl;
 
 /**
  * Servlet implementation class AtmosphereController
@@ -19,7 +19,7 @@ import com.ssafy.interest.service.InterestServiceImp;
 public class AtmosphereController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	AtmosphereService atmosphereService = AtmosphereServiceImp.getInstance();
-	InterestService interestService = InterestServiceImp.getInstance();
+	InterestService interestService = InterestServiceImpl.getInstance();
        
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String act = request.getParameter("act");
