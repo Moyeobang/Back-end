@@ -1,11 +1,11 @@
-package com.ssafy.interest.dao;
+package com.ssafy.interest.model.mapper;
 
 import java.sql.SQLException;
 import java.util.List;
 
 import com.ssafy.interest.model.InterestDto;
 
-public interface InterestDao {
+public interface InterestMapper {
 	int getMainInterestSeq(String id);
 	List<InterestDto> selectInterest(String userId) throws SQLException;
 	int insertInterest(InterestDto dto) throws SQLException;

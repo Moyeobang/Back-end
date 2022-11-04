@@ -1,4 +1,4 @@
-package com.ssafy.category.service;
+package com.ssafy.category.model.service;
 
 import java.sql.SQLException;
 import java.util.List;

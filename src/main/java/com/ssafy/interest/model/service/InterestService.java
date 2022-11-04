@@ -1,4 +1,4 @@
-package com.ssafy.interest.service;
+package com.ssafy.interest.model.service;
 
 import java.util.List;
 

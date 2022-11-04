@@ -1,10 +1,10 @@
-package com.ssafy.atmosphere.dao;
+package com.ssafy.atmosphere.model.mapper;
 
 import java.util.List;
 
 import com.ssafy.atmosphere.model.AtmosphereDto;
 
-public interface AtmosphereDao {
+public interface AtmosphereMapper {
 
 	List<AtmosphereDto> listAtmosphere(String in);
 }

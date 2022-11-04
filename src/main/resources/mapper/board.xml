@@ -46,7 +46,7 @@
 				</when>
 			</choose>
 		</where>
-		<!-- ORDER BY ARTICLE_NO DESC LIMIT #{START}, #{SPL} -->
+		ORDER BY ARTICLE_NO DESC LIMIT #{START}, #{SPL}
 	</select>
 
 	<select id="totalArticleCount" parameterType="Map"

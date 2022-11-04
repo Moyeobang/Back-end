@@ -1,4 +1,4 @@
-package com.ssafy.category.model.dao;
+package com.ssafy.category.model.mapper;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -12,17 +12,17 @@ import com.ssafy.category.model.CategoryDto;
 import com.ssafy.house.model.HouseDto;
 import com.ssafy.util.DBUtil;
 
-public class CategoryDaoImpl implements CategoryDao{
+public class CategoryDaoImpl implements CategoryMapper{
 	
 	
-	private static CategoryDao categoryDao = new CategoryDaoImpl();
+	private static CategoryMapper categoryDao = new CategoryDaoImpl();
 	private DBUtil dbUtil;
 	
 	private CategoryDaoImpl() {
 		dbUtil = DBUtil.getInstance();
 	}
 
-	public static CategoryDao getCategoryDao() {
+	public static CategoryMapper getCategoryDao() {
 		return categoryDao;
 	}
 	

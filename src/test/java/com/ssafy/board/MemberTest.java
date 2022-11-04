@@ -16,12 +16,15 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.ssafy.member.model.MemberDto;
 import com.ssafy.member.model.service.MemberService;
+
 
 public class MemberTest extends SpringbootRestapiApplicationTests {
 
@@ -51,13 +54,10 @@ public class MemberTest extends SpringbootRestapiApplicationTests {
 	}
 
 	@Test
-	@Ignore
 	public void nullTest() {
-		if(memberService != null) {
-			logger.debug("userService : {}", memberService);
-		}
+		logger.debug("userService : {}", memberService);
 		assertNotNull(memberService);
-		assertNull(memberService);
+//		assertNull(memberService);
 		logger.debug("memberService : {}", memberService);
 	}
 
@@ -73,7 +73,7 @@ public class MemberTest extends SpringbootRestapiApplicationTests {
 	public void login() throws Exception {
 		Map<String, String> map = new HashMap<String, String>();
 		map.put("userid", "ssafy");
-		map.put("userpwd", "1234");
+		map.put("userpwd", "1212");
 		System.out.println(memberService);
 		MemberDto memberDto = null;
 		try {

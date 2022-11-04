@@ -1,4 +1,4 @@
-package com.ssafy.interest;
+package com.ssafy.interest.controller;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -19,8 +19,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ssafy.house.model.HouseDto;
 import com.ssafy.interest.model.InterestDto;
-import com.ssafy.interest.service.InterestService;
-import com.ssafy.interest.service.InterestServiceImp;
+import com.ssafy.interest.model.service.InterestService;
+import com.ssafy.interest.model.service.InterestServiceImpl;
 import com.ssafy.member.model.MemberDto;
 
 @WebServlet("/interest")
@@ -30,7 +30,7 @@ public class InterestController extends HttpServlet {
 	private InterestService interestService;
 
 	public void init() {
-		interestService = InterestServiceImp.getInstance();
+		interestService = InterestServiceImpl.getInstance();
 	}
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)

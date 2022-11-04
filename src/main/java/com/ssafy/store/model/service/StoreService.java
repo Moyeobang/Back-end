@@ -1,6 +1,6 @@
-package com.ssafy.store.service;
+package com.ssafy.store.model.service;
 
-import com.ssafy.store.StoreDto;
+import com.ssafy.store.model.StoreDto;
 
 public interface StoreService {
 	void insertStore(StoreDto storeDto) throws Exception;

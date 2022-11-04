@@ -1,4 +1,4 @@
-package com.ssafy.store;
+package com.ssafy.store.model;
 
 public class StoreDto {
 	String storeId;

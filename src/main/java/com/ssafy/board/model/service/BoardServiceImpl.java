@@ -7,9 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.ssafy.board.model.BoardDto;
-import com.ssafy.board.model.mapper.BoardDaoImpl;
 import com.ssafy.board.model.mapper.BoardMapper;
-import com.ssafy.util.SizeConstant;
 
 @Service
 public class BoardServiceImpl implements BoardService {

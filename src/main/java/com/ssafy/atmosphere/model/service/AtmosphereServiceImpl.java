@@ -1,4 +1,4 @@
-package com.ssafy.atmosphere.service;
+package com.ssafy.atmosphere.model.service;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -15,20 +15,20 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
-import com.ssafy.atmosphere.dao.AtmosphereDao;
-import com.ssafy.atmosphere.dao.AtmosphereDaoImp;
 import com.ssafy.atmosphere.model.AtmosphereDto;
-import com.ssafy.interest.service.InterestService;
-import com.ssafy.interest.service.InterestServiceImp;
+import com.ssafy.atmosphere.model.mapper.AtmosphereMapper;
+import com.ssafy.atmosphere.model.mapper.AtmosphereDaoImp;
+import com.ssafy.interest.model.service.InterestService;
+import com.ssafy.interest.model.service.InterestServiceImpl;
 import com.ssafy.util.DBUtil;
 
-public class AtmosphereServiceImp implements AtmosphereService {
+public class AtmosphereServiceImpl implements AtmosphereService {
 
-	private static AtmosphereService atmosphereService = new AtmosphereServiceImp();
+	private static AtmosphereService atmosphereService = new AtmosphereServiceImpl();
 
-	private AtmosphereDao dao = AtmosphereDaoImp.getAtmosphereDao();
+	private AtmosphereMapper mapper = AtmosphereDaoImp.getAtmosphereDao();
 	
-	private AtmosphereServiceImp() {
+	private AtmosphereServiceImpl() {
 	}
 
 	public static AtmosphereService getInstance() {
@@ -168,9 +168,9 @@ public class AtmosphereServiceImp implements AtmosphereService {
 
 	@Override
 	public List<AtmosphereDto> list(String id) {
-		InterestService interestService = InterestServiceImp.getInstance();
+		InterestService interestService = InterestServiceImpl.getInstance();
 		String in = interestService.getRegion(id);
-		return dao.listAtmosphere(in);
+		return mapper.listAtmosphere(in);
 	}
 
 }
