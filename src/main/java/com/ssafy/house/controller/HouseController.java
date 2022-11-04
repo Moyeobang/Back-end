@@ -16,33 +16,27 @@ import java.util.Map;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ssafy.house.model.HouseDto;
 import com.ssafy.house.model.service.HouseService;
-import com.ssafy.house.model.service.HouseServiceImpl;
 import com.ssafy.util.ParameterCheck;
 
 @Controller
-//@WebServlet("/house")
 public class HouseController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	private static final String serviceKey = "W8tskb3ozBWJaXxxw5I%2FVKzmrJ53268CjU%2BcNrKjqwATnE8Y0NQjsSzuxuzf%2FzqDq%2B2joOsA4Q3HR347slp2Yg%3D%3D";
 
+	@Autowired
 	private HouseService houseService;
 	private Map<String, String> map;
-
-	public void init() {
-		houseService = HouseServiceImpl.getInstance();
-	}
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
@@ -100,25 +94,7 @@ public class HouseController extends HttpServlet {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-		} else {
-			redirect(request, response, path);
 		}
-	}
-
-	private void forward(HttpServletRequest request, HttpServletResponse response, String path)
-			throws ServletException, IOException {
-		RequestDispatcher dispatcher = request.getRequestDispatcher(path);
-		dispatcher.forward(request, response);
-	}
-
-	private void redirect(HttpServletRequest request, HttpServletResponse response, String path) throws IOException {
-		response.sendRedirect(request.getContextPath() + path);
-	}
-
-	protected void doPost(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
-		request.setCharacterEncoding("utf-8");
-		doGet(request, response);
 	}
 
 	private String list(HttpServletRequest request, HttpServletResponse response) {
