@@ -51,8 +51,8 @@ public class NewsController extends HttpServlet {
 				result.add(news);
 			}
 
-
-			if (result.size() == 0) {
+			System.out.println(result);
+			if (result.size() != 0) {
 				return new ResponseEntity<List<NewsDto>>(result, HttpStatus.OK);
 			} else {
 				return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);

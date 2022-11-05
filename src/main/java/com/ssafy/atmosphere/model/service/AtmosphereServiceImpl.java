@@ -14,26 +14,21 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.ssafy.atmosphere.model.AtmosphereDto;
-import com.ssafy.atmosphere.model.mapper.AtmosphereMapper;
 import com.ssafy.atmosphere.model.mapper.AtmosphereDaoImp;
+import com.ssafy.atmosphere.model.mapper.AtmosphereMapper;
 import com.ssafy.interest.model.service.InterestService;
 import com.ssafy.interest.model.service.InterestServiceImpl;
 import com.ssafy.util.DBUtil;
 
+@Service
 public class AtmosphereServiceImpl implements AtmosphereService {
 
-	private static AtmosphereService atmosphereService = new AtmosphereServiceImpl();
-
-	private AtmosphereMapper mapper = AtmosphereDaoImp.getAtmosphereDao();
-	
-	private AtmosphereServiceImpl() {
-	}
-
-	public static AtmosphereService getInstance() {
-		return atmosphereService;
-	}
+	@Autowired
+	private AtmosphereMapper mapper;	
 
 	@Override
 	public File locate() {
@@ -66,7 +61,6 @@ public class AtmosphereServiceImpl implements AtmosphereService {
 	}
 	
 	DBUtil dbUtil = DBUtil.getInstance();
-	
 	
 
 	@Override
