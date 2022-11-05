@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ssafy.category.model.mapper.CategoryMapper">
+	<select id = "listCategory" parameterType="map" resultType="categoryDto">
+		SELECT CATEGORY_ID, PARENT_ID, CATEGORY_NAME
+		FROM CATEGORY
+		WHERE PARENT_ID = #{parent_id}
+	</select>
+</mapper>

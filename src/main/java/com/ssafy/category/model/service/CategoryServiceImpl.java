@@ -2,30 +2,24 @@ package com.ssafy.category.model.service;
 
 import java.sql.SQLException;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.ssafy.category.model.CategoryDto;
 import com.ssafy.category.model.mapper.CategoryMapper;
-import com.ssafy.category.model.mapper.CategoryDaoImpl;
 
+@Service
 public class CategoryServiceImpl implements CategoryService {
 
-	private static CategoryService categoryService = new CategoryServiceImpl();
-	private CategoryMapper categoryDao;
-
-	private CategoryServiceImpl() {
-		categoryDao = CategoryDaoImpl.getCategoryDao();
-	}
-
-	public static CategoryService getInstance() {
-		return categoryService;
-	}
+	@Autowired
+	private CategoryMapper categoryMapper;
 
 	@Override
 	public List<CategoryDto> listCategory(Map<String, String> map) throws SQLException {
-		return categoryDao.listCategory(map);
+		return categoryMapper.listCategory(map);
 	}
 
 	@Override
