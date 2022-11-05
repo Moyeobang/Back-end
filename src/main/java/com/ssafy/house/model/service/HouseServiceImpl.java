@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import com.ssafy.house.model.HouseDealDto2;
 import com.ssafy.house.model.HouseDto;
 import com.ssafy.house.model.mapper.HouseMapper;
+import com.ssafy.util.ParameterCheck;
 import com.ssafy.util.SizeConstant;
 
 @Service
@@ -20,9 +21,9 @@ public class HouseServiceImpl implements HouseService{
 	
 	@Override
 	public List<HouseDto> listHouse(Map<String, String> map) throws SQLException {
-		int pgno = Integer.parseInt(map.get("pgno"));
+		int pgNo = ParameterCheck.notNumberToOne(map.get("pgno"));
 		int spl = SizeConstant.SIZE_PER_LIST;
-		int start = (pgno - 1) * spl;
+		int start = (pgNo - 1) * spl;
 		map.put("start", start + "");
 		map.put("spl", spl + "");
 		return houseMapper.listHouse(map);
