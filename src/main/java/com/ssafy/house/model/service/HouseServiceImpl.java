@@ -41,7 +41,7 @@ public class HouseServiceImpl implements HouseService{
 	@Override
 	public int insertHouse(HouseDto houseDto) throws SQLException {
 		// TODO Auto-generated method stub
-		return 0;
+		return houseMapper.insertHouse(houseDto);
 	}
 
 	@Override

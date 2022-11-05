@@ -25,4 +25,18 @@
 		from houseinfo
 		where aptCode = #{aptCode}
 	</select>
+	
+	<insert id="insertHouse" parameterType="houseDto">
+		insert into houseinfo
+		value (#{aptCode}, #{buildYear}, #{roadName}, #{roadNameBonbun}, #{roadNameBubun}, #{roadNameSeq}, #{roadNameBasementCode}, #{roadNameCode}, #{dong}, #{bonbun},  #{bubun}, #{sigunguCode}, #{eubmyundongCode}, #{dongCode}, #{landCode}, #{apartmentName}, #{jibun}, #{lng}, #{lat}
+		)
+	</insert>
+	
+	<select id="listDeal" parameterType="long" resultType="houseDealDto2">
+		select NO, DEALAMOUNT, DEALYEAR, DEALMONTH, AREA, APTCODE
+		from housedeal
+		where aptCode = #{aptCode}
+		order by area
+	</select>
+	
 </mapper>
