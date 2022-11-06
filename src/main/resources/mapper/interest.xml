@@ -26,12 +26,6 @@
 		<result column="user_id" property="user_id" />
 	</resultMap>
 
-	<parameterMap type="int" id="seqChange">
-		<parameter property="beforeSeq" />
-		<parameter property="seq" />
-	</parameterMap>
-
-
 	<select id="checkInsert" parameterType="interestDto"
 		resultType="int">
 		SELECT COUNT(*) FROM INTEREST
@@ -45,21 +39,25 @@
 		SELECT COUNT(*) FROM INTEREST WHERE USER_ID = #{user_id},
 		IS_MAIN = 1
 	</select>
-	
+
 	<insert id="insertInterest" parameterType="interestDto">
-	INSERT INTO INTEREST (DONG, DONGNAME, GUGUN, GUGUNNAME, SIDO, SIDONAME, USER_ID, IS_MAIN VALUES (?,?,?,?,?,?,?,?)
-<!-- 	pstmt.setInt(8, exist>0?0:1); -->
+		INSERT INTO INTEREST (DONG, DONGNAME, GUGUN, GUGUNNAME, SIDO,
+		SIDONAME, USER_ID, IS_MAIN) VALUES
+		(#{dong},#{dongName},#{gugun},#{gugunName},#{sido},#{sidoName},#{user_id},0)
+		<!-- pstmt.setInt(8, exist>0?0:1); -->
 	</insert>
 
-	<delete id="deleteInterest" parameterType="seq">
+	<delete id="deleteInterest" parameterType="int">
 		DELETE FROM INTEREST
 		WHERE SEQ = #{seq}
 	</delete>
 
 	<select id="selectInterest" parameterType="String"
 		resultMap="listDto">
-		select seq,dong,dongName,gugun,gugunName,sido,sidoName,user_id
-		from interest where user_id = #{user_id}
+		select
+		seq,dong,dongName,gugun,gugunName,sido,sidoName,user_id
+		from interest
+		where user_id = #{user_id}
 	</select>
 
 	<select id="getRegion" parameterType="String"
@@ -69,10 +67,12 @@
 		USER_ID = #{USER_ID} AND IS_MAIN = 1
 	</select>
 
-	<update id="mainChange" parameterMap="seqChange">
-		UPDATE INTEREST SET IS_MAIN
+	<update id="mainChange" parameterType="Map">
+		UPDATE INTEREST SET
+		IS_MAIN
 		= 0 WHERE SEQ = #{beforeSeq};
-		UPDATE INTEREST SET IS_MAIN = 1 WHERE SEQ
+		UPDATE INTEREST SET IS_MAIN = 1
+		WHERE SEQ
 		= #{seq};
 	</update>
 

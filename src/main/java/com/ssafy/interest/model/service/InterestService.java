@@ -1,6 +1,7 @@
 package com.ssafy.interest.model.service;
 
 import java.util.List;
+import java.util.Map;
 
 import com.ssafy.interest.model.InterestDto;
 
@@ -10,6 +11,6 @@ public interface InterestService {
 	boolean checkInsert(InterestDto dto) throws Exception;
 	int deleteInterest(int seq) throws Exception;
 	String getRegion(String id);
-	int mainChange(int beforeSeq, int seq);
+	void mainChange(Map<String, Integer> seqMap);
 	int getMainInterestSeq(String id);
 }

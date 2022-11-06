@@ -1,62 +1,54 @@
 package com.ssafy.interest.model.service;
 
 import java.util.List;
+import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.ssafy.interest.model.InterestDto;
 import com.ssafy.interest.model.mapper.InterestMapper;
-import com.ssafy.interest.model.mapper.InterestDaoImp;
 
 @Service
 public class InterestServiceImpl implements InterestService {
-
-	private static InterestService interestService = new InterestServiceImpl();
-	private InterestMapper interestdao;
 	
-	private InterestServiceImpl() {
-		interestdao = InterestDaoImp.getInstance();
-	}
-	
-	public static InterestService getInstance() {
-		return interestService;
-	}
+	@Autowired
+	private InterestMapper interestMapper;
 	
 	@Override
 	public int insertInterest(InterestDto dto) throws Exception {
-		return interestdao.insertInterest(dto);
+		return interestMapper.insertInterest(dto);
 	}
 
 	@Override
 	public boolean checkInsert(InterestDto dto) throws Exception {
-		int check = interestdao.checkInsert(dto);
+		int check = interestMapper.checkInsert(dto);
 		return (check>0);
 	}
 
 	@Override
 	public int deleteInterest(int seq) throws Exception {
-		return interestdao.deleteInterest(seq);
+		return interestMapper.deleteInterest(seq);
 	}
 
 	@Override
 	public List<InterestDto> selectInterest(String userId) throws Exception {
-		return interestdao.selectInterest(userId);
+		return interestMapper.selectInterest(userId);
 	}
 
 	@Override
 	public String getRegion(String id) {
-		return interestdao.getRegion(id);
+		return interestMapper.getRegion(id);
 	}
 
 	@Override
-	public int mainChange(int beforeSeq, int seq) {
-		return interestdao.mainChange(beforeSeq, seq);
+	public void mainChange(Map<String, Integer> seqMap) {
+		interestMapper.mainChange(seqMap);
 	}
 
 	@Override
 	public int getMainInterestSeq(String id) {
-		// TODO Auto-generated method stub
-		return interestdao.getMainInterestSeq(id);
+		return interestMapper.getMainInterestSeq(id);
 	}
 	
 }

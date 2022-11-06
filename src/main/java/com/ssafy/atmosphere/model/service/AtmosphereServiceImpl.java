@@ -29,6 +29,9 @@ public class AtmosphereServiceImpl implements AtmosphereService {
 
 	@Autowired
 	private AtmosphereMapper mapper;	
+	
+	@Autowired
+	InterestService interestService;
 
 	@Override
 	public File locate() {
@@ -162,7 +165,6 @@ public class AtmosphereServiceImpl implements AtmosphereService {
 
 	@Override
 	public List<AtmosphereDto> list(String id) {
-		InterestService interestService = InterestServiceImpl.getInstance();
 		String in = interestService.getRegion(id);
 		return mapper.listAtmosphere(in);
 	}
