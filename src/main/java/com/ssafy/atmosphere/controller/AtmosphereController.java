@@ -24,7 +24,9 @@ public class AtmosphereController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	@Autowired
 	AtmosphereService atmosphereService;
-	InterestService interestService = InterestServiceImpl.getInstance();
+	
+	@Autowired
+	InterestService interestService;
        
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String act = request.getParameter("act");
