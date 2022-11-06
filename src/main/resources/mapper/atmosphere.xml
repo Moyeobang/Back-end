@@ -8,4 +8,13 @@
 		from atmosphere 
 		where WRKP_ADDR like #{in}
 	</select>
+<!-- 	<insert id ="insertAtmosphere" parameterType="atmosphere"> -->
+<!-- 		insert into atmosphere (apv_perm_mgt_no,sf_team_nm,upch_cob_nm, -->
+<!-- 		drt_insp_se_nm,org_and_team_code,drt_insp_item,dispo_tgt_yn, -->
+<!-- 		wrkp_addr,drt_insp_ymd,upch_cob_code,wrkp_naddr, -->
+<!-- 		wrkp_nm,drt_insp_rt_dtl) values (#{apv_perm_mgt_no}, #{dispo_tgt_yn}, -->
+<!-- 		#{drt_insp_item},#{drt_insp_rt_dtl},#{drt_insp_se_nm},#{drt_insp_ymd}, -->
+<!-- 		#{org_and_team_code},#{sf_team_nm},#{upch_cob_code}, -->
+<!-- 		#{upch_cob_nm},#{wrkp_addr},#{wrkp_naddr},#{wrkp_nm}) -->
+<!-- 	</insert> -->
 </mapper>
