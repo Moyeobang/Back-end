@@ -2,10 +2,13 @@ package com.ssafy.interest.model.service;
 
 import java.util.List;
 
+import org.springframework.stereotype.Service;
+
 import com.ssafy.interest.model.InterestDto;
 import com.ssafy.interest.model.mapper.InterestMapper;
 import com.ssafy.interest.model.mapper.InterestDaoImp;
 
+@Service
 public class InterestServiceImpl implements InterestService {
 
 	private static InterestService interestService = new InterestServiceImpl();
@@ -26,7 +29,8 @@ public class InterestServiceImpl implements InterestService {
 
 	@Override
 	public boolean checkInsert(InterestDto dto) throws Exception {
-		return interestdao.checkInsert(dto);
+		int check = interestdao.checkInsert(dto);
+		return (check>0);
 	}
 
 	@Override

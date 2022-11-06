@@ -62,7 +62,7 @@ public class InterestDaoImp implements InterestMapper {
 	}
 	
 	@Override
-	public boolean checkInsert(InterestDto dto) throws SQLException {
+	public int checkInsert(InterestDto dto) throws SQLException {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ssafy.store.model.mapper.StoreMapper">
+	<insert id="insertStore" parameterType="storeDto">
+		insert into storeinfo (storeId, storeName, category, dongCode, address, latitude, longitude)
+		values (#{storeId}, #{storeName}, #{category}, #{dongCode}, #{address}, #{latitude}, #{longitude}) 
+	</insert>
+	<select id="countStore" resultType="int">
+		select count(*)
+		from storeinfo
+	</select>
+</mapper>

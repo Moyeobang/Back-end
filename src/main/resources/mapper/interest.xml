@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper
+	namespace="com.ssafy.interest.model.mapper.InterestMapper">
+
+	<resultMap type="boardDto" id="board">
+		<result column="article_no" property="articleNo" />
+		<result column="user_id" property="userId" />
+		<result column="user_name" property="userName" />
+		<result column="subject" property="subject" />
+		<result column="content" property="content" />
+		<result column="hit" property="hit" />
+		<result column="register_time" property="registerTime" />
+	</resultMap>
+
+	<resultMap type="interestDto" id="listDto">
+		<result column="seq" property="seq" />
+		<result column="dong" property="dong" />
+		<result column="dongName" property="dongName" />
+		<result column="gugun" property="gugun" />
+		<result column="gugunName" property="gugunName" />
+		<result column="sido" property="sido" />
+		<result column="sidoName" property="sidoName" />
+		<result column="user_id" property="user_id" />
+	</resultMap>
+
+	<parameterMap type="int" id="seqChange">
+		<parameter property="beforeSeq" />
+		<parameter property="seq" />
+	</parameterMap>
+
+
+	<select id="checkInsert" parameterType="interestDto"
+		resultType="int">
+		SELECT COUNT(*) FROM INTEREST
+		WHERE USER_ID = #{user_id} AND
+		DONG = #{dong}
+		AND GUGUN = #{gugun} AND SIDO = #{sido}
+	</select>
+
+	<select id="countMainInterest" parameterType="String"
+		resultType="int">
+		SELECT COUNT(*) FROM INTEREST WHERE USER_ID = #{user_id},
+		IS_MAIN = 1
+	</select>
+	
+	<insert id="insertInterest" parameterType="interestDto">
+	INSERT INTO INTEREST (DONG, DONGNAME, GUGUN, GUGUNNAME, SIDO, SIDONAME, USER_ID, IS_MAIN VALUES (?,?,?,?,?,?,?,?)
+<!-- 	pstmt.setInt(8, exist>0?0:1); -->
+	</insert>
+
+	<delete id="deleteInterest" parameterType="seq">
+		DELETE FROM INTEREST
+		WHERE SEQ = #{seq}
+	</delete>
+
+	<select id="selectInterest" parameterType="String"
+		resultMap="listDto">
+		select seq,dong,dongName,gugun,gugunName,sido,sidoName,user_id
+		from interest where user_id = #{user_id}
+	</select>
+
+	<select id="getRegion" parameterType="String"
+		resultType="String">
+		SELECT SIDONAME, GUGUNNAME, DONGNAME FROM INTEREST
+		WHERE
+		USER_ID = #{USER_ID} AND IS_MAIN = 1
+	</select>
+
+	<update id="mainChange" parameterMap="seqChange">
+		UPDATE INTEREST SET IS_MAIN
+		= 0 WHERE SEQ = #{beforeSeq};
+		UPDATE INTEREST SET IS_MAIN = 1 WHERE SEQ
+		= #{seq};
+	</update>
+
+	<select id="getMainInterestSeq" parameterType="String"
+		resultType="int">
+		SELECT SEQ FROM INTEREST WHERE USER_ID = #{userid} AND
+		IS_MAIN = 1
+	</select>
+</mapper>
