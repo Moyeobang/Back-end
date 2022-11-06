@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ssafy.house.model.mapper.HouseMapper">
+	<select id="listHouse" parameterType="map" resultType="houseDto">
+		select aptCode, buildYear, roadName, roadNameBonbun, roadNameBubun, roadNameSeq, roadNameBasementCode, roadNameCode, dong, bonbun,  bubun, sigunguCode, eubmyundongCode, dongCode, landCode, apartmentName, jibun, lng, lat
+		from houseinfo
+		<where>
+			<if test="dongCode != null and dongCode != ''">dongCode = #{dongCode}</if>
+			<if test="apartmentName != null and apartment != ''">and apartmentName like concat('%', #{apartmentName}, '%')</if>
+		</where>
+		order by aptCode desc limit ${start}, ${spl}
+	</select>
+	<select id="totalHouseCount" parameterType="map" resultType="int">
+		select count(*)
+		from houseinfo
+		<where>
+			<if test="dongCode != null and dongCode != ''">dongCode = #{dongCode}</if>
+			<if test="apartmentName != null and apartment != ''">and apartmentName like concat('%', #{apartmentName}, '%')</if>
+		</where>
+	</select>
+	<select id="getHouse" parameterType="long" resultType="houseDto">
+		select *
+		from houseinfo
+		where aptCode = #{aptCode}
+	</select>
+	
+	<insert id="insertHouse" parameterType="houseDto">
+		insert into houseinfo
+		value (#{aptCode}, #{buildYear}, #{roadName}, #{roadNameBonbun}, #{roadNameBubun}, #{roadNameSeq}, #{roadNameBasementCode}, #{roadNameCode}, #{dong}, #{bonbun},  #{bubun}, #{sigunguCode}, #{eubmyundongCode}, #{dongCode}, #{landCode}, #{apartmentName}, #{jibun}, #{lng}, #{lat}
+		)
+	</insert>
+	
+	<select id="listDeal" parameterType="long" resultType="houseDealDto2">
+		select NO, DEALAMOUNT, DEALYEAR, DEALMONTH, AREA, APTCODE
+		from housedeal
+		where aptCode = #{aptCode}
+		order by area
+	</select>
+	
+</mapper>

@@ -1,5 +1,8 @@
 package com.ssafy.house.model;
 
+import org.springframework.stereotype.Component;
+
+@Component
 public class HouseDto {
 
 	private long aptCode;

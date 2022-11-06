@@ -22,7 +22,7 @@
 	src="//dapi.kakao.com/v2/maps/sdk.js?appkey=a152d2aabef07da25afb167fc3a1a32c&libraries=services"></script>
 </head>
 <body>
-	<%@ include file="/common/header.jsp"%>
+	<%@ include file="/WEB-INF/views/common/header.jsp"%>
 	<div class="container p-4">
 		<h2 style="margin-top:50px;">회원관리</h2>
 	</div>
@@ -105,7 +105,7 @@
 	          </ul>
 	        </div>
 		</div>
-		<%@ include file="/common/footer.jsp"%>
+		<%@ include file="/WEB-INF/views/common/footer.jsp"%>
 		<script
 			src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js"
 			integrity="sha384-u1OknCvxWvY5kfmNBILK2hRnQC3Pr17a+RTT6rIHI7NnikvbZlHgTPOOmMi466C8"

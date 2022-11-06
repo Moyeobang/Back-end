@@ -1,5 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
-<%@ include file="/common/header.jsp"%>
+<%@ include file="/WEB-INF/views/common/header.jsp"%>
 <c:if test="${empty article}">
 	<script type="text/javascript">
 		alert("글이 삭제되었거나 정상적인 URL 접근이 아닙니다.");
@@ -91,4 +91,4 @@
        	}
       });
     </script>
-<%@ include file="/common/footer.jsp" %>
+<%@ include file="/WEB-INF/views/common/footer.jsp" %>

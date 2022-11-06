@@ -1,5 +1,8 @@
 package com.ssafy.member.model;
 
+import org.springframework.stereotype.Component;
+
+@Component
 public class MemberDto {
 
 	private String userId;

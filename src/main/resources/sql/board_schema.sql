@@ -38,6 +38,50 @@ values 	('ssafy', '김싸피', '1234', 'ssafy', 'ssafy.com', now(), '일반 회�
 	
 commit;
 
+-- -----------------------------------------------------
+-- Table `ssafyweb`.`category`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `CATEGORY`;
+CREATE TABLE `CATEGORY` (
+  `CATEGORY_ID` INT NOT NULL AUTO_INCREMENT,
+  `PARENT_ID` INT DEFAULT NULL,
+  `CATEGORY_NAME` VARCHAR(10) DEFAULT NULL,
+  PRIMARY KEY (`CATEGORY_ID`),
+  FOREIGN KEY (`PARENT_ID`) REFERENCES CATEGORY(CATEGORY_ID)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+INSERT INTO CATEGORY(CATEGORY_NAME)
+VALUES ('카테고리');
+
+INSERT INTO CATEGORY(PARENT_ID, CATEGORY_NAME)
+VALUES(1, '기타'),
+(1, '정책'),
+(1, '분양'),
+(1, '경매/공매'),
+(1, '시장동향');
+INSERT INTO CATEGORY(PARENT_ID, CATEGORY_NAME)
+VALUES(3,'정부'),
+(3,	'국토부'),
+(3,	'국토교통부'),
+(3,	'한국부동산원');
+INSERT INTO CATEGORY(PARENT_ID, CATEGORY_NAME)
+VALUES(4,'청약'),
+(4, 'LH');
+INSERT INTO CATEGORY(PARENT_ID, CATEGORY_NAME)
+VALUES(5,'낙찰'),
+(5,	'경매'),
+(5,	'공매');
+INSERT INTO CATEGORY(PARENT_ID, CATEGORY_NAME)
+VALUES(6,'대출'),
+(6, '금리'),
+(6,	'이자'),
+(6,	'전월세'),
+(6,	'전세'),
+(6,	'은행');
+
+commit;
+
+
 
 -- -----------------------------------------------------
 -- Table `ssafyweb`.`board`

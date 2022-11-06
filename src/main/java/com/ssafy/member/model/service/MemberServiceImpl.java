@@ -4,72 +4,74 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.ssafy.member.model.MemberDto;
-import com.ssafy.member.model.dao.MemberDao;
-import com.ssafy.member.model.dao.MemberDaoImpl;
+import com.ssafy.member.model.mapper.MemberMapper;
+import com.ssafy.util.ParameterCheck;
 import com.ssafy.util.SizeConstant;
 
+@Service
 public class MemberServiceImpl implements MemberService {
 	
-	private static MemberService memberService = new MemberServiceImpl();
-	private MemberDao memberDao;
+	@Autowired
+	private MemberMapper memberMapper;
 	
-	private MemberServiceImpl() {
-		memberDao = MemberDaoImpl.getMemberDao();
-	}
-	
-	public static MemberService getMemberService() {
-		return memberService;
-	}
 
 	@Override
 	public int idCheck(String userId) throws Exception {
-		return memberDao.idCheck(userId);
+		return memberMapper.idCheck(userId);
 	}
 
 	@Override
 	public void joinMember(MemberDto memberDto) throws Exception {
 		// TODO validation check
-		memberDao.joinMember(memberDto);
+		memberMapper.joinMember(memberDto);
 	}
 
 	@Override
-	public MemberDto loginMember(String userId, String userPwd) throws Exception {
-		return memberDao.loginMember(userId, userPwd);
+	public MemberDto loginMember(Map<String, String> map) throws Exception {
+		return memberMapper.loginMember(map);
 	}
 
 	@Override
-	public void deleteMember(MemberDto memberDto) throws Exception {
+	public void deleteMember(String userId) throws Exception {
 		// TODO Auto-generated method stub
-		memberDao.deleteMember(memberDto);
+		memberMapper.deleteMember(userId);
 	}
 	
 	@Override
-	public void updateMember(MemberDto memberDto, String userName, String userEmailId, String userEmailDomain) throws Exception {
+	public void updateMember(MemberDto memberDto) throws Exception {
 		// TODO Auto-generated method stub
-		memberDao.updateMember(memberDto, userName, userEmailId, userEmailDomain);
+		memberMapper.updateMember(memberDto);
 	}
 
 	@Override
-	public MemberDto changePassword(MemberDto memberDto, String newPassword) throws SQLException {
+	public MemberDto changePassword(Map<String, String> map) throws SQLException {
 		// TODO Auto-generated method stub
-		return memberDao.changePassword(memberDto, newPassword);
+		return memberMapper.changePassword(map);
 	}
 
 	@Override
 	public List<MemberDto> listMember(Map<String, String> map) throws Exception {
 		// TODO Auto-generated method stub
-		int pgno = Integer.parseInt(map.get("pgno"));
+		int pgno = ParameterCheck.notNumberToZero(map.get("pgno"));
 		int spl = SizeConstant.SIZE_PER_LIST;
 		int start = (pgno - 1) * spl;
 		map.put("start", start + "");
 		map.put("spl", spl + "");
-		return memberDao.listMember(map);
+		return memberMapper.listMember(map);
 	}
 
 	@Override
 	public int totalMemberCount(Map<String, String> map) throws Exception {
 		// TODO Auto-generated method stub
-		return memberDao.totalMemberCount(map);
+		return memberMapper.totalMemberCount(map);
+	}
+
+	@Override
+	public MemberDto getMember(String userId) throws Exception {
+		return memberMapper.getMember(userId);
 	}
 }

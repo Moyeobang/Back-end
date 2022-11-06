@@ -1,5 +1,8 @@
 package com.ssafy.atmosphere.model;
 
+import org.springframework.stereotype.Component;
+
+@Component
 public class AtmosphereDto {
 
 	int idx;
