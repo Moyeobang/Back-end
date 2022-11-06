@@ -30,4 +30,10 @@ public class NewsDto {
 		this.url = url;
 	}
 
+	@Override
+	public String toString() {
+		return "NewsDto [categoryName=" + categoryName + ", title=" + title + ", url=" + url + "]";
+	}
+	
+
 }

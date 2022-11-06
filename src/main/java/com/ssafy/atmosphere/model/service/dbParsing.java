@@ -2,7 +2,13 @@ package com.ssafy.atmosphere.model.service;
 
 import java.io.File;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
 public class dbParsing {
+	
+	@Autowired
+	static
+	AtmosphereService a;
 
 	public static void main(String[] args) {
 		File f1 = new File("WebContent/resources/atmosphereJSON/서울시 강남구 환경 지도점검 내역 현황.json");
@@ -29,7 +35,6 @@ public class dbParsing {
 		File f22 = new File("WebContent/resources/atmosphereJSON/서울시 종로구 환경 지도점검 내역 현황.json");
 		File f23 = new File("WebContent/resources/atmosphereJSON/서울시 중구 환경 지도점검 내역 현황.json");
 		File f24 = new File("WebContent/resources/atmosphereJSON/서울시 중랑구 환경 지도점검 내역 현황.json");
-		AtmosphereService a = AtmosphereServiceImpl.getInstance();
 //		a.parser(a.locate());
 		a.parser(f1);
 		a.parser(f2);
