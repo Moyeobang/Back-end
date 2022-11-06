@@ -26,6 +26,14 @@
 ![1-5-2_로그아웃](/uploads/f498625d802bab3e17b85e4303c9e424/1-5-2_로그아웃.PNG)
 
 <h2>2) 추가 기능</h1>
+<h4>2-0-1) 관심 지역 조회</h4>
+![image](/uploads/39db8bccb208997856ab09ea79f51884/image.png)
+<h4>2-0-2) 관심 지역 등록</h4>
+![image](/uploads/f9896a6bc971e18b83bb15a67aa4c487/image.png)
+![image](/uploads/754089e0b50ec4d265c0ac11e42ea60a/image.png)
+<h4>2-0-3) 관심 지역 삭제</h4>
+![image](/uploads/634282f3bbbe291515200ff831811831/image.png)
+![image](/uploads/edc33aa00ce0826910f19c375e70dbcb/image.png)
 
 <h2>3) 심화 기능</h1>
 <h4>3-1) 공지사항 등록</h4>
