@@ -28,7 +28,7 @@ public class CustomUserDetailsService implements UserDetailsService {
 //                .map(this::createUserDetails)
 //                .orElseThrow(() -> new UsernameNotFoundException("해당하는 유저를 찾을 수 없습니다."));
     	
-    	// JPA는 아마도 한번에 불러오는게 가능한듯하다. Mybatis는 List를 따로 불러야하는듯해서 분리하여 roles을 찾는다.
+    // JPA는 아마도 한번에 불러오는게 가능한듯하다. Mybatis는 List를 따로 불러야하는듯해서 분리하여 roles을 찾는다.
       Member member = memberMapper.findByMemberId(memberId);
       List<String> roles = memberMapper.getRoles(memberId);
       member.setRoles(roles);

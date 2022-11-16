@@ -15,6 +15,11 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import nonapi.io.github.classgraph.json.Id;
 
+/**
+ * SpringSecurity 유저 관련 권한 설정을 위한 클래스.
+ * 최소한 username(PK), password, List<String>roles를 가져야한다.
+ * 나는 편의상 재활용을 위해 memberName 필드를 끼워주었다.
+ */
 @Getter
 @Builder
 @NoArgsConstructor
@@ -23,7 +28,7 @@ public class Member implements UserDetails {
  
     @Id
     private String memberId;
- 
+    private String memberName;
     private String password;
  
     @Builder.Default
@@ -45,11 +50,7 @@ public class Member implements UserDetails {
     public String getPassword() {
         return password;
     }
- 
-    public void setRoles(List<String> roles) {
-    	this.roles = roles;
-    }
-    
+
     @Override
     public boolean isAccountNonExpired() {
         return true;
@@ -69,4 +70,17 @@ public class Member implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
+    
+    public void setRoles(List<String> roles) {
+    	this.roles = roles;
+    }
+
+	public void setMemberName(String memberName) {
+		this.memberName = memberName;
+	}
+    
+	public String getMemberName() {
+		return this.memberName;
+	}
+	
 }

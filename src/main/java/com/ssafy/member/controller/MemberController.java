@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
@@ -26,14 +25,15 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.ssafy.jwt.TokenInfo;
+import com.ssafy.member.model.Member;
 import com.ssafy.member.model.MemberDto;
+import com.ssafy.member.model.MemberInfoDto;
 import com.ssafy.member.model.MemberLoginRequestDto;
 import com.ssafy.member.model.service.MemberService;
 
 @Controller
 @RequestMapping("/user")
-public class MemberController extends HttpServlet {
-	private static final long serialVersionUID = 1L;
+public class MemberController{
 
 	private final Logger logger = LoggerFactory.getLogger(MemberController.class);
 
@@ -70,42 +70,11 @@ public class MemberController extends HttpServlet {
 		}
 	}
 
-	// 로그인
-	@PostMapping("login")
-	@ResponseBody
-	private ResponseEntity<?> login(@RequestParam Map<String, String> map, Model model, HttpSession session,
-			HttpServletResponse response) {
-		logger.debug("map : {}", map.get("userid"));
-		try {
-			MemberDto memberDto = memberService.loginMember(map);
-			logger.debug("memberDto : {}", memberDto);
-			if (memberDto != null) {
-				session.setAttribute("userinfo", memberDto);
-
-				Cookie cookie = new Cookie("ssafy_id", map.get("userid"));
-				cookie.setPath("/board");
-				if ("ok".equals(map.get("saveid"))) {
-					cookie.setMaxAge(60 * 60 * 24 * 365 * 40);
-				} else {
-					cookie.setMaxAge(0);
-				}
-				response.addCookie(cookie);
-
-				return new ResponseEntity<Void>(HttpStatus.OK);
-			} else {
-				return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-			return exceptionHandling(e);
-		}
-	}
-
 	@GetMapping("/logout")
 	@ResponseBody
-	private ResponseEntity<?> logout(HttpSession session) {
+	private ResponseEntity<?> logout() {
 		System.out.println("로그아웃");
-		session.invalidate();
+		// TODO : 해당 access token을 비활성화하는 blackList 구현 및 클라이언트 단 데이터 삭제
 		return new ResponseEntity<Void>(HttpStatus.OK);
 	}
 
@@ -113,7 +82,6 @@ public class MemberController extends HttpServlet {
 	@GetMapping("/{userId}")
 	@ResponseBody
 	private ResponseEntity<?> getMember(@PathVariable("userId") String userId) throws Exception {
-		System.out.println(userId);
 		try {
 			MemberDto member = memberService.getMember(userId);
 			if (member != null)
@@ -130,16 +98,9 @@ public class MemberController extends HttpServlet {
 	// 회원 삭제
 	@DeleteMapping("/{userId}")
 	@ResponseBody
-	private ResponseEntity<?> userDelete(@PathVariable("userId") String userId, HttpSession session) throws Exception {
-		MemberDto user = (MemberDto) session.getAttribute("userinfo");
-//		if (!user.getUserId().equals(userId) && user.getUserClass().equals("일반 회원")) {
-//			System.out.println("일반 회원은 자신이 아닌 다른 회원의 정보를 수정/삭제할 수 없습니다.");
-//			return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
-//		}
-		System.out.println(user.getUserId());
+	private ResponseEntity<?> userDelete(@PathVariable("userId") String userId) throws Exception {
 		try {
 			memberService.deleteMember(userId);
-			session.invalidate();
 			return new ResponseEntity<Void>(HttpStatus.OK);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -151,13 +112,7 @@ public class MemberController extends HttpServlet {
 	// 회원 수정
 	@PutMapping("/{userId}")
 	@ResponseBody
-	private ResponseEntity<?> edit(@PathVariable("userId") String userId, MemberDto memberDto, HttpSession session) {
-		MemberDto user = (MemberDto) session.getAttribute("userinfo");
-//		if (!user.getUserId().equals(userId) && user.getUserClass().equals("일반 회원")) {
-//			System.out.println("일반 회원은 자신이 아닌 다른 회원의 정보를 수정/삭제할 수 없습니다.");
-//			return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
-//		}
-		System.out.println(user.getUserId());
+	private ResponseEntity<?> edit(@PathVariable("userId") String userId, MemberDto memberDto) {
 		try {
 			memberService.updateMember(memberDto);
 			return new ResponseEntity<Void>(HttpStatus.OK);
@@ -171,28 +126,22 @@ public class MemberController extends HttpServlet {
 	// 회원 리스트 조회
 	@GetMapping("/list")
 	@ResponseBody
-	private ResponseEntity<?> userList(@RequestParam Map<String, String> map, HttpSession session) throws Exception {
+	private ResponseEntity<?> userList(@RequestParam Map<String, String> map) throws Exception {
 		System.out.println(map.get("key"));
 		System.out.println(map.get("word"));
-		MemberDto memberDto = (MemberDto) session.getAttribute("userinfo");
-		if (memberDto != null && memberDto.getUserClass().equals("관리자")) {
-			System.out.println("[관리자] 접근 권한이 확인되었습니다.");
-			List<MemberDto> list;
-			try {
-				list = memberService.listMember(map);
-				if (list != null && !list.isEmpty()) { // 회원 목록이 있다면
-					return new ResponseEntity<List<MemberDto>>(list, HttpStatus.OK);
-				} else {
-					return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
-				}
-			} catch (Exception e) {
-				e.printStackTrace();
-				return exceptionHandling(e);
+		List<MemberDto> list;
+		try {
+			list = memberService.listMember(map);
+			if (list != null && !list.isEmpty()) { // 회원 목록이 있다면
+				return new ResponseEntity<List<MemberDto>>(list, HttpStatus.OK);
+			} else {
+				return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
 			}
-		} else {
-			System.out.println("[일반 사용자] 접근 권한이 없습니다.");
-			return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return exceptionHandling(e);
 		}
+
 	}
 	
 
@@ -221,12 +170,7 @@ public class MemberController extends HttpServlet {
 //		}
 //	}
 
-	// 비밀번호 변경 => 회원정보 수정에 통합
-	// TODO : current - 현재 비밀번호 변경 관련 => Rest API로 수정 및 jsp 페이지 이름 통일
-//	@GetMapping("/password")
-//	private String current() {
-//		return "/user/current";
-//	}
+
 //
 //	@PostMapping("/password/{newPwd}")
 //	private String change(@RequestParam("newPassword") String newPwd, HttpSession session) throws SQLException {
@@ -240,14 +184,27 @@ public class MemberController extends HttpServlet {
 //
 
 	
-	
+	// TODO : 클라이언트 단에서 Store에 memberInfoDto 저장.
 	@PostMapping("/login2")
 	@ResponseBody
-	public TokenInfo login(@RequestBody MemberLoginRequestDto memberLoginRequestDto) throws Exception {
+	public ResponseEntity<?> login(@RequestBody MemberLoginRequestDto memberLoginRequestDto) throws Exception {
         String memberId = memberLoginRequestDto.getMemberId();
         String password = memberLoginRequestDto.getPassword();
+        
+        // TODO : 기존의 getMember는 상세 조회 기능. password와 name만 조회하는 약식 기능이 따로 필요하다.
+        Member member = memberService.findByMemberId(memberId);
+        if(!member.getPassword().equals(password)) {
+        	throw new IllegalArgumentException("비밀번호를 확인하세요");
+        }
+        
+        // TODO : Spring Security의 Username과 DB상 User_name이 혼동될 여지가 있음.
+        // 컬럼명을 real_name, alias 등으로 바꾸는 것을 추천.
         TokenInfo tokenInfo = memberService.login(memberId, password);
-        return tokenInfo;	
+        MemberInfoDto memberInfoDto = new MemberInfoDto();
+        memberInfoDto.setTokenInfo(tokenInfo);
+        memberInfoDto.setUserId(member.getUsername()); // 주의. 이 Username은 Spring 작명 규칙에 의한 것으로 사실은 user_id, PK를 나타낸다. 리팩터링 필요.
+        memberInfoDto.setUserName(member.getMemberName());
+        return new ResponseEntity<MemberInfoDto>(memberInfoDto, HttpStatus.OK);
 	}
 
 	

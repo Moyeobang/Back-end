@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.ssafy.jwt.TokenInfo;
 import com.ssafy.jwt.util.JwtTokenProvider;
+import com.ssafy.member.model.Member;
 import com.ssafy.member.model.MemberDto;
 import com.ssafy.member.model.mapper.MemberMapper;
 import com.ssafy.util.ParameterCheck;
@@ -24,7 +25,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class MemberServiceImpl implements MemberService {
 	
-	private MemberMapper memberMapper;
+	private final MemberMapper memberMapper;
 	private final AuthenticationManagerBuilder authenticationManagerBuilder;
     private final JwtTokenProvider jwtTokenProvider;
 
@@ -84,9 +85,12 @@ public class MemberServiceImpl implements MemberService {
 		return memberMapper.getMember(userId);
 	}
 	
- 
+	public Member findByMemberId(String userId) throws Exception{
+		return memberMapper.findByMemberId(userId);
+	}
+	
     @Transactional
-    public TokenInfo login(String memberId, String password) {
+    public TokenInfo login(String memberId, String password) throws SQLException {
         // 1. Login ID/PW 를 기반으로 Authentication 객체 생성
         // 이때 authentication 는 인증 여부를 확인하는 authenticated 값이 false
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(memberId, password);
@@ -97,7 +101,10 @@ public class MemberServiceImpl implements MemberService {
  
         // 3. 인증 정보를 기반으로 JWT 토큰 생성
         TokenInfo tokenInfo = jwtTokenProvider.generateToken(authentication);
- 
+        
+        // 4. 생성된 JWT 토큰 중 refresh token 저장
+        memberMapper.updateRefreshToken(memberId, tokenInfo.getRefreshToken());
+        
         return tokenInfo;
     }
 }

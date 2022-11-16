@@ -2,6 +2,10 @@ package com.ssafy.member.model;
 
 import org.springframework.stereotype.Component;
 
+/**
+ * 회원가입, 마이페이지 조회 수정 삭제를 위한 일반 회원용 DTO
+ *
+ */
 @Component
 public class MemberDto {
 
@@ -11,21 +15,12 @@ public class MemberDto {
 	private String emailId;
 	private String emailDomain;
 	private String joinDate;
-	private String userClass;
 	
+
 	@Override
 	public String toString() {
 		return "MemberDto [userId=" + userId + ", userName=" + userName + ", userPwd=" + userPwd + ", emailId="
-				+ emailId + ", emailDomain=" + emailDomain + ", joinDate=" + joinDate + ", userClass=" + userClass
-				+ "]";
-	}
-
-	public String getUserClass() {
-		return userClass;
-	}
-
-	public void setUserClass(String userClass) {
-		this.userClass = userClass;
+				+ emailId + ", emailDomain=" + emailDomain + ", joinDate=" + joinDate + "]";
 	}
 
 	public String getUserId() {
