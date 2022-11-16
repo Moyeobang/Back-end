@@ -77,4 +77,10 @@
 		from member
 		where member_id = #{member_id}
 	</select>
+	
+	<select id="getRoles" parameterType="String" resultType="String">
+		select roles
+		from member_roles
+		where member_member_id = #{member_id}
+	</select>
 </mapper>

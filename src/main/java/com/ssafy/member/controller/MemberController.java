@@ -40,30 +40,6 @@ public class MemberController extends HttpServlet {
 	@Autowired
 	private MemberService memberService;
 
-	// 회원가입
-	@GetMapping("/signUpForm")
-	private String join() {
-		return "/user/join";
-	}
-
-	// TODO : 동사형 명사형으로 변환. jsp 페이지 변경
-	// 조회-수정페이지 통합
-	@GetMapping("/mypage")
-	private String mypage(HttpSession session) {
-		return "/user/mypage";
-	}
-
-	@GetMapping("/mypageForm")
-	private String edit() {
-		return "/user/edit";
-	}
-
-	// 로그인
-	@GetMapping("/loginForm")
-	private String login() {
-		return "/user/login";
-	}
-
 	// 특정 userId 존재 확인
 	// TODO : 동사 -> 명사로 변경. 회원 정보 조회 응용으로 바꿀 수 있음.
 	@GetMapping("/check/{userId}")
@@ -262,11 +238,7 @@ public class MemberController extends HttpServlet {
 //		return "redirect:/user/mypage";
 //	}
 //
-//	// TODO : change - 현재 비밀번호 변경 페이지
-//	@GetMapping("/change")
-//	private String change() {
-//		return "/user/change";
-//	}
+
 	
 	
 	@PostMapping("/login2")
@@ -274,12 +246,14 @@ public class MemberController extends HttpServlet {
 	public TokenInfo login(@RequestBody MemberLoginRequestDto memberLoginRequestDto) throws Exception {
         String memberId = memberLoginRequestDto.getMemberId();
         String password = memberLoginRequestDto.getPassword();
-        System.out.println("들어옴!!!");
         TokenInfo tokenInfo = memberService.login(memberId, password);
-        System.out.println(tokenInfo.getGrantType());
-        System.out.println(tokenInfo.getAccessToken());
-        System.out.println(tokenInfo.getRefreshToken());
         return tokenInfo;	
 	}
 
+	
+	@PostMapping("/test")
+	@ResponseBody
+	public String test() {
+		return "success";
+	}
 }

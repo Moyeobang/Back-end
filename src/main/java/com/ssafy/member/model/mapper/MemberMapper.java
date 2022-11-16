@@ -24,5 +24,7 @@ public interface MemberMapper {
 	MemberDto getMember(String userId) throws SQLException;
 	
 	// jwt테스트 중
-	Optional<Member> findByMemberId(String userId);
+//	Optional<Member> findByMemberId(String userId);
+	Member findByMemberId(String userId);
+	List<String> getRoles(String userId);
 }

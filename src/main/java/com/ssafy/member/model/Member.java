@@ -46,6 +46,10 @@ public class Member implements UserDetails {
         return password;
     }
  
+    public void setRoles(List<String> roles) {
+    	this.roles = roles;
+    }
+    
     @Override
     public boolean isAccountNonExpired() {
         return true;
