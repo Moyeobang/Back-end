@@ -38,7 +38,7 @@
 		limit #{start}, #{spp}
 	</select>
 	
-	<select id="getArticle" parameterType="int" resultType="qnaDto">
+	<select id="getArticle" parameterType="int" resultMap="qna">
 		select article_no, user_id, subject, content, hit, register_time
 		from qnaboard
 		where article_no = #{article_no}
