@@ -25,7 +25,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.ssafy.jwt.TokenInfo;
 import com.ssafy.member.model.MemberDto;
+import com.ssafy.member.model.MemberLoginRequestDto;
 import com.ssafy.member.model.service.MemberService;
 
 @Controller
@@ -265,5 +267,19 @@ public class MemberController extends HttpServlet {
 //	private String change() {
 //		return "/user/change";
 //	}
+	
+	
+	@PostMapping("/login2")
+	@ResponseBody
+	public TokenInfo login(@RequestBody MemberLoginRequestDto memberLoginRequestDto) throws Exception {
+        String memberId = memberLoginRequestDto.getMemberId();
+        String password = memberLoginRequestDto.getPassword();
+        System.out.println("들어옴!!!");
+        TokenInfo tokenInfo = memberService.login(memberId, password);
+        System.out.println(tokenInfo.getGrantType());
+        System.out.println(tokenInfo.getAccessToken());
+        System.out.println(tokenInfo.getRefreshToken());
+        return tokenInfo;	
+	}
 
 }

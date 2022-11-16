@@ -16,6 +16,11 @@
 		<result column="email_domain" property="emailDomain"/>
 		<result column="join_date" property="joinDate"/>
 	</resultMap>
+	
+	<resultMap type="member" id="mb">
+		<result column="member_id" property="memberId"/>
+		<result column="password" property="password"/>		
+	</resultMap>
 
 	<select id="idCheck" parameterType="String" resultType="int">
 		select count(user_id)
@@ -67,4 +72,9 @@
 		where user_id = #{userId}
 	</select>
 
+	<select id ="findByMemberId" parameterType="String" resultMap="mb">
+		select *
+		from member
+		where member_id = #{member_id}
+	</select>
 </mapper>

@@ -4,6 +4,7 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 
+import com.ssafy.jwt.TokenInfo;
 import com.ssafy.member.model.MemberDto;
 
 public interface MemberService {
@@ -16,4 +17,5 @@ public interface MemberService {
 	int totalMemberCount(Map<String, String> map) throws Exception;
 	MemberDto loginMember(Map<String, String> map) throws Exception;
 	MemberDto getMember(String userId) throws Exception;
+	TokenInfo login(String memberId, String password)  throws Exception;
 }
