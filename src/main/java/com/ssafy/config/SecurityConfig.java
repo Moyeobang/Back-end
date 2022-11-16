@@ -30,9 +30,10 @@ public class SecurityConfig {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
-                .antMatchers("/housedeal/*").permitAll()
+//                .antMatchers("/**").permitAll() // 개발용 전체 임시 허용
+                .antMatchers("/housedeal/**").permitAll()
                 .antMatchers("/user/login2").permitAll()
-                .antMatchers("/user/test").hasRole("USER")
+//                .antMatchers("/user/test").hasRole("USER")
                 .anyRequest().authenticated()
                 .and()
                 .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class);

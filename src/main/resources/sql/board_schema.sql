@@ -33,7 +33,8 @@ DEFAULT CHARACTER SET = utf8mb4
 COLLATE = utf8mb4_0900_ai_ci;
 
 insert into `vueproject`.`members` (user_id, user_name, user_password, email_id, email_domain, join_date, refresh_token)
-values ('admin', '관리자', '1234', 'admin', 'google.com', now(), 'eyJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2Njg3MDQ4NjN9.MW62cZQZswO54tWEQNSwPS_5kT5KDsqFn31Ujq2vwYE');
+values ('admin', '관리자', '1234', 'admin', 'google.com', now(), 'eyJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2Njg3MDQ4NjN9.MW62cZQZswO54tWEQNSwPS_5kT5KDsqFn31Ujq2vwYE'),
+('ssafy', '김싸피', '1234', 'ssafy', 'ssafy.com', now(), null);
 	
 commit;
 

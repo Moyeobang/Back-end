@@ -21,7 +21,6 @@ import com.ssafy.util.SizeConstant;
 import lombok.RequiredArgsConstructor;
 
 @Service
-@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class MemberServiceImpl implements MemberService {
 	
@@ -89,6 +88,8 @@ public class MemberServiceImpl implements MemberService {
 		return memberMapper.findByMemberId(userId);
 	}
 	
+
+//	@Transactional(readOnly = true)
     @Transactional
     public TokenInfo login(String memberId, String password) throws SQLException {
         // 1. Login ID/PW 를 기반으로 Authentication 객체 생성
