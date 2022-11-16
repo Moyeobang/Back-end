@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+<mapper namespace="com.ssafy.qna.model.mapper.QnaMapper">
+
+	<resultMap type="qnaDto" id="qna">
+		<result column="article_no" property="articleno"/>
+		<result column="user_id" property="userid"/>
+		<result column="subject" property="subject"/>
+		<result column="content" property="content"/>
+		<result column="hit" property="hit"/>
+		<result column="register_time" property="regtime"/>
+	</resultMap>
+
+	<resultMap type="qnaAnswerDto" id ="qnaAnswer">
+		<result column="user_id" property="userId"/>
+		<result column="content" property="answerContent" />
+		<result column="register_Time" property="answerRegTime" />
+	</resultMap>
+	
+	<select id="listArticle" parameterType="map" resultMap="qna">
+		select article_no, user_id, subject, content, hit,
+				case when date_format(register_time, '%Y%m%d') = date_format(now(), '%Y%m%d')
+				then date_format(register_time, '%H:%i:%s')
+				else date_format(register_time, '%y.%m.%d')
+				end register_time
+		from qnaBoard
+		<if test="word != null and word != ''">
+			<if test="key == 'subject'">
+				where subject like concat('%', #{word}, '%')
+			</if>
+			<if test="key != 'subject'">
+				where ${key} = #{word}
+			</if>
+		</if>
+		order by article_no desc
+		limit #{start}, #{spp}
+	</select>
+	
+	<select id="getArticle" parameterType="int" resultType="qnaDto">
+		select article_no, user_id, subject, content, hit, register_time
+		from qnaboard
+		where article_no = #{article_no}
+	</select>
+	
+	<select id="getQnaAnswer" parameterType="int" resultMap="qnaAnswer">
+		select user_id, content, register_Time
+		from qnaanswer
+		where article_no = #{articleNo}
+	</select>
+	
+	<insert id="writeArticle" parameterType="qnaDto">
+		insert into qnaboard (user_id, subject, content, hit, register_time)
+		values (#{userid}, #{subject}, #{content}, 0, now())
+	</insert>
+	
+<!-- 	<select id="getTotalCount" parameterType="map" resultType="int"> -->
+<!-- 		select count(articleno) -->
+<!-- 		from board -->
+<!-- 		<if test="word != null and word != ''"> -->
+<!-- 			<if test="key == 'subject'"> -->
+<!-- 				where subject like concat('%', #{word}, '%') -->
+<!-- 			</if> -->
+<!-- 			<if test="key != 'subject'"> -->
+<!-- 				where ${key} = #{word} -->
+<!-- 			</if> -->
+<!-- 		</if> -->
+<!-- 	</select> -->
+	
+
+
+	<update id="modifyArticle" parameterType="qnaDto">
+		update qnaboard
+		set subject = #{subject}, content = #{content}
+		where article_no = #{articleno}
+	</update>
+
+	<delete id="deleteArticle" parameterType="int">
+		delete from qnaBoard
+		where article_no = #{articleno}
+	</delete>
+
+</mapper>
+
