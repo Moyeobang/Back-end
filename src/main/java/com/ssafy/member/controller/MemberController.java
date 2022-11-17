@@ -190,18 +190,18 @@ public class MemberController{
 	@PostMapping("/login")
 	@ResponseBody
 	public ResponseEntity<?> login(@RequestBody MemberLoginRequestDto memberLoginRequestDto) throws Exception {
-        String memberId = memberLoginRequestDto.getMemberId();
-        String password = memberLoginRequestDto.getPassword();
+        String userId = memberLoginRequestDto.getUserid();
+        String password = memberLoginRequestDto.getUserpwd();
         
         // TODO : 기존의 getMember는 상세 조회 기능. password와 name만 조회하는 약식 기능이 따로 필요하다.
-        Member member = memberService.findByMemberId(memberId);
+        Member member = memberService.findByMemberId(userId);
         if(!member.getPassword().equals(password)) {
         	throw new IllegalArgumentException("비밀번호를 확인하세요");
         }
         
         // TODO : Spring Security의 Username과 DB상 User_name이 혼동될 여지가 있음.
         // 컬럼명을 real_name, alias 등으로 바꾸는 것을 추천.
-        TokenInfo tokenInfo = memberService.login(memberId, password);
+        TokenInfo tokenInfo = memberService.login(userId, password);
         MemberInfoDto memberInfoDto = new MemberInfoDto();
         memberInfoDto.setTokenInfo(tokenInfo);
         memberInfoDto.setUserId(member.getUsername()); // 주의. 이 Username은 Spring 작명 규칙에 의한 것으로 사실은 user_id, PK를 나타낸다. 리팩터링 필요.
