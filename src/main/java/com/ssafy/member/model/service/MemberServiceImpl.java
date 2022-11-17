@@ -108,4 +108,11 @@ public class MemberServiceImpl implements MemberService {
         
         return tokenInfo;
     }
+
+	@Override
+	public void deleteRefreshToken(String userId) throws Exception {
+		// TODO Auto-generated method stub
+		memberMapper.updateRefreshToken(userId, null);
+	}
+
 }

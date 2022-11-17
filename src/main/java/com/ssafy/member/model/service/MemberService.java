@@ -20,4 +20,6 @@ public interface MemberService {
 	MemberDto getMember(String userId) throws Exception;
 	TokenInfo login(String memberId, String password)  throws Exception;
 	Member findByMemberId(String memberId)  throws Exception;
+	void deleteRefreshToken(String userId) throws Exception;
+	
 }

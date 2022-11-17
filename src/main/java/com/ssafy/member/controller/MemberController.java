@@ -70,12 +70,14 @@ public class MemberController{
 		}
 	}
 
-	@GetMapping("/logout")
+	// TODO : 해당 access token을 비활성화하는 blackList 구현 및 클라이언트 단 데이터 삭제
+	// 엄밀히 말하면 logout은 blacklist에 토큰을 추가하는 Post요청.
+	@PutMapping("/logout/{userId}")
 	@ResponseBody
-	private ResponseEntity<?> logout() {
+	private ResponseEntity<?> logout(@PathVariable("userId") String userId) throws Exception {
 		System.out.println("로그아웃");
-		// TODO : 해당 access token을 비활성화하는 blackList 구현 및 클라이언트 단 데이터 삭제
-		return new ResponseEntity<Void>(HttpStatus.OK);
+		memberService.deleteRefreshToken(userId);
+		return new ResponseEntity<>("success logout", HttpStatus.OK);
 	}
 
 	// 특정 회원 정보 조회
@@ -185,7 +187,7 @@ public class MemberController{
 
 	
 	// TODO : 클라이언트 단에서 Store에 memberInfoDto 저장.
-	@PostMapping("/login2")
+	@PostMapping("/login")
 	@ResponseBody
 	public ResponseEntity<?> login(@RequestBody MemberLoginRequestDto memberLoginRequestDto) throws Exception {
         String memberId = memberLoginRequestDto.getMemberId();

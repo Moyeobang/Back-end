@@ -28,4 +28,5 @@ public interface MemberMapper {
 	Member findByMemberId(String userId);
 	List<String> getRoles(String userId);
 	int updateRefreshToken(String userId, String refreshToken) throws SQLException;
+	void deleteRefreshToken(String userId);
 }
