@@ -190,12 +190,6 @@ public class HouseDealController extends HttpServlet {
 	}
 
 	private String moveModifyPage(HttpServletRequest request, HttpServletResponse response) {
-		HttpSession session = request.getSession();
-		MemberDto memberDto = (MemberDto) session.getAttribute("userinfo");
-		if (memberDto == null || !memberDto.getUserClass().equals("관리자")) {
-			request.setAttribute("msg", "접근권한이 없습니다.");
-			return "user/login";
-		}
 		Long no = Long.parseLong(request.getParameter("no"));
 		try {
 			request.setAttribute("houseDealInfo", houseDealService.getHouseDeal(no));

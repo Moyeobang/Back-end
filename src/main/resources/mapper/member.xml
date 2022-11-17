@@ -7,7 +7,6 @@
 	<resultMap type="memberDto" id="member">
 		<result column="user_id" property="userId"/>
 		<result column="user_name" property="userName"/>
-		<result column="user_class" property="userClass"/>
 	</resultMap>
 	
 	<resultMap type="memberDto" id="memberAll" extends="member">
@@ -15,6 +14,12 @@
 		<result column="email_id" property="emailId"/>
 		<result column="email_domain" property="emailDomain"/>
 		<result column="join_date" property="joinDate"/>
+	</resultMap>
+	
+	<resultMap type="member" id="mb">
+		<result column="user_id" property="memberId"/>
+		<result column="user_name" property="memberName"/>
+		<result column="user_password" property="password"/>		
 	</resultMap>
 
 	<select id="idCheck" parameterType="String" resultType="int">
@@ -24,12 +29,12 @@
 	</select>
 
 	<insert id="joinMember" parameterType="memberDto">
-		insert into members (user_name, user_id, user_password, email_id, email_domain, join_date, user_class)
-		values (#{userName}, #{userId}, #{userPwd}, #{emailId}, #{emailDomain}, now(), #{userClass})
+		insert into members (user_name, user_id, user_password, email_id, email_domain, join_date)
+		values (#{userName}, #{userId}, #{userPwd}, #{emailId}, #{emailDomain}, now())
 	</insert>
 
 	<select id="loginMember" parameterType="map" resultMap="member">
-		select user_id, user_name, user_class
+		select user_id, user_name
 		from members
 		where user_id = #{userid} and user_password = #{userpwd}
 	</select>
@@ -51,7 +56,7 @@
 	</update>
 
 	<select id="listMember" parameterType="map" resultMap="memberAll">
-		select user_name, user_id, user_password, email_id, email_domain, join_date, user_class
+		select user_name, user_id, user_password, email_id, email_domain, join_date
 		from members
 		<where>
 			<if test="key == 'userId'">
@@ -62,9 +67,26 @@
 	</select>
 	
 	<select id="getMember" parameterType="string" resultMap="memberAll">
-		select user_id, user_name, user_password, email_id, email_domain, join_date, user_class
+		select user_id, user_name, user_password, email_id, email_domain, join_date
 		from members
 		where user_id = #{userId}
 	</select>
 
+	<select id ="findByMemberId" parameterType="String" resultMap="mb">
+		select user_id, user_name, user_password
+		from members
+		where user_id = #{member_id}
+	</select>
+	
+	<select id="getRoles" parameterType="String" resultType="String">
+		select roles
+		from member_roles
+		where members_user_id = #{member_id}
+	</select>
+	
+	<update id="updateRefreshToken" parameterType="String">
+		update members
+		set refresh_token = #{refreshToken}
+		where user_id = #{userId}
+	</update>
 </mapper>

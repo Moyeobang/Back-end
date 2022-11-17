@@ -26,15 +26,29 @@ CREATE TABLE IF NOT EXISTS `vueproject`.`members` (
   `email_id` VARCHAR(20) NULL DEFAULT NULL,
   `email_domain` VARCHAR(45) NULL DEFAULT NULL,
   `join_date` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `user_class` VARCHAR(20) NOT NULL,
+  `refresh_token` TEXT NULL,
   PRIMARY KEY (`user_id`))
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4
 COLLATE = utf8mb4_0900_ai_ci;
 
-insert into `vueproject`.`members` (user_id, user_name, user_password, email_id, email_domain, join_date, user_class)
-values 	('ssafy', '김싸피', '1234', 'ssafy', 'ssafy.com', now(), '일반 회원'), 
-		('admin', '관리자', '1234', 'admin', 'google.com', now(), '관리자');
+insert into `vueproject`.`members` (user_id, user_name, user_password, email_id, email_domain, join_date, refresh_token)
+values ('admin', '관리자', '1234', 'admin', 'google.com', now(), 'eyJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2Njg3MDQ4NjN9.MW62cZQZswO54tWEQNSwPS_5kT5KDsqFn31Ujq2vwYE'),
+('ssafy', '김싸피', '1234', 'ssafy', 'ssafy.com', now(), null);
+	
+commit;
+
+DROP TABLE IF EXISTS `vueproject`.`member_roles` ;
+
+CREATE TABLE IF NOT EXISTS `vueproject`.`member_roles` (
+  `members_user_id` VARCHAR(16) NOT NULL,
+  `roles` VARCHAR(20) NOT NULL)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
+
+insert into `vueproject`.`member_roles` (members_user_id, roles)
+values ('admin', 'USER'), ('admin', 'ADMIN');
 	
 commit;
 
