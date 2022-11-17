@@ -196,7 +196,7 @@ public class BoardController extends HttpServlet {
 
 	@ResponseBody
 	@GetMapping("/view/{articleNo}")
-	public ResponseEntity<?> view(@RequestBody int articleNo) {
+	public ResponseEntity<?> view(@PathVariable int articleNo) {
 		try {
 			BoardDto dto = boardService.getArticle(articleNo);
 			if (dto != null) {

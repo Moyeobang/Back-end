@@ -75,7 +75,7 @@
 	</select>
 
 	<select id="getArticle" parameterType="int"
-		resultType="boardDto">
+		 resultMap="board">
 		select article_no, user_id, subject, content, hit, register_time
 		from board
 		where article_no = #{articleNo}
