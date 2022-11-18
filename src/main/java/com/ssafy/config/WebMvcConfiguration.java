@@ -11,12 +11,9 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.http.HttpMethod;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
-import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.resource.PathResourceResolver;
-
-import com.ssafy.interceptor.ConfirmInterceptor;
 
 @Configuration
 @EnableAspectJAutoProxy
@@ -24,9 +21,6 @@ import com.ssafy.interceptor.ConfirmInterceptor;
 public class WebMvcConfiguration implements WebMvcConfigurer {
 
 	private final List<String> patterns = Arrays.asList("/board/*", "/admin", "/user/list");
-
-	@Autowired
-	private ConfirmInterceptor confirmInterceptor;
 
 	private final String uploadFilePath;
 
@@ -44,12 +38,6 @@ public class WebMvcConfiguration implements WebMvcConfigurer {
 //				.allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH", "HEAD")
 				.maxAge(1800);
 	}
-
-//	@Override
-	/*
-	 * public void addInterceptors(InterceptorRegistry registry) {
-	 * registry.addInterceptor(confirmInterceptor).addPathPatterns(patterns); }
-	 */
 
 	@Override
 	public void addResourceHandlers(ResourceHandlerRegistry registry) {

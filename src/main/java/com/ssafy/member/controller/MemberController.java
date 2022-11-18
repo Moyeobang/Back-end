@@ -1,11 +1,10 @@
 package com.ssafy.member.controller;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
+import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,17 +23,20 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.ssafy.jwt.TokenInfo;
-import com.ssafy.member.model.Member;
+import com.ssafy.jwt.util.JwtTokenProvider;
 import com.ssafy.member.model.MemberDto;
-import com.ssafy.member.model.MemberInfoDto;
 import com.ssafy.member.model.MemberLoginRequestDto;
 import com.ssafy.member.model.service.MemberService;
 
 @Controller
 @RequestMapping("/user")
-public class MemberController{
+public class MemberController {
 
 	private final Logger logger = LoggerFactory.getLogger(MemberController.class);
+	private static final String SUCCESS = "success";
+	private static final String FAIL = "fail";
+	@Autowired
+	private JwtTokenProvider jwtTokenProvider;
 
 	@Autowired
 	private MemberService memberService;
@@ -70,15 +71,7 @@ public class MemberController{
 		}
 	}
 
-	// TODO : 해당 access token을 비활성화하는 blackList 구현 및 클라이언트 단 데이터 삭제
-	// 엄밀히 말하면 logout은 blacklist에 토큰을 추가하는 Post요청.
-	@PutMapping("/logout/{userId}")
-	@ResponseBody
-	private ResponseEntity<?> logout(@PathVariable("userId") String userId) throws Exception {
-		System.out.println("로그아웃");
-		memberService.deleteRefreshToken(userId);
-		return new ResponseEntity<>("success logout", HttpStatus.OK);
-	}
+
 
 	// 특정 회원 정보 조회
 	@GetMapping("/{userId}")
@@ -145,12 +138,10 @@ public class MemberController{
 		}
 
 	}
-	
 
 	private ResponseEntity<?> exceptionHandling(Exception e) {
 		return new ResponseEntity<String>("Error : " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
 	}
-
 
 //	private String current(HttpServletRequest request, HttpServletResponse response) {
 //		String userId = request.getParameter("userid");
@@ -172,7 +163,6 @@ public class MemberController{
 //		}
 //	}
 
-
 //
 //	@PostMapping("/password/{newPwd}")
 //	private String change(@RequestParam("newPassword") String newPwd, HttpSession session) throws SQLException {
@@ -185,34 +175,102 @@ public class MemberController{
 //	}
 //
 
-	
 	// TODO : 클라이언트 단에서 Store에 memberInfoDto 저장.
 	@PostMapping("/login")
 	@ResponseBody
-	public ResponseEntity<?> login(@RequestBody MemberLoginRequestDto memberLoginRequestDto) throws Exception {
-        String memberId = memberLoginRequestDto.getMemberId();
-        String password = memberLoginRequestDto.getPassword();
-        
-        // TODO : 기존의 getMember는 상세 조회 기능. password와 name만 조회하는 약식 기능이 따로 필요하다.
-        Member member = memberService.findByMemberId(memberId);
-        if(!member.getPassword().equals(password)) {
-        	throw new IllegalArgumentException("비밀번호를 확인하세요");
-        }
-        
-        // TODO : Spring Security의 Username과 DB상 User_name이 혼동될 여지가 있음.
-        // 컬럼명을 real_name, alias 등으로 바꾸는 것을 추천.
-        TokenInfo tokenInfo = memberService.login(memberId, password);
-        MemberInfoDto memberInfoDto = new MemberInfoDto();
-        memberInfoDto.setTokenInfo(tokenInfo);
-        memberInfoDto.setUserId(member.getUsername()); // 주의. 이 Username은 Spring 작명 규칙에 의한 것으로 사실은 user_id, PK를 나타낸다. 리팩터링 필요.
-        memberInfoDto.setUserName(member.getMemberName());
-        return new ResponseEntity<MemberInfoDto>(memberInfoDto, HttpStatus.OK);
+	public ResponseEntity<?> login(@RequestBody MemberLoginRequestDto memberLoginRequestDto) {
+		String userId = memberLoginRequestDto.getUserid();
+		String password = memberLoginRequestDto.getUserpwd();
+		Map<String, Object> resultMap = new HashMap<>();
+
+		try {
+			// 원래는 security Bad credential로 해결하는 부분.
+			String userPwd = memberService.getPasswordById(userId);
+			if (!userPwd.equals(password)) {
+				System.out.println("비밀번호가 틀립니다.");
+				resultMap.put("message", FAIL);
+				return new ResponseEntity<Map<String, Object>>(resultMap, HttpStatus.ACCEPTED);
+			}
+
+			TokenInfo tokenInfo = memberService.login(userId, password);
+			tokenInfo.setMessage(SUCCESS);
+			return new ResponseEntity<TokenInfo>(tokenInfo, HttpStatus.OK);
+		} catch (Exception e) {
+			logger.error("로그인 실패 : {}", e);
+//			resultMap.put("message", e.getMessage()); // exception이 나면 null이 넘어감
+			resultMap.put("message", FAIL);
+			return new ResponseEntity<Map<String, Object>>(resultMap, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
 	}
 
-	
 	@PostMapping("/test")
 	@ResponseBody
 	public String test() {
 		return "success";
+	}
+
+	// Security Filter에서 jwt 유효성 확인은 끝나고 넘어온 상태.
+	@GetMapping("/info/{userId}")
+	@ResponseBody
+	public ResponseEntity<?> getInfoById(@PathVariable("userId") String userId) {
+		Map<String, Object> resultMap = new HashMap<>();
+		HttpStatus status = null;
+		logger.info("사용 가능한 토큰!!!");
+		try {
+			// 로그인 사용자 정보.
+			MemberDto member = memberService.getUserInfo(userId);
+			resultMap.put("userInfo", member);
+			resultMap.put("message", SUCCESS);
+			status = HttpStatus.ACCEPTED;
+		} catch (Exception e) {
+			logger.error("정보조회 실패 : {}", e);
+			resultMap.put("message", e.getMessage());
+			status = HttpStatus.INTERNAL_SERVER_ERROR;
+		}
+
+		return new ResponseEntity<Map<String, Object>>(resultMap, status);
+	}
+
+	@ResponseBody
+	@PostMapping("/refresh")
+	public ResponseEntity<?> refreshToken(@RequestBody MemberDto memberDto, HttpServletRequest request)
+			throws Exception {
+		TokenInfo tokenInfo = null;
+		HttpStatus status = HttpStatus.ACCEPTED;
+		String token = request.getHeader("Authorization").substring(7);
+		// 리프레시 토큰 유효성 확인. 기간 만료, 없음, 올바르지 않은 양식 등
+		if (!jwtTokenProvider.validateToken(token)) {
+			System.out.println("refresh token 만료!!");
+			status = HttpStatus.UNAUTHORIZED;
+		} else {
+
+			// 해당 토큰의 소유자가 맞는지 확인
+			if (token.equals(memberService.getRefreshToken(memberDto.getUserId()))) {
+				String accessToken = memberService.createAccessToken(memberDto.getUserId());
+				tokenInfo = TokenInfo.builder().message(SUCCESS).grantType("Bearer").accessToken(accessToken)
+						.build();
+				status = HttpStatus.ACCEPTED;
+			}
+		}
+		return new ResponseEntity<TokenInfo>(tokenInfo, status);
+	}
+	
+	// TODO : 해당 access token을 비활성화하는 blackList 구현 및 클라이언트 단 데이터 삭제
+	// 엄밀히 말하면 logout은 blacklist에 토큰을 추가하는 Post요청.
+	@GetMapping("/logout/{userId}")
+	@ResponseBody
+	private ResponseEntity<?> logout(@PathVariable("userId") String userId) throws Exception {
+		Map<String, Object> resultMap = new HashMap<>();
+		HttpStatus status = HttpStatus.ACCEPTED;
+		try {
+			memberService.deleteRefreshToken(userId);
+			resultMap.put("message", SUCCESS);
+			status = HttpStatus.ACCEPTED;
+		} catch (Exception e) {
+			logger.error("로그아웃 실패 : {}", e);
+			resultMap.put("message", e.getMessage());
+			status = HttpStatus.INTERNAL_SERVER_ERROR;
+		}
+		return new ResponseEntity<Map<String, Object>>(resultMap, status);
 	}
 }

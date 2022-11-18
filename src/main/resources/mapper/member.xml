@@ -73,7 +73,7 @@
 	</select>
 
 	<select id ="findByMemberId" parameterType="String" resultMap="mb">
-		select user_id, user_name, user_password
+		select user_id, user_password
 		from members
 		where user_id = #{member_id}
 	</select>
@@ -89,4 +89,22 @@
 		set refresh_token = #{refreshToken}
 		where user_id = #{userId}
 	</update>
+	
+	<select id="getPasswordById" parameterType="String" resultType="String">
+		select user_password
+		from members
+		where user_id = #{userId}
+	</select>
+	
+	<select id="getUserInfo" parameterType ="String" resultMap="member">
+		select user_id, user_name
+		from members
+		where user_id = #{userId}
+	</select>
+	
+	<select id="getRefreshToken" parameterType="String" resultType="String">
+		select refresh_token
+		from members
+		where user_id = #{userId}
+	</select>
 </mapper>

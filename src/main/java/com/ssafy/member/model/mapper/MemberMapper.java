@@ -29,4 +29,7 @@ public interface MemberMapper {
 	List<String> getRoles(String userId);
 	int updateRefreshToken(String userId, String refreshToken) throws SQLException;
 	void deleteRefreshToken(String userId);
+	String getPasswordById(String userId);
+	MemberDto getUserInfo(String userId);
+	String getRefreshToken(String userId);
 }

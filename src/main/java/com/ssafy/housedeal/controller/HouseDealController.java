@@ -44,9 +44,7 @@ import io.swagger.v3.oas.annotations.parameters.RequestBody;
 
 @Controller
 @RequestMapping("/housedeal")
-public class HouseDealController extends HttpServlet {
-	private static final long serialVersionUID = 1L;
-
+public class HouseDealController{
 	private static final String serviceKey = "W8tskb3ozBWJaXxxw5I%2FVKzmrJ53268CjU%2BcNrKjqwATnE8Y0NQjsSzuxuzf%2FzqDq%2B2joOsA4Q3HR347slp2Yg%3D%3D";
 
 	private final Logger logger = LoggerFactory.getLogger(HouseDealController.class);
@@ -57,55 +55,13 @@ public class HouseDealController extends HttpServlet {
 	@Autowired
 	private HouseService houseService;
 
-	private Map<String, String> map;
-
-
-	protected void doGet(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
-		response.setContentType("text/plain;charset=utf-8");
-		String path = "/index.jsp";
-
-		String act = request.getParameter("act");
-		int pgNo = ParameterCheck.notNumberToOne(request.getParameter("pgno"));
-		String sidoCode = ParameterCheck.nullToBlank(request.getParameter("sidoCode"));
-		String gugunCode = ParameterCheck.nullToBlank(request.getParameter("gugunCode"));
-		String dongCode = ParameterCheck.nullToBlank(request.getParameter("dongCode"));
-		String name = ParameterCheck.nullToBlank(request.getParameter("apartmentName"));
-
-		map = new HashMap<>();
-		map.put("pgno", pgNo + "");
-		map.put("sidoCode", sidoCode);
-		map.put("gugunCode", gugunCode);
-		map.put("dongCode", dongCode);
-		map.put("apartmentName", name);
-
-//		if ("searchAll".equals(act)) {
-//			path = searchAll(request, response);
-//			if (path != null) {
-//				forward(request, response, path);
-//			}
-//		} else if ("mv-modify".equals(act)) {
-//			path = moveModifyPage(request, response);
-//			forward(request, response, path);
-//		} else if ("modify".equals(act)) {
-//			path = modify(request, response);
-//			forward(request, response, path);
-//		} else if ("view".equals(act)) {
-//			path = getHouseDeal(request, response);
-//			forward(request, response, path);
-//		} else {
-//			redirect(request, response, path);
-//		}
-	}
 
 	@ResponseBody
 	@GetMapping("/housedeal")
 	public ResponseEntity<?> serachAll(@RequestParam Map<String, String> map) {
 		List<HouseDealDto> list = null;
-		int size = 0;
 		try {
 			list = houseDealService.listHouseDeal(map);
-//			size = houseDealService.totalHouseDealCount(map);
 
 			if (list != null && !list.isEmpty()) {
 				return new ResponseEntity<List<HouseDealDto>>(list, HttpStatus.OK);
@@ -117,6 +73,7 @@ public class HouseDealController extends HttpServlet {
 			return exceptionHandling(e);
 		}
 	}
+	
 //  원본. JSON 형식의 값 반환
 //	private String searchAll(HttpServletRequest request, HttpServletResponse response) {
 //		List<HouseDealDto> list = null;
@@ -171,7 +128,6 @@ public class HouseDealController extends HttpServlet {
 //		return null;
 //	}
 
-	// admin 전용
 	@GetMapping("/housedeal/{no}")
 	@ResponseBody
 	private ResponseEntity<?> getHouseDeal(@PathVariable("no") Long no) {
@@ -187,18 +143,6 @@ public class HouseDealController extends HttpServlet {
 			e.printStackTrace();
 			return exceptionHandling(e);
 		}
-	}
-
-	private String moveModifyPage(HttpServletRequest request, HttpServletResponse response) {
-		Long no = Long.parseLong(request.getParameter("no"));
-		try {
-			request.setAttribute("houseDealInfo", houseDealService.getHouseDeal(no));
-		} catch (SQLException e) {
-			e.printStackTrace();
-			request.setAttribute("msg", "실매매가 수정페이지 이동중 에러발생!!!");
-			return "error/error";
-		}
-		return "housedeal/modify";
 	}
 
 	@ResponseBody
@@ -260,66 +204,6 @@ public class HouseDealController extends HttpServlet {
 			return exceptionHandling(e);
 		}
 	}
-
-// 원본 코드 OpenAPI에 실 데이터를 삽입.
-//	private String addHouseDeal(HttpServletRequest request, HttpServletResponse response) {
-//		String regCode = request.getParameter("regCode");
-//		String dealYM = request.getParameter("dealYM");
-//
-//		StringBuilder urlBuilder = new StringBuilder(
-//				"http://openapi.molit.go.kr/OpenAPI_ToolInstallPackage/service/rest/RTMSOBJSvc/getRTMSDataSvcAptTradeDev"); // URL
-//
-//		BufferedReader rd = null;
-//		HttpURLConnection conn = null;
-//		StringBuilder sb = new StringBuilder();
-//
-//		try {
-//			urlBuilder.append("?" + URLEncoder.encode("serviceKey", "UTF-8") + "=" + serviceKey);
-//			urlBuilder.append("&" + URLEncoder.encode("LAWD_CD", "UTF-8") + "=" + URLEncoder.encode(regCode, "UTF-8"));
-//			urlBuilder.append("&" + URLEncoder.encode("DEAL_YMD", "UTF-8") + "=" + URLEncoder.encode(dealYM, "UTF-8"));
-//			urlBuilder.append(
-//					"&" + URLEncoder.encode("pageNo", "UTF-8") + "=" + URLEncoder.encode("1", "UTF-8")); /* 페이지번호 */
-//			urlBuilder.append("&" + URLEncoder.encode("numOfRows", "UTF-8") + "="
-//					+ URLEncoder.encode("30", "UTF-8")); /* 페이지당건수 */
-//
-//			URL url = new URL(urlBuilder.toString());
-//			conn = (HttpURLConnection) url.openConnection();
-//			conn.setRequestMethod("GET");
-//			conn.setRequestProperty("Content-type", "application/xml");
-//
-////			System.out.println("Response code: " + conn.getResponseCode());
-//
-//			if (conn.getResponseCode() >= 200 && conn.getResponseCode() <= 300) {
-//				rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-//			} else {
-//				rd = new BufferedReader(new InputStreamReader(conn.getErrorStream()));
-//			}
-//
-//			String line;
-//			while ((line = rd.readLine()) != null) {
-//				sb.append(line);
-//			}
-//
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//			request.setAttribute("msg", "실매매가 추가 중 에러발생!!!");
-//			return "error/error";
-//		} finally {
-//
-//			try {
-//				if (rd != null)
-//					rd.close();
-//				if (conn != null)
-//					conn.disconnect();
-//			} catch (IOException e) {
-//				e.printStackTrace();
-//				request.setAttribute("msg", "실매매가 추가 중 에러발생!!!");
-//				return "error/error";
-//			}
-//		}
-//
-//		return "";
-//	}
 
 	private ResponseEntity<String> exceptionHandling(Exception e) {
 		e.printStackTrace();

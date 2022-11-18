@@ -1,5 +1,8 @@
 package com.ssafy.member.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.stereotype.Component;
 
 /**
@@ -15,6 +18,7 @@ public class MemberDto {
 	private String emailId;
 	private String emailDomain;
 	private String joinDate;
+	private List<String> roles = new ArrayList<>();
 	
 
 	@Override
@@ -69,6 +73,14 @@ public class MemberDto {
 
 	public void setJoinDate(String joinDate) {
 		this.joinDate = joinDate;
+	}
+
+	public List<String> getRoles() {
+		return roles;
+	}
+
+	public void setRoles(List<String> roles) {
+		this.roles = roles;
 	}
 
 }
