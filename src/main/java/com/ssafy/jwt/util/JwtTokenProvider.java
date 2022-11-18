@@ -16,6 +16,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import com.ssafy.jwt.TokenInfo;
+import com.ssafy.member.model.MemberDto;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -42,30 +43,38 @@ public class JwtTokenProvider {
         String authorities = authentication.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.joining(","));
- 
-        long now = (new Date()).getTime();
-        // Access Token 생성
-        Date accessTokenExpiresIn = new Date(now + 86400000);
-        String accessToken = Jwts.builder()
-//                .setSubject(authentication.getName())
-        		.setSubject("accessToken")
-                .claim("auth", authorities)
-                .claim("userid", authentication.getName())
-                .setExpiration(accessTokenExpiresIn)
-                .signWith(key, SignatureAlgorithm.HS256)
-                .compact();
+
+        String accessToken = createAccessToken(authorities, authentication);
  
         // Refresh Token 생성
-        String refreshToken = Jwts.builder()
-                .setExpiration(new Date(now + 86400000))
-                .signWith(key, SignatureAlgorithm.HS256)
-                .compact();
+        String refreshToken = createRefreshToken();
  
         return TokenInfo.builder()
                 .grantType("Bearer")
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)
                 .build();
+    }
+    
+    public String createAccessToken(String authorities, Authentication authentication) {
+        long now = (new Date()).getTime();
+        // Access Token 생성
+        Date accessTokenExpiresIn = new Date(now + 86400000);
+		return Jwts.builder()
+				.setSubject("accessToken")
+		  .claim("auth", authorities)
+		  .claim("userid", authentication.getName())
+		  .setExpiration(accessTokenExpiresIn)
+		  .signWith(key, SignatureAlgorithm.HS256)
+		  .compact();
+    }
+    
+    public String createRefreshToken() {
+    	long now = (new Date()).getTime();
+    	return Jwts.builder()
+                .setExpiration(new Date(now + 86400000))
+                .signWith(key, SignatureAlgorithm.HS256)
+                .compact();
     }
  
     // JWT 토큰을 복호화하여 토큰에 들어있는 정보를 꺼내는 메서드

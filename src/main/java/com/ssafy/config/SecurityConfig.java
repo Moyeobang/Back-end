@@ -30,10 +30,10 @@ public class SecurityConfig {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
-                .antMatchers("/user/test").hasRole("USER")
-                .antMatchers("/**").permitAll() // 개발용 전체 임시 허용
+                .antMatchers("/user/test").hasRole("USER") 
+//                .antMatchers("/**").permitAll() // 개발용 전체 임시 허용. 모든 권한(role)에 대해 접근을 허용한다. 필터는 적용된다. 
 //                .antMatchers("/housedeal/**").permitAll()	// 아파트 조회용
-//                .antMatchers("/user/login", "/user/logout/*", "/user").permitAll()	// jwt 발급 로그인
+                .antMatchers("/user/login", "/user/logout/*", "/user/refresh").permitAll()	// jwt 발급 요청 로그인 및 재발급 요청
                 .anyRequest().authenticated()
                 .and()
                 .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class);

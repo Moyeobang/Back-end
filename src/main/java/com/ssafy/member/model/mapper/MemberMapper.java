@@ -31,4 +31,5 @@ public interface MemberMapper {
 	void deleteRefreshToken(String userId);
 	String getPasswordById(String userId);
 	MemberDto getUserInfo(String userId);
+	String getRefreshToken(String userId);
 }

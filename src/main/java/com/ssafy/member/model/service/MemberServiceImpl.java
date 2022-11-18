@@ -3,10 +3,12 @@ package com.ssafy.member.model.service;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -126,6 +128,24 @@ public class MemberServiceImpl implements MemberService {
 	    List<String> roles = memberMapper.getRoles(userId);
 	    memberDto.setRoles(roles);
 	    return memberDto;
+	}
+
+	@Override
+	public String getRefreshToken(String userId) throws Exception {
+		return memberMapper.getRefreshToken(userId);
+	}
+
+	@Override
+	public String createAccessToken(String userId) throws Exception {
+		String password = this.getPasswordById(userId);
+        // userId - password쌍의 인증객체를 확인하고, DB에 저장된 값과 일치하는지 확인한다. 최종적으로 userId, password, roles를 가져온다.
+		// 내부적으로 붙는 `ROLE_` prefix를 위해 Authentication 객체를 활용하여 token을 생성한다. 
+		UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(userId, password);
+        Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
+        String authorities = authentication.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority)
+                .collect(Collectors.joining(","));
+        return jwtTokenProvider.createAccessToken(authorities, authentication);
 	}
 
 }

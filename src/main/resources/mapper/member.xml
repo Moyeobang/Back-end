@@ -99,6 +99,12 @@
 	<select id="getUserInfo" parameterType ="String" resultMap="member">
 		select user_id, user_name
 		from members
-		where user_id = #{userid}
+		where user_id = #{userId}
+	</select>
+	
+	<select id="getRefreshToken" parameterType="String" resultType="String">
+		select refresh_token
+		from members
+		where user_id = #{userId}
 	</select>
 </mapper>

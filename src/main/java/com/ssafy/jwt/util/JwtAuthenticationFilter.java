@@ -17,30 +17,36 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends GenericFilterBean {
- 
-    private final JwtTokenProvider jwtTokenProvider;
- 
-    @Override
-    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
- 
-        // 1. Request Header 에서 JWT 토큰 추출
-        String token = resolveToken((HttpServletRequest) request);
-        
-        // 2. validateToken 으로 토큰 유효성 검사
-        if (token != null && jwtTokenProvider.validateToken(token)) {
-            // 토큰이 유효할 경우 토큰에서 Authentication 객체를 가지고 와서 SecurityContext 에 저장
-            Authentication authentication = jwtTokenProvider.getAuthentication(token);
-            SecurityContextHolder.getContext().setAuthentication(authentication);
-        }
-        chain.doFilter(request, response);
-    }
- 
-    // Request Header 에서 토큰 정보 추출
-    private String resolveToken(HttpServletRequest request) {
-        String bearerToken = request.getHeader("Authorization");
-        if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer")) {
-            return bearerToken.substring(7);
-        }
-        return null;
-    }
+
+	private final JwtTokenProvider jwtTokenProvider;
+
+	@Override
+	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
+			throws IOException, ServletException {
+		String servletPath = ((HttpServletRequest) request).getServletPath();
+		// 1. Request Header 에서 JWT 토큰 추출
+		String token = resolveToken((HttpServletRequest) request);
+
+		// 로그인, 리프레시 요청이라면 토큰 검사하지 않음
+		if (servletPath.equals("/user/login") || servletPath.equals("/user/refresh")) {
+			chain.doFilter(request, response);
+		} else {
+			// 2. validateToken 으로 토큰 유효성 검사
+			if (token != null && jwtTokenProvider.validateToken(token)) {
+				// 토큰이 유효할 경우 토큰에서 Authentication 객체를 가지고 와서 SecurityContext 에 저장
+				Authentication authentication = jwtTokenProvider.getAuthentication(token);
+				SecurityContextHolder.getContext().setAuthentication(authentication);
+			}
+			chain.doFilter(request, response);
+		}
+	}
+
+	// Request Header 에서 토큰 정보 추출
+	private String resolveToken(HttpServletRequest request) {
+		String bearerToken = request.getHeader("Authorization");
+		if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer")) {
+			return bearerToken.substring(7);
+		}
+		return null;
+	}
 }

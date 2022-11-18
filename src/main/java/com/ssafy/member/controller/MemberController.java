@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +23,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.ssafy.jwt.TokenInfo;
-import com.ssafy.member.model.Member;
+import com.ssafy.jwt.util.JwtTokenProvider;
 import com.ssafy.member.model.MemberDto;
 import com.ssafy.member.model.MemberLoginRequestDto;
 import com.ssafy.member.model.service.MemberService;
@@ -33,6 +35,8 @@ public class MemberController {
 	private final Logger logger = LoggerFactory.getLogger(MemberController.class);
 	private static final String SUCCESS = "success";
 	private static final String FAIL = "fail";
+	@Autowired
+	private JwtTokenProvider jwtTokenProvider;
 
 	@Autowired
 	private MemberService memberService;
@@ -67,15 +71,7 @@ public class MemberController {
 		}
 	}
 
-	// TODO : 해당 access token을 비활성화하는 blackList 구현 및 클라이언트 단 데이터 삭제
-	// 엄밀히 말하면 logout은 blacklist에 토큰을 추가하는 Post요청.
-	@PutMapping("/logout/{userId}")
-	@ResponseBody
-	private ResponseEntity<?> logout(@PathVariable("userId") String userId) throws Exception {
-		System.out.println("로그아웃");
-		memberService.deleteRefreshToken(userId);
-		return new ResponseEntity<>("success logout", HttpStatus.OK);
-	}
+
 
 	// 특정 회원 정보 조회
 	@GetMapping("/{userId}")
@@ -221,7 +217,7 @@ public class MemberController {
 		HttpStatus status = null;
 		logger.info("사용 가능한 토큰!!!");
 		try {
-			//	로그인 사용자 정보.
+			// 로그인 사용자 정보.
 			MemberDto member = memberService.getUserInfo(userId);
 			resultMap.put("userInfo", member);
 			resultMap.put("message", SUCCESS);
@@ -232,6 +228,49 @@ public class MemberController {
 			status = HttpStatus.INTERNAL_SERVER_ERROR;
 		}
 
+		return new ResponseEntity<Map<String, Object>>(resultMap, status);
+	}
+
+	@ResponseBody
+	@PostMapping("/refresh")
+	public ResponseEntity<?> refreshToken(@RequestBody MemberDto memberDto, HttpServletRequest request)
+			throws Exception {
+		TokenInfo tokenInfo = null;
+		HttpStatus status = HttpStatus.ACCEPTED;
+		String token = request.getHeader("Authorization").substring(7);
+		// 리프레시 토큰 유효성 확인. 기간 만료, 없음, 올바르지 않은 양식 등
+		if (!jwtTokenProvider.validateToken(token)) {
+			System.out.println("refresh token 만료!!");
+			status = HttpStatus.UNAUTHORIZED;
+		} else {
+
+			// 해당 토큰의 소유자가 맞는지 확인
+			if (token.equals(memberService.getRefreshToken(memberDto.getUserId()))) {
+				String accessToken = memberService.createAccessToken(memberDto.getUserId());
+				tokenInfo = TokenInfo.builder().message(SUCCESS).grantType("Bearer").accessToken(accessToken)
+						.build();
+				status = HttpStatus.ACCEPTED;
+			}
+		}
+		return new ResponseEntity<TokenInfo>(tokenInfo, status);
+	}
+	
+	// TODO : 해당 access token을 비활성화하는 blackList 구현 및 클라이언트 단 데이터 삭제
+	// 엄밀히 말하면 logout은 blacklist에 토큰을 추가하는 Post요청.
+	@GetMapping("/logout/{userId}")
+	@ResponseBody
+	private ResponseEntity<?> logout(@PathVariable("userId") String userId) throws Exception {
+		Map<String, Object> resultMap = new HashMap<>();
+		HttpStatus status = HttpStatus.ACCEPTED;
+		try {
+			memberService.deleteRefreshToken(userId);
+			resultMap.put("message", SUCCESS);
+			status = HttpStatus.ACCEPTED;
+		} catch (Exception e) {
+			logger.error("로그아웃 실패 : {}", e);
+			resultMap.put("message", e.getMessage());
+			status = HttpStatus.INTERNAL_SERVER_ERROR;
+		}
 		return new ResponseEntity<Map<String, Object>>(resultMap, status);
 	}
 }
