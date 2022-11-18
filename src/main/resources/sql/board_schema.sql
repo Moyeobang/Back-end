@@ -41,14 +41,16 @@ commit;
 DROP TABLE IF EXISTS `vueproject`.`member_roles` ;
 
 CREATE TABLE IF NOT EXISTS `vueproject`.`member_roles` (
+	seq int primary key auto_increment,
   `members_user_id` VARCHAR(16) NOT NULL,
-  `roles` VARCHAR(20) NOT NULL)
+  `roles` VARCHAR(20) NOT NULL DEFAULT 'USER'
+  )
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4
 COLLATE = utf8mb4_0900_ai_ci;
 
 insert into `vueproject`.`member_roles` (members_user_id, roles)
-values ('admin', 'USER'), ('admin', 'ADMIN');
+values ('admin', 'USER'), ('admin', 'ADMIN'), ('ssafy', 'USER');
 	
 commit;
 

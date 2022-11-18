@@ -1,11 +1,8 @@
 package com.ssafy.member.controller;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -27,15 +23,16 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.ssafy.jwt.TokenInfo;
 import com.ssafy.member.model.Member;
 import com.ssafy.member.model.MemberDto;
-import com.ssafy.member.model.MemberInfoDto;
 import com.ssafy.member.model.MemberLoginRequestDto;
 import com.ssafy.member.model.service.MemberService;
 
 @Controller
 @RequestMapping("/user")
-public class MemberController{
+public class MemberController {
 
 	private final Logger logger = LoggerFactory.getLogger(MemberController.class);
+	private static final String SUCCESS = "success";
+	private static final String FAIL = "fail";
 
 	@Autowired
 	private MemberService memberService;
@@ -145,12 +142,10 @@ public class MemberController{
 		}
 
 	}
-	
 
 	private ResponseEntity<?> exceptionHandling(Exception e) {
 		return new ResponseEntity<String>("Error : " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
 	}
-
 
 //	private String current(HttpServletRequest request, HttpServletResponse response) {
 //		String userId = request.getParameter("userid");
@@ -172,7 +167,6 @@ public class MemberController{
 //		}
 //	}
 
-
 //
 //	@PostMapping("/password/{newPwd}")
 //	private String change(@RequestParam("newPassword") String newPwd, HttpSession session) throws SQLException {
@@ -185,34 +179,59 @@ public class MemberController{
 //	}
 //
 
-	
 	// TODO : 클라이언트 단에서 Store에 memberInfoDto 저장.
 	@PostMapping("/login")
 	@ResponseBody
-	public ResponseEntity<?> login(@RequestBody MemberLoginRequestDto memberLoginRequestDto) throws Exception {
-        String userId = memberLoginRequestDto.getUserid();
-        String password = memberLoginRequestDto.getUserpwd();
-        
-        // TODO : 기존의 getMember는 상세 조회 기능. password와 name만 조회하는 약식 기능이 따로 필요하다.
-        Member member = memberService.findByMemberId(userId);
-        if(!member.getPassword().equals(password)) {
-        	throw new IllegalArgumentException("비밀번호를 확인하세요");
-        }
-        
-        // TODO : Spring Security의 Username과 DB상 User_name이 혼동될 여지가 있음.
-        // 컬럼명을 real_name, alias 등으로 바꾸는 것을 추천.
-        TokenInfo tokenInfo = memberService.login(userId, password);
-        MemberInfoDto memberInfoDto = new MemberInfoDto();
-        memberInfoDto.setTokenInfo(tokenInfo);
-        memberInfoDto.setUserId(member.getUsername()); // 주의. 이 Username은 Spring 작명 규칙에 의한 것으로 사실은 user_id, PK를 나타낸다. 리팩터링 필요.
-        memberInfoDto.setUserName(member.getMemberName());
-        return new ResponseEntity<MemberInfoDto>(memberInfoDto, HttpStatus.OK);
+	public ResponseEntity<?> login(@RequestBody MemberLoginRequestDto memberLoginRequestDto) {
+		String userId = memberLoginRequestDto.getUserid();
+		String password = memberLoginRequestDto.getUserpwd();
+		Map<String, Object> resultMap = new HashMap<>();
+
+		try {
+			// 원래는 security Bad credential로 해결하는 부분.
+			String userPwd = memberService.getPasswordById(userId);
+			if (!userPwd.equals(password)) {
+				System.out.println("비밀번호가 틀립니다.");
+				resultMap.put("message", FAIL);
+				return new ResponseEntity<Map<String, Object>>(resultMap, HttpStatus.ACCEPTED);
+			}
+
+			TokenInfo tokenInfo = memberService.login(userId, password);
+			tokenInfo.setMessage(SUCCESS);
+			return new ResponseEntity<TokenInfo>(tokenInfo, HttpStatus.OK);
+		} catch (Exception e) {
+			logger.error("로그인 실패 : {}", e);
+//			resultMap.put("message", e.getMessage()); // exception이 나면 null이 넘어감
+			resultMap.put("message", FAIL);
+			return new ResponseEntity<Map<String, Object>>(resultMap, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
 	}
 
-	
 	@PostMapping("/test")
 	@ResponseBody
 	public String test() {
 		return "success";
+	}
+
+	// Security Filter에서 jwt 유효성 확인은 끝나고 넘어온 상태.
+	@GetMapping("/info/{userId}")
+	@ResponseBody
+	public ResponseEntity<?> getInfoById(@PathVariable("userId") String userId) {
+		Map<String, Object> resultMap = new HashMap<>();
+		HttpStatus status = null;
+		logger.info("사용 가능한 토큰!!!");
+		try {
+			//	로그인 사용자 정보.
+			MemberDto member = memberService.getUserInfo(userId);
+			resultMap.put("userInfo", member);
+			resultMap.put("message", SUCCESS);
+			status = HttpStatus.ACCEPTED;
+		} catch (Exception e) {
+			logger.error("정보조회 실패 : {}", e);
+			resultMap.put("message", e.getMessage());
+			status = HttpStatus.INTERNAL_SERVER_ERROR;
+		}
+
+		return new ResponseEntity<Map<String, Object>>(resultMap, status);
 	}
 }

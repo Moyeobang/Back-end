@@ -8,6 +8,7 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 public class TokenInfo {
+	private String message;
 	private String grantType;
 	private String accessToken;
 	private String refreshToken;

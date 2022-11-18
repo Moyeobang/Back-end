@@ -45,10 +45,12 @@ public class JwtTokenProvider {
  
         long now = (new Date()).getTime();
         // Access Token 생성
-        Date accessTokenExpiresIn = new Date(now + 20);
+        Date accessTokenExpiresIn = new Date(now + 86400000);
         String accessToken = Jwts.builder()
-                .setSubject(authentication.getName())
+//                .setSubject(authentication.getName())
+        		.setSubject("accessToken")
                 .claim("auth", authorities)
+                .claim("userid", authentication.getName())
                 .setExpiration(accessTokenExpiresIn)
                 .signWith(key, SignatureAlgorithm.HS256)
                 .compact();

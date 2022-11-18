@@ -28,7 +28,6 @@ public class Member implements UserDetails {
  
     @Id
     private String memberId;
-    private String memberName;
     private String password;
  
     @Builder.Default
@@ -75,12 +74,4 @@ public class Member implements UserDetails {
     	this.roles = roles;
     }
 
-	public void setMemberName(String memberName) {
-		this.memberName = memberName;
-	}
-    
-	public String getMemberName() {
-		return this.memberName;
-	}
-	
 }
