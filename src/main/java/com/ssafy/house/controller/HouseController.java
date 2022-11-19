@@ -3,8 +3,6 @@ package com.ssafy.house.controller;
 import java.util.List;
 import java.util.Map;
 
-import javax.servlet.http.HttpServlet;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.ssafy.house.model.HouseDto;
+import com.ssafy.house.model.HouseInfoDto;
 import com.ssafy.house.model.service.HouseService;
 
 @Controller
@@ -25,6 +24,23 @@ public class HouseController{
 	@Autowired
 	private HouseService houseService;
 
+
+	@GetMapping("/tempList")
+	@ResponseBody
+	private ResponseEntity<?> getHouseList(@RequestParam Map<String, String> houseParameter) {
+		try {
+			List<HouseInfoDto> list = houseService.getHouseList(houseParameter);
+			if (list != null && !list.isEmpty()) { 
+				return new ResponseEntity<List<HouseInfoDto>>(list, HttpStatus.OK);
+			} else {
+				return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			return exceptionHandling(e);
+		}
+	}
+	
 	@GetMapping("")
 	@ResponseBody
 	private ResponseEntity<?> listHouse(@RequestParam Map<String, String> map) {

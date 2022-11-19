@@ -6,6 +6,8 @@ import java.util.Map;
 
 import com.ssafy.house.model.HouseDealDto2;
 import com.ssafy.house.model.HouseDto;
+import com.ssafy.house.model.HouseInfoDto;
+import com.ssafy.housedeal.model.HouseDealInfoDto;
 
 public interface HouseMapper {
 
@@ -18,5 +20,9 @@ public interface HouseMapper {
 	int insertHouse(HouseDto houseDto) throws SQLException;
 	
 	List<HouseDealDto2> listDeal(long aptCode) throws SQLException;
+
+	List<HouseInfoDto> getHouseList(Map<String, String> houseParameter) throws SQLException;
+
+	List<HouseDealInfoDto> getHouseDealList(Map<String, String> houseParameter) throws SQLException;
 
 }

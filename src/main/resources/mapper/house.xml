@@ -39,4 +39,41 @@
 		order by area
 	</select>
 	
+	<select id ="getHouseList" parameterType="map" resultType="houseInfoDto">
+			select aptCode, lat, lng, apartmentName,
+			concat(address, ' ', roadName, ' ', TRIM(LEADING '0' FROM roadNameBonbun), '-',
+			case
+				when roadNameBubun = '00000' then ''
+				else TRIM(LEADING '0' FROM roadNameBubun)
+			end
+			) as roadNameAddress,
+			concat(dong, ' ', jibun) as jibunNameAddress,
+			buildYear
+			from
+			(select aptCode, lat, lng, apartmentName, buildYear, dongcode, roadName, roadNameBonbun, roadNameBubun, dong, jibun
+			from houseinfo
+			where dongcode = #{dongCode} 
+			<if test="apartmentName != null">
+				and apartmentName LIKE CONCAT('%',#{apartmentName},'%')
+			</if>
+				<if test="buildYearLow != null"><![CDATA[ buildYear >= #{buildYearLow} ]]> </if>
+				<if test="buildYearHigh != null"><![CDATA[ and buildYear <= #{buildYearHigh} ]]> </if>
+			) HI
+			join
+			(select concat(sidoName, ' ', gugunName, ' ') as address, dongcode from dongcode) DC
+			ON HI.dongcode = DC.dongcode;
+	</select>
+	
+	
+	<select id = "getHouseDealList" parameterType="map" resultType="houseDealInfoDto">
+		select aptCode, dealAmount, concat(dealYear,'.',dealMonth,'.',dealDay) as date, area, floor
+		from housedeal
+		where aptCode = #{aptCode}
+			<if test="budgetLow != null"><![CDATA[ and dealAmount >= #{budgetLow}]]></if>
+			<if test="budgetHigh != null"><![CDATA[ and dealAmount <= #{budgetHigh}]]></if>
+			<if test="areaLow != null"><![CDATA[ and area <= #{areaLow}]]></if>
+			<if test="areaHigh != null"><![CDATA[ and area <= #{areaHigh}]]></if>
+		order by dealYear desc;
+	</select>
+	
 </mapper>
