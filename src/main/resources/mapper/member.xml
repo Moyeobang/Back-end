@@ -21,6 +21,14 @@
 		<result column="user_name" property="memberName"/>
 		<result column="user_password" property="password"/>		
 	</resultMap>
+	
+	<parameterMap type="memberDto" id="memberJoin">
+		<parameter property="userId"/>
+		<parameter property="userName"/>
+		<parameter property="userPwd"/>
+		<parameter property="emailId"/>
+		<parameter property="emailDomain"/>
+	</parameterMap>
 
 	<select id="idCheck" parameterType="String" resultType="int">
 		select count(user_id)
@@ -28,7 +36,7 @@
 		where user_id = #{userId}
 	</select>
 
-	<insert id="joinMember" parameterType="memberDto">
+	<insert id="joinMember" parameterMap="memberJoin">
 		insert into members (user_name, user_id, user_password, email_id, email_domain, join_date)
 		values (#{userName}, #{userId}, #{userPwd}, #{emailId}, #{emailDomain}, now())
 	</insert>
