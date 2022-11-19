@@ -60,7 +60,7 @@ public class MemberController {
 	// 회원가입
 	@PostMapping("")
 	@ResponseBody
-	public ResponseEntity<?> userJoin(MemberDto memberDto) {
+	public ResponseEntity<?> userJoin(@RequestBody MemberDto memberDto) {
 		logger.debug("memberDto info : {}", memberDto);
 		try {
 			memberService.joinMember(memberDto);
