@@ -20,11 +20,8 @@ import com.ssafy.house.model.service.HouseService;
 
 @Controller
 @RequestMapping("/houses")
-public class HouseController extends HttpServlet {
-	private static final long serialVersionUID = 1L;
-
-	private static final String serviceKey = "W8tskb3ozBWJaXxxw5I%2FVKzmrJ53268CjU%2BcNrKjqwATnE8Y0NQjsSzuxuzf%2FzqDq%2B2joOsA4Q3HR347slp2Yg%3D%3D";
-
+public class HouseController{
+	
 	@Autowired
 	private HouseService houseService;
 
