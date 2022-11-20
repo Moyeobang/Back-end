@@ -6,7 +6,7 @@ import java.util.Map;
 
 import com.ssafy.house.model.HouseDealDto2;
 import com.ssafy.house.model.HouseDto;
-
+import com.ssafy.house.model.HouseInfoDto;
 public interface HouseService {
 
 	List<HouseDto> listHouse(Map<String, String> map) throws SQLException;
@@ -18,4 +18,6 @@ public interface HouseService {
 	int insertHouse(HouseDto houseDto) throws SQLException;
 	
 	List<HouseDealDto2> listDeal(long aptCode) throws SQLException;
+
+	List<HouseInfoDto> getHouseList(Map<String, String> houseParameter) throws SQLException;
 }

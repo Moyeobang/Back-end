@@ -1,21 +1,8 @@
 package com.ssafy.housedeal.controller;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.net.URLEncoder;
 import java.sql.SQLException;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,20 +19,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.ssafy.house.model.service.HouseService;
-import com.ssafy.house.model.service.HouseServiceImpl;
 import com.ssafy.housedeal.model.HouseDealDto;
 import com.ssafy.housedeal.model.service.HouseDealService;
-import com.ssafy.housedeal.model.service.HouseDealServiceImpl;
-import com.ssafy.member.controller.MemberController;
-import com.ssafy.member.model.MemberDto;
-import com.ssafy.util.ParameterCheck;
 
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 
 @Controller
 @RequestMapping("/housedeal")
 public class HouseDealController{
-	private static final String serviceKey = "W8tskb3ozBWJaXxxw5I%2FVKzmrJ53268CjU%2BcNrKjqwATnE8Y0NQjsSzuxuzf%2FzqDq%2B2joOsA4Q3HR347slp2Yg%3D%3D";
 
 	private final Logger logger = LoggerFactory.getLogger(HouseDealController.class);
 	
@@ -74,60 +55,6 @@ public class HouseDealController{
 		}
 	}
 	
-//  원본. JSON 형식의 값 반환
-//	private String searchAll(HttpServletRequest request, HttpServletResponse response) {
-//		List<HouseDealDto> list = null;
-//		int pgNo = ParameterCheck.notNumberToOne(request.getParameter("pgno"));
-//		int size = 0;
-//
-//		try {
-//			list = houseDealService.listHouseDeal(map);
-//			size = houseDealService.totalHouseDealCount(map);
-//			PrintWriter out = response.getWriter();
-//			ObjectMapper mapper = new ObjectMapper();
-//			if (list == null || list.size() == 0) {
-//				out.println("{\"size\" : 0}");
-//			} else {
-//				StringBuilder sb = new StringBuilder();
-//				sb.append("{ \"size\" : ").append(size).append(", ");
-//				sb.append("\"pgno\" : ").append(pgNo).append(", ");
-//				sb.append("\"datas\" : [");
-//
-//				Map<Long, HouseDto> map = new HashMap<>();
-//				for (int i = 0; i < list.size(); i++) {
-//					sb.append(mapper.writeValueAsString(list.get(i))).append(",");
-//					HouseDto houseDto = houseService.getHouse(list.get(i).getAptCode());
-//					if (houseDto != null) {
-//						Long aptCode = list.get(i).getAptCode();
-//						map.put(aptCode, houseDto);
-//					}
-//				}
-//
-//				sb.setLength(sb.toString().length() - 1);
-//				sb.append("], ");
-//
-//				if (map.size() > 0) {
-//					sb.append(" \"position\" : [");
-//					for (Long key : map.keySet()) {
-//						sb.append(mapper.writeValueAsString(map.get(key))).append(",");
-//					}
-//					sb.setLength(sb.toString().length() - 1);
-//					sb.append("]}");
-//					out.println(sb);
-//				} else {
-//					sb.append("\"position\" : []}");
-//					out.println(sb);
-//				}
-//			}
-//		} catch (SQLException | IOException e) {
-//			e.printStackTrace();
-//			request.setAttribute("msg", "실매매가 조회 목록 중 에러발생!!!");
-//			return "/error/error.jsp";
-//		}
-//
-//		return null;
-//	}
-
 	@GetMapping("/housedeal/{no}")
 	@ResponseBody
 	private ResponseEntity<?> getHouseDeal(@PathVariable("no") Long no) {
