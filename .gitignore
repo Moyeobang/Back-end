@@ -35,3 +35,6 @@ build/
 ### git test ###
 .metadata/
 bin/
+
+### enviroment file ###
+application.properties

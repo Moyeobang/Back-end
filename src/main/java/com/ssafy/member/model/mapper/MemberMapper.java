@@ -18,7 +18,6 @@ public interface MemberMapper {
 	MemberDto loginMember(Map<String, String> map) throws SQLException;
 	void deleteMember(String userId) throws SQLException;
 	void updateMember(MemberDto memberDto) throws SQLException;
-	MemberDto changePassword(Map<String, String> map) throws SQLException;
 	List<MemberDto> listMember(Map<String, String> map) throws SQLException;
 	int totalMemberCount(Map<String, String> map) throws SQLException;
 	MemberDto getMember(String userId) throws SQLException;
@@ -32,4 +31,7 @@ public interface MemberMapper {
 	String getPasswordById(String userId);
 	MemberDto getUserInfo(String userId);
 	String getRefreshToken(String userId);
+	
+	String getMemberEmail(String userId) throws SQLException;
+	int changePassword(String userId, String newPassword) throws SQLException;
 }
