@@ -5,6 +5,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
@@ -16,6 +19,7 @@ import com.ssafy.jwt.TokenInfo;
 import com.ssafy.jwt.util.JwtTokenProvider;
 import com.ssafy.member.model.Member;
 import com.ssafy.member.model.MemberDto;
+import com.ssafy.member.model.PwdChangeRequestDto;
 import com.ssafy.member.model.mapper.MemberMapper;
 import com.ssafy.util.ParameterCheck;
 import com.ssafy.util.SizeConstant;
@@ -29,6 +33,11 @@ public class MemberServiceImpl implements MemberService {
 	private final MemberMapper memberMapper;
 	private final AuthenticationManagerBuilder authenticationManagerBuilder;
     private final JwtTokenProvider jwtTokenProvider;
+    
+    // For mail
+    private final JavaMailSender mailSender;
+    @Value("${spring.mail.username}")
+    private String FROM_ADDRESS = "";
 
 	@Override
 	public int idCheck(String userId) throws Exception {
@@ -58,11 +67,6 @@ public class MemberServiceImpl implements MemberService {
 		memberMapper.updateMember(memberDto);
 	}
 
-	@Override
-	public MemberDto changePassword(Map<String, String> map) throws SQLException {
-		// TODO Auto-generated method stub
-		return memberMapper.changePassword(map);
-	}
 
 	@Override
 	public List<MemberDto> listMember(Map<String, String> map) throws Exception {
@@ -146,6 +150,29 @@ public class MemberServiceImpl implements MemberService {
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.joining(","));
         return jwtTokenProvider.createAccessToken(authorities, authentication);
+	}
+
+	@Override
+	public String getMemberEmail(String userId) throws Exception {
+		return memberMapper.getMemberEmail(userId);
+	}
+
+	@Override
+	public void sendMail(String randPwd, String memberEmail) throws Exception {
+		SimpleMailMessage message = new SimpleMailMessage();
+		System.out.println("FROM : "+FROM_ADDRESS);
+		System.out.println("TO : "+memberEmail);
+		message.setTo(memberEmail);
+		message.setFrom(FROM_ADDRESS);
+		message.setSubject("[WhereIsOurHome] Forgot Password Authentication");
+		message.setText("안녕하세요 회원님 반갑습니다.");
+		message.setText("임시 발급 비밀번호는 "+randPwd+"입니다.");
+		mailSender.send(message);		
+	}
+	
+	@Override
+	public boolean changePassword(String userId, String newPassword) throws SQLException {
+		return memberMapper.changePassword(userId, newPassword) == 1;
 	}
 
 }

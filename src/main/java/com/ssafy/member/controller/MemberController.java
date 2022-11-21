@@ -6,6 +6,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang3.RandomStringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +27,7 @@ import com.ssafy.jwt.TokenInfo;
 import com.ssafy.jwt.util.JwtTokenProvider;
 import com.ssafy.member.model.MemberDto;
 import com.ssafy.member.model.MemberLoginRequestDto;
+import com.ssafy.member.model.PwdChangeRequestDto;
 import com.ssafy.member.model.service.MemberService;
 
 @Controller
@@ -70,8 +72,6 @@ public class MemberController {
 			return exceptionHandling(e);
 		}
 	}
-
-
 
 	// 특정 회원 정보 조회
 	@GetMapping("/{userId}")
@@ -139,42 +139,6 @@ public class MemberController {
 
 	}
 
-	private ResponseEntity<?> exceptionHandling(Exception e) {
-		return new ResponseEntity<String>("Error : " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-	}
-
-//	private String current(HttpServletRequest request, HttpServletResponse response) {
-//		String userId = request.getParameter("userid");
-//		String currentPwd = request.getParameter("current");
-//		System.out.println(userId+" "+currentPwd);
-//		
-//		try {
-//			MemberDto memberDto = memberService.loginMember(userId, currentPwd);
-//			if(memberDto != null) { // 濡�洹몄�� �깃났(id, pwd �쇱�!!!!)
-//				return "/user?act=mvchange";
-//			} else { // 濡�洹몄�� �ㅽ��(id, pwd 遺��쇱�!!!!) -> jsp���� 寃���
-//				request.setAttribute("msg", "���대�� ���� 鍮�諛�踰��� ���� �� �ㅼ�� 濡�洹몄��!!!");
-//				return "/user?act=mypage";
-//			}
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//			request.setAttribute("msg", "鍮�諛�踰��� 蹂�寃� 泥�由� 以� ���� 諛���!!!");
-//			return "/error/error.jsp";
-//		}
-//	}
-
-//
-//	@PostMapping("/password/{newPwd}")
-//	private String change(@RequestParam("newPassword") String newPwd, HttpSession session) throws SQLException {
-//		MemberDto memberDto = (MemberDto) session.getAttribute("userinfo");
-//		Map<String, String> map = new HashMap<>();
-//		map.put("newPwd", newPwd);
-//		map.put("userId", memberDto.getUserId());
-//		memberService.changePassword(map);
-//		return "redirect:/user/mypage";
-//	}
-//
-
 	// TODO : 클라이언트 단에서 Store에 memberInfoDto 저장.
 	@PostMapping("/login")
 	@ResponseBody
@@ -197,16 +161,9 @@ public class MemberController {
 			return new ResponseEntity<TokenInfo>(tokenInfo, HttpStatus.OK);
 		} catch (Exception e) {
 			logger.error("로그인 실패 : {}", e);
-//			resultMap.put("message", e.getMessage()); // exception이 나면 null이 넘어감
 			resultMap.put("message", FAIL);
 			return new ResponseEntity<Map<String, Object>>(resultMap, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
-	}
-
-	@PostMapping("/test")
-	@ResponseBody
-	public String test() {
-		return "success";
 	}
 
 	// Security Filter에서 jwt 유효성 확인은 끝나고 넘어온 상태.
@@ -247,14 +204,13 @@ public class MemberController {
 			// 해당 토큰의 소유자가 맞는지 확인
 			if (token.equals(memberService.getRefreshToken(memberDto.getUserId()))) {
 				String accessToken = memberService.createAccessToken(memberDto.getUserId());
-				tokenInfo = TokenInfo.builder().message(SUCCESS).grantType("Bearer").accessToken(accessToken)
-						.build();
+				tokenInfo = TokenInfo.builder().message(SUCCESS).grantType("Bearer").accessToken(accessToken).build();
 				status = HttpStatus.ACCEPTED;
 			}
 		}
 		return new ResponseEntity<TokenInfo>(tokenInfo, status);
 	}
-	
+
 	// TODO : 해당 access token을 비활성화하는 blackList 구현 및 클라이언트 단 데이터 삭제
 	// 엄밀히 말하면 logout은 blacklist에 토큰을 추가하는 Post요청.
 	@GetMapping("/logout/{userId}")
@@ -272,5 +228,84 @@ public class MemberController {
 			status = HttpStatus.INTERNAL_SERVER_ERROR;
 		}
 		return new ResponseEntity<Map<String, Object>>(resultMap, status);
+	}
+
+	// 아이디 정보를 통해 유저 정보를 확인하고, 임시비밀번호 이메일을 전송한다.
+	// TODO : 아이디뿐만 아니라, 핸드폰 번호/이메일 등 유저를 확인 할 수 있는 정보가 추가로 필요하다.
+	@GetMapping("/{userId}/password")
+	public ResponseEntity<?> changeRandomPwd(@PathVariable("userId") String userId) {
+		logger.debug("userId : {}", userId);
+		Map<String, Object> resultMap = new HashMap<>();
+		HttpStatus status = HttpStatus.ACCEPTED;
+		try {
+			String memberEmail = memberService.getMemberEmail(userId);
+			if (memberEmail != null) {
+				// 유저에 해당하는 이메일을 가져와서, 해당 이메일에 임시비밀번호를 전송한다.
+				String randPwd = RandomStringUtils.randomAlphanumeric(10);
+				memberService.changePassword(userId, randPwd);
+				memberService.sendMail(randPwd, memberEmail);
+
+				// 이메일 일부 가리기
+				char[] temp = memberEmail.toCharArray();
+				for (int i = 1; i < memberEmail.indexOf('@') - 1; i++) {
+					temp[i] = '*';
+				}
+				memberEmail = String.valueOf(temp);
+
+				resultMap.put("message", SUCCESS);
+				resultMap.put("email", memberEmail);
+				status = HttpStatus.OK;
+			} else {
+				// 아이디 일치하는 사용자가 없습니다.
+				resultMap.put("message", FAIL);
+				status = HttpStatus.ACCEPTED;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			exceptionHandling(e);
+		}
+		return new ResponseEntity<Map<String, Object>>(resultMap, status);
+	}
+
+	/**
+	 * @param userId // 지금 로그인 한 유저의 id
+	 * @param currentPassword  // 현재 비밀번호
+	 * @param newPassword	// 바꿀 비밀번호
+	 * 
+	 * @return
+	 */
+	@PutMapping("/{userId}/password")
+	public ResponseEntity<?> changePwd(@PathVariable("userId") String userId,
+			@RequestBody PwdChangeRequestDto pwdChangeRequestDto) {
+		logger.debug("PasswordChangeRequestDto : {}", pwdChangeRequestDto);
+		Map<String, Object> resultMap = new HashMap<>();
+		HttpStatus status = HttpStatus.ACCEPTED;
+		try {
+			String password = memberService.getPasswordById(userId);
+			if (password.equals(pwdChangeRequestDto.getCurrentPassword())) {
+				memberService.changePassword(userId, pwdChangeRequestDto.getNewPassword());
+				resultMap.put("message", "success");
+				status = HttpStatus.OK;
+				
+			} else {
+				resultMap.put("message", "현재 비밀번호가 일치하지 않습니다.");
+				status = HttpStatus.ACCEPTED;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			exceptionHandling(e);
+		}
+
+		return new ResponseEntity<Map<String, Object>>(resultMap, status);
+	}
+
+	private ResponseEntity<?> exceptionHandling(Exception e) {
+		return new ResponseEntity<String>("Error : " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+	}
+
+	@PostMapping("/test")
+	@ResponseBody
+	public String test() {
+		return "success";
 	}
 }

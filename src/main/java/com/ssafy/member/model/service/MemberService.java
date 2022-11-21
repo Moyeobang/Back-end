@@ -7,13 +7,13 @@ import java.util.Map;
 import com.ssafy.jwt.TokenInfo;
 import com.ssafy.member.model.Member;
 import com.ssafy.member.model.MemberDto;
+import com.ssafy.member.model.PwdChangeRequestDto;
 
 public interface MemberService {
-	int idCheck(String userId) throws Exception; // ���대�� 以�蹂듦���
-	void joinMember(MemberDto memberDto) throws Exception; // ����媛���
-	void deleteMember(String userId) throws Exception; // ��������
-	void updateMember(MemberDto memberDto) throws Exception; // ������蹂대�寃�
-	MemberDto changePassword(Map<String, String> map) throws SQLException; // 鍮�諛�踰��� 蹂�寃�
+	int idCheck(String userId) throws Exception;
+	void joinMember(MemberDto memberDto) throws Exception;
+	void deleteMember(String userId) throws Exception;
+	void updateMember(MemberDto memberDto) throws Exception;
 	List<MemberDto> listMember(Map<String, String> map) throws Exception;
 	int totalMemberCount(Map<String, String> map) throws Exception;
 	MemberDto loginMember(Map<String, String> map) throws Exception;
@@ -25,4 +25,7 @@ public interface MemberService {
 	MemberDto getUserInfo(String userId) throws Exception;
 	String getRefreshToken(String userId) throws Exception;
 	String createAccessToken(String string) throws Exception;
+	String getMemberEmail(String userId) throws Exception;
+	void sendMail(String randPwd, String memberEmail) throws Exception;
+	boolean changePassword(String userId, String newPassword) throws SQLException;
 }
