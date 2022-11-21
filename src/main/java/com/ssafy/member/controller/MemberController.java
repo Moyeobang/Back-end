@@ -27,6 +27,7 @@ import com.ssafy.jwt.TokenInfo;
 import com.ssafy.jwt.util.JwtTokenProvider;
 import com.ssafy.member.model.MemberDto;
 import com.ssafy.member.model.MemberLoginRequestDto;
+import com.ssafy.member.model.PwdChangeRequestDto;
 import com.ssafy.member.model.service.MemberService;
 
 @Controller
@@ -230,25 +231,32 @@ public class MemberController {
 	}
 
 	// 아이디 정보를 통해 유저 정보를 확인하고, 임시비밀번호 이메일을 전송한다.
-	@PutMapping("/{userId}/password")
+	// TODO : 아이디뿐만 아니라, 핸드폰 번호/이메일 등 유저를 확인 할 수 있는 정보가 추가로 필요하다.
+	@GetMapping("/{userId}/password")
 	public ResponseEntity<?> changeRandomPwd(@PathVariable("userId") String userId) {
 		logger.debug("userId : {}", userId);
 		Map<String, Object> resultMap = new HashMap<>();
 		HttpStatus status = HttpStatus.ACCEPTED;
 		try {
 			String memberEmail = memberService.getMemberEmail(userId);
-			if(memberEmail != null) {
+			if (memberEmail != null) {
 				// 유저에 해당하는 이메일을 가져와서, 해당 이메일에 임시비밀번호를 전송한다.
 				String randPwd = RandomStringUtils.randomAlphanumeric(10);
 				memberService.changePassword(userId, randPwd);
 				memberService.sendMail(randPwd, memberEmail);
-				// TODO : 이메일 일부 가리기
+
+				// 이메일 일부 가리기
+				char[] temp = memberEmail.toCharArray();
+				for (int i = 1; i < memberEmail.indexOf('@') - 1; i++) {
+					temp[i] = '*';
+				}
+				memberEmail = String.valueOf(temp);
+
 				resultMap.put("message", SUCCESS);
 				resultMap.put("email", memberEmail);
 				status = HttpStatus.OK;
 			} else {
 				// 아이디 일치하는 사용자가 없습니다.
-				resultMap.put("message", FAIL);
 				resultMap.put("message", FAIL);
 				status = HttpStatus.ACCEPTED;
 			}
@@ -256,6 +264,38 @@ public class MemberController {
 			e.printStackTrace();
 			exceptionHandling(e);
 		}
+		return new ResponseEntity<Map<String, Object>>(resultMap, status);
+	}
+
+	/**
+	 * @param userId // 지금 로그인 한 유저의 id
+	 * @param currentPassword  // 현재 비밀번호
+	 * @param newPassword	// 바꿀 비밀번호
+	 * 
+	 * @return
+	 */
+	@PutMapping("/{userId}/password")
+	public ResponseEntity<?> changePwd(@PathVariable("userId") String userId,
+			@RequestBody PwdChangeRequestDto pwdChangeRequestDto) {
+		logger.debug("PasswordChangeRequestDto : {}", pwdChangeRequestDto);
+		Map<String, Object> resultMap = new HashMap<>();
+		HttpStatus status = HttpStatus.ACCEPTED;
+		try {
+			String password = memberService.getPasswordById(userId);
+			if (password.equals(pwdChangeRequestDto.getCurrentPassword())) {
+				memberService.changePassword(userId, pwdChangeRequestDto.getNewPassword());
+				resultMap.put("message", "success");
+				status = HttpStatus.OK;
+				
+			} else {
+				resultMap.put("message", "현재 비밀번호가 일치하지 않습니다.");
+				status = HttpStatus.ACCEPTED;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			exceptionHandling(e);
+		}
+
 		return new ResponseEntity<Map<String, Object>>(resultMap, status);
 	}
 

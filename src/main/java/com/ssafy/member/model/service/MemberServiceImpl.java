@@ -19,6 +19,7 @@ import com.ssafy.jwt.TokenInfo;
 import com.ssafy.jwt.util.JwtTokenProvider;
 import com.ssafy.member.model.Member;
 import com.ssafy.member.model.MemberDto;
+import com.ssafy.member.model.PwdChangeRequestDto;
 import com.ssafy.member.model.mapper.MemberMapper;
 import com.ssafy.util.ParameterCheck;
 import com.ssafy.util.SizeConstant;
@@ -173,4 +174,5 @@ public class MemberServiceImpl implements MemberService {
 	public boolean changePassword(String userId, String newPassword) throws SQLException {
 		return memberMapper.changePassword(userId, newPassword) == 1;
 	}
+
 }

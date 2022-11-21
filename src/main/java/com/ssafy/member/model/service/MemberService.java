@@ -7,6 +7,7 @@ import java.util.Map;
 import com.ssafy.jwt.TokenInfo;
 import com.ssafy.member.model.Member;
 import com.ssafy.member.model.MemberDto;
+import com.ssafy.member.model.PwdChangeRequestDto;
 
 public interface MemberService {
 	int idCheck(String userId) throws Exception;
