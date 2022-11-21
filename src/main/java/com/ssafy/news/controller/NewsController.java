@@ -43,13 +43,13 @@ public class NewsController extends HttpServlet {
 
 			List<NewsDto> result = new ArrayList<NewsDto>();
 
-			System.out.println(elements.select("a.news > span > img"));
 			for (Element element : elements) {
 				NewsDto news = new NewsDto();
 				news.setTitle(element.attr("title"));
 				news.setCategoryName(categoryService.getCategory(element.attr("title")));
 				news.setUrl("https://news.sbs.co.kr" + element.attr("href"));
 				news.setImgURL(element.select("span > img").attr("data-src"));
+				news.setDate(element.select("p.desc > span.date").html());
 				result.add(news);
 			}
 

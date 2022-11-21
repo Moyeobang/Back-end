@@ -8,4 +8,5 @@ public class NewsDto {
 	private String title;
 	private String url;
 	private String imgURL;
+	private String date;
 }
