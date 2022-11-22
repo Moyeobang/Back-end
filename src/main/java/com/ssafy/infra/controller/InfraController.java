@@ -18,6 +18,7 @@ public class InfraController {
 	@GetMapping()
 	private ResponseEntity<?> getInfraPoint(@RequestParam InfraRequestDto infraRequestDto){
 		System.out.println("들어오는 것 확인 "+infraRequestDto);
+		//
 		return new ResponseEntity<Void>(HttpStatus.OK);
 	}
 }
