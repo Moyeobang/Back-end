@@ -41,13 +41,13 @@
 	
 	<select id ="getHouseList" parameterType="map" resultType="houseInfoDto">
 			select aptCode, lat, lng, apartmentName,
-			concat(address, ' ', roadName, ' ', TRIM(LEADING '0' FROM roadNameBonbun), '-',
+			concat(address, ' ', roadName, ' ', TRIM(LEADING '0' FROM roadNameBonbun), 
 			case
 				when roadNameBubun = '00000' then ''
-				else TRIM(LEADING '0' FROM roadNameBubun)
+				else concat('-', TRIM(LEADING '0' FROM roadNameBubun))
 			end
 			) as roadNameAddress,
-			concat(dong, ' ', jibun) as jibunNameAddress,
+			concat(address, ' ', dong, ' ', jibun) as jibunNameAddress,
 			buildYear
 			from
 			(select aptCode, lat, lng, apartmentName, buildYear, dongcode, roadName, roadNameBonbun, roadNameBubun, dong, jibun
