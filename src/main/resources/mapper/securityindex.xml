@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+<mapper namespace="com.ssafy.securityindex.model.mapper.SecurityIndexMapper">
+	<insert id="insertData" parameterType="securityIndexDetailDto">
+	  INSERT INTO `vueproject`.`securityindex`
+		(`sigugunCode`,
+		`sido`,
+		`city`,
+		`region_name`,
+		`category1`,
+		`category2`,
+		`category3`,
+		`Population`,
+		`area`,
+		`per_population`,
+		`urban_area_ratio`,
+		`unknown1`,
+		`max_score`,
+		`unknown2`,
+		`social_safety_index`,
+		`EAPS`,
+		`LSPS`,
+		`HHPS`,
+		`REPS`,
+		`EAPS_Income`,
+		`EAPS_Welfare`,
+		`EAPS_Employment`,
+		`EAPS_Future`,
+		`LSPS_Police`,
+		`LSPS_Firefighting`,
+		`LSPS_Safety_Infrastructure`,
+		`LSPS_Traffic_Safety`,
+		`HHPS_Health_Status`,
+		`HHPS_Medical_Accessibility`,
+		`HHPS_Medical_satisfaction`,
+		`REPS_Atmospheric_conditions`,
+		`REPS_Residential_Conditions`,
+		`REPS_Transportation_Infrastructure`,
+		`REPS_Willingness_to_continue_living`)
+		VALUES
+		(#{sigugunCode},
+		#{sido},
+		#{city},
+		#{region_name},
+		#{category1},
+		#{category2},
+		#{category3},
+		#{Population},
+		#{area},
+		#{per_population},
+		#{urban_area_ratio},
+		#{unknown1},
+		#{max_score},
+		#{unknown2},
+		#{social_safety_index},
+		#{EAPS},
+		#{LSPS},
+		#{HHPS},
+		#{REPS},
+		#{EAPS_Income},
+		#{EAPS_Welfare},
+		#{EAPS_Employment},
+		#{EAPS_Future},
+		#{LSPS_Police},
+		#{LSPS_Firefighting},
+		#{LSPS_Safety_Infrastructure},
+		#{LSPS_Traffic_Safety},
+		#{HHPS_Health_Status},
+		#{HHPS_Medical_Accessibility},
+		#{HHPS_Medical_satisfaction},
+		#{REPS_Atmospheric_conditions},
+		#{REPS_Residential_Conditions},
+		#{REPS_Transportation_Infrastructure},
+		#{REPS_Willingness_to_continue_living});
+
+	</insert>
+
+</mapper>
+
