@@ -24,12 +24,13 @@ public class HouseController{
 	@Autowired
 	private HouseService houseService;
 
-
-	@GetMapping("/tempList")
+	// GetMapping("")
+	@GetMapping("")
 	@ResponseBody
 	private ResponseEntity<?> getHouseList(@RequestParam Map<String, String> houseParameter) {
 		try {
 			List<HouseInfoDto> list = houseService.getHouseList(houseParameter);
+			System.out.println(list.size());
 			if (list != null && !list.isEmpty()) { 
 				return new ResponseEntity<List<HouseInfoDto>>(list, HttpStatus.OK);
 			} else {
@@ -41,22 +42,6 @@ public class HouseController{
 		}
 	}
 	
-	@GetMapping("")
-	@ResponseBody
-	private ResponseEntity<?> listHouse(@RequestParam Map<String, String> map) {
-		try {
-			List<HouseDto> list = houseService.listHouse(map);
-			if (list != null && !list.isEmpty()) { 
-				return new ResponseEntity<List<HouseDto>>(list, HttpStatus.OK);
-			} else {
-				return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-			return exceptionHandling(e);
-		}
-
-	}
 
 	@GetMapping("/{aptCode}")
 	@ResponseBody
