@@ -3,6 +3,10 @@
 	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 	
 <mapper namespace="com.ssafy.securityindex.model.mapper.SecurityIndexMapper">
+	<select id="getSecurityIndex" parameterType="String" resultType="securityIndexDetailDto">
+		select * from securityindex where sigugunCode = #{sigugunCode}
+	</select>
+
 	<insert id="insertData" parameterType="securityIndexDetailDto">
 	  INSERT INTO `vueproject`.`securityindex`
 		(`sigugunCode`,

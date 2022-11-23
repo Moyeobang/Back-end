@@ -5,7 +5,7 @@ USE `vueproject` ;
 DROP TABLE IF EXISTS `vueproject`.`securityindex` ;
 
 CREATE TABLE IF NOT EXISTS `vueproject`.`securityindex` (
-  `sigugunCode` INT NOT NULL,
+  `sigugunCode` BIGINT NOT NULL,
 `sido` VARCHAR(30) NOT NULL,
 `city` VARCHAR(30) NOT NULL,
 `region_name` VARCHAR(30) NOT NULL,
