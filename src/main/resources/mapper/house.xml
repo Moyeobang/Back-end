@@ -52,12 +52,21 @@
 			from
 			(select aptCode, lat, lng, apartmentName, buildYear, dongcode, roadName, roadNameBonbun, roadNameBubun, dong, jibun
 			from houseinfo
-			where dongcode = #{dongCode} 
-			<if test="apartmentName != null">
-				and apartmentName LIKE CONCAT('%',#{apartmentName},'%')
-			</if>
-				<if test="buildYearLow != null"><![CDATA[ buildYear >= #{buildYearLow} ]]> </if>
-				<if test="buildYearHigh != null"><![CDATA[ and buildYear <= #{buildYearHigh} ]]> </if>
+			<where>
+				<if test="gugunCode != null">
+					and dongCode LIKE concat(#{gugunCode}, '%') 
+				</if>
+				<if test="dongCode != null">
+					and dongcode = #{dongCode} 
+				</if>
+				<if test="apartmentName != null">
+					and apartmentName LIKE CONCAT('%',#{apartmentName},'%')
+				</if>
+					<if test="buildYearLow != null"><![CDATA[ buildYear >= #{buildYearLow} ]]> </if>
+					<if test="buildYearHigh != null"><![CDATA[ and buildYear <= #{buildYearHigh} ]]> </if>
+					<if test="minLat != null and minLat != null"> and lat between #{minLat} and #{maxLat} </if>
+					<if test="minLng != null and minLng != null"> and lng between #{minLng} and #{maxLng} </if>
+			</where>
 			) HI
 			join
 			(select concat(sidoName, ' ', gugunName, ' ') as address, dongcode from dongcode) DC

@@ -32,6 +32,7 @@ public class HouseServiceImpl implements HouseService {
 		return houseDtoList;
 	}
 
+
 	@Override
 	public List<HouseDto> listHouse(Map<String, String> map) throws SQLException {
 		int pgNo = ParameterCheck.notNumberToOne(map.get("pgno"));
