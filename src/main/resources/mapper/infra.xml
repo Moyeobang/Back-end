@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ssafy.infra.model.mapper.InfraMapper">
+	<select id="getInfraCount" parameterType="map" resultType="infraDto">
+		select 
+			sum(case when category='관광/여가/오락' then count end) as 'entertainment', 
+			sum(case when category='부동산' then count end) as 'realEastate', 
+			sum(case when category='생활서비스' then count end) as 'livingService',
+			sum(case when category='소매' then count end) as 'retailSale', 
+			sum(case when category='숙박' then count end) as 'accommodation', 
+			sum(case when category='스포츠' then count end) as 'sports',
+			sum(case when category='음식' then count end) as 'food', 
+			sum(case when category='학문/교육' then count end) as 'education' 
+		From (
+			select category, IFNUll(count, 0) as count
+			from
+			(
+			select category, count(*) as count
+			from
+			(select storeName, category, latitude, longitude, 
+			ST_Distance_Sphere(POINT(#{latitude}, #{longitude}), POINT(latitude, longitude) ) as distance
+			from storeinfo ) SI
+			<![CDATA[where distance < 750]]>
+			group by category
+			order by category
+			) A right join store_category B using(category)
+			) C
+			;
+	</select>
+	
+	<select id="getRandHouse" resultType="randHouse">
+		<!-- 	현재는 임시로 부산에 대한 아파트 정보만 가져온다. 아래는 뷰 생성 시 사용-->
+		<!-- 	select * from rand_apt; -->
+		Select distinct apartmentName, lat, lng From houseinfo where dongcode LIKE '26%' Order by RAND() LIMIT 100
+	</select>
+</mapper>
