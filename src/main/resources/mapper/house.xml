@@ -59,13 +59,13 @@
 				<if test="dongCode != null">
 					and dongcode = #{dongCode} 
 				</if>
-				<if test="apartmentName != null">
+				<if test="apartmentName != null and apartmentName != ''">
 					and apartmentName LIKE CONCAT('%',#{apartmentName},'%')
 				</if>
 					<if test="buildYearLow != null"><![CDATA[ buildYear >= #{buildYearLow} ]]> </if>
 					<if test="buildYearHigh != null"><![CDATA[ and buildYear <= #{buildYearHigh} ]]> </if>
-					<if test="minLat != null and minLat != null"> and lat between #{minLat} and #{maxLat} </if>
-					<if test="minLng != null and minLng != null"> and lng between #{minLng} and #{maxLng} </if>
+					<if test="minLat != null and maxLat != null"> and lat between #{minLat} and #{maxLat} </if>
+					<if test="minLng != null and maxLng != null"> and lng between #{minLng} and #{maxLng} </if>
 			</where>
 			) HI
 			join
@@ -78,10 +78,10 @@
 		select aptCode, dealAmount, concat(dealYear,'.',dealMonth,'.',dealDay) as date, area, floor
 		from housedeal
 		where aptCode = #{aptCode}
-			<if test="budgetLow != null"><![CDATA[ and dealAmount >= #{budgetLow}]]></if>
-			<if test="budgetHigh != null"><![CDATA[ and dealAmount <= #{budgetHigh}]]></if>
-			<if test="areaLow != null"><![CDATA[ and area <= #{areaLow}]]></if>
-			<if test="areaHigh != null"><![CDATA[ and area <= #{areaHigh}]]></if>
+			<if test="budgetLow != null and budgetLow != ''"><![CDATA[ and dealAmount >= #{budgetLow}]]></if>
+			<if test="budgetHigh != null and budgetHigh != ''"><![CDATA[ and dealAmount <= #{budgetHigh}]]></if>
+			<if test="areaLow != null and areaLow != ''"><![CDATA[ and area <= #{areaLow}]]></if>
+			<if test="areaHigh != null and areaHigh != ''"><![CDATA[ and area <= #{areaHigh}]]></if>
 		order by dealYear desc;
 	</select>
 	

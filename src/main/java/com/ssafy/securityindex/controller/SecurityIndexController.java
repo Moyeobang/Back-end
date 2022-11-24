@@ -40,7 +40,7 @@ public class SecurityIndexController {
 	@GetMapping("/test/insert")
 	public void insertData() throws IOException, InterruptedException {
 //		BufferedReader br = new BufferedReader(new FileReader(filePath));
-		BufferedReader br = new BufferedReader(new FileReader("C:\\Users\\teepi\\Desktop\\사회안전지수데이터.txt"));
+		BufferedReader br = new BufferedReader(new FileReader("src/main/resources/sql/사회안전지수데이터.txt"));
 		String line = br.readLine();
 		String[] regionData = line.split("\\},");
 		System.out.println(regionData.length);
