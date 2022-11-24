@@ -9,7 +9,9 @@ import com.ssafy.infra.model.RandHouse;
 
 public interface InfraMapper {
 
-	List<RandHouse> getRandHouse() throws SQLException;
+	List<RandHouse> getRandHouse(String sidoCode) throws SQLException;
 
-	InfraDto getInfraCount(Map<String, String> map) throws SQLException;
+	InfraDto getInfraCount(Map<String, Object> map) throws SQLException;
+
+	void insertStatistics(Map<String, Object> map) throws SQLException;
 }

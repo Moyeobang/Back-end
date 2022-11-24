@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -26,7 +27,7 @@ public class InfraController {
 	private InfraService infraService;
 		
 	@GetMapping()
-	private ResponseEntity<?> getInfraCount(@RequestParam Map<String, String> map){
+	private ResponseEntity<?> getInfraCount(@RequestParam Map<String, Object> map){
 		try {
 			InfraDto infraDto = infraService.getInfraCount(map);
 		}catch (Exception e) {
@@ -35,5 +36,17 @@ public class InfraController {
 		}
 		
 		return new ResponseEntity<Void>(HttpStatus.OK);
+	}
+	
+	@GetMapping("/statistics/{sidoCode}")
+	private ResponseEntity<?> calStatistics(@PathVariable("sidoCode") String sidoCode){
+		try {
+			infraService.calStatistics(sidoCode);
+			return new ResponseEntity<Void>(HttpStatus.OK);
+		}catch (Exception e) {
+			e.printStackTrace();
+			return new ResponseEntity<Void>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		
 	}
 }
