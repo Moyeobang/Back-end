@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ssafy.infra.model.mapper.InfraMapper">
+	<select id="getInfraCount" parameterType="map" resultType="infraDto">
+		select 
+			sum(case when category='관광/여가/오락' then count end) as 'entertainment', 
+			sum(case when category='부동산' then count end) as 'realEastate', 
+			sum(case when category='생활서비스' then count end) as 'livingService',
+			sum(case when category='소매' then count end) as 'retailSale', 
+			sum(case when category='숙박' then count end) as 'accommodation', 
+			sum(case when category='스포츠' then count end) as 'sports',
+			sum(case when category='음식' then count end) as 'food', 
+			sum(case when category='학문/교육' then count end) as 'education' 
+		From (
+			select category, IFNUll(count, 0) as count
+			from
+			(
+			select category, count(*) as count
+			from
+			(select storeName, category, latitude, longitude, 
+			ST_Distance_Sphere(POINT(#{longitude}, #{latitude}), POINT(longitude, latitude) ) as distance
+			from storeinfo ) SI
+			<![CDATA[where distance < 750]]>
+			group by category
+			order by category
+			) A right join store_category B using(category)
+			) C
+			;
+	</select>
+	
+	<select id="getRandHouse" parameterType="string" resultType="randHouse">
+		Select distinct apartmentName, lat, lng From houseinfo
+		where dongcode LIKE concat(#{sidoCode},'%')
+		Order by RAND() LIMIT 100
+	</select>
+	
+	<select id="insertStatistics" parameterType="map">
+		insert into storestatistics (sidoCode, category, mean, var, sd)
+		value (#{sidoCode}, #{category}, #{mean}, #{var}, #{sd})
+	</select>
+	
+	<select id="getInfraStatisticsDto" parameterType="map" resultType="infraStatisticsDto">
+		select sidoCode, category, mean, var, sd
+		from storestatistics
+		where sidoCode = #{sidoCode} and category = #{category}
+	</select>
+</mapper>

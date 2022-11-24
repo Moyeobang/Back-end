@@ -130,8 +130,8 @@ CREATE TABLE storeinfo (
   category VARCHAR(45) NULL,
   dongCode VARCHAR(45) NULL,
   address VARCHAR(45) NULL,
-  latitude VARCHAR(45) NULL,
-  longitude VARCHAR(45) NULL,
+  latitude decimal(18,10) NULL,
+  longitude decimal(18,10) NULL,
   PRIMARY KEY (storeId)
   )ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
