@@ -107,7 +107,8 @@ public class MemberController {
 	// 회원 수정
 	@PutMapping("/{userId}")
 	@ResponseBody
-	private ResponseEntity<?> edit(@PathVariable("userId") String userId, MemberDto memberDto) {
+	private ResponseEntity<?> edit(@PathVariable("userId") String userId, @RequestBody MemberDto memberDto) {
+		logger.debug("memberDto : {}", memberDto);
 		try {
 			memberService.updateMember(memberDto);
 			return new ResponseEntity<Void>(HttpStatus.OK);
@@ -286,7 +287,6 @@ public class MemberController {
 				memberService.changePassword(userId, pwdChangeRequestDto.getNewPassword());
 				resultMap.put("message", "success");
 				status = HttpStatus.OK;
-				
 			} else {
 				resultMap.put("message", "현재 비밀번호가 일치하지 않습니다.");
 				status = HttpStatus.ACCEPTED;
