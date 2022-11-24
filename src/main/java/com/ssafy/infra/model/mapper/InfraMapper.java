@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.ssafy.infra.model.InfraDto;
+import com.ssafy.infra.model.InfraStatisticsDto;
 import com.ssafy.infra.model.RandHouse;
 
 public interface InfraMapper {
@@ -14,4 +15,6 @@ public interface InfraMapper {
 	InfraDto getInfraCount(Map<String, Object> map) throws SQLException;
 
 	void insertStatistics(Map<String, Object> map) throws SQLException;
+
+	InfraStatisticsDto getInfraStatisticsDto(Map<String, Object> map) throws SQLException;
 }

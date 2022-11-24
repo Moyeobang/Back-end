@@ -31,15 +31,19 @@
 	</select>
 	
 	<select id="getRandHouse" parameterType="string" resultType="randHouse">
-		<!-- 	현재는 임시로 부산에 대한 아파트 정보만 가져온다. 아래는 뷰 생성 시 사용-->
-			select * from rand_apt;
-<!-- 		Select distinct apartmentName, lat, lng From houseinfo -->
-<!-- 		where dongcode LIKE concat(#{sidoCode},'%') -->
-<!-- 		Order by RAND() LIMIT 100 -->
+		Select distinct apartmentName, lat, lng From houseinfo
+		where dongcode LIKE concat(#{sidoCode},'%')
+		Order by RAND() LIMIT 100
 	</select>
 	
 	<select id="insertStatistics" parameterType="map">
-		insert into storestatistics (sidoCode, category, mean)
-		value (#{sidoCode}, #{category}, #{mean})
+		insert into storestatistics (sidoCode, category, mean, var, sd)
+		value (#{sidoCode}, #{category}, #{mean}, #{var}, #{sd})
+	</select>
+	
+	<select id="getInfraStatisticsDto" parameterType="map" resultType="infraStatisticsDto">
+		select sidoCode, category, mean, var, sd
+		from storestatistics
+		where sidoCode = #{sidoCode} and category = #{category}
 	</select>
 </mapper>

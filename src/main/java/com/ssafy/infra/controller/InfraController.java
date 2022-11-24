@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ssafy.infra.model.InfraDto;
+import com.ssafy.infra.model.InfraGradeDto;
 import com.ssafy.infra.model.service.InfraService;
 
 import io.swagger.annotations.Api;
@@ -46,7 +47,18 @@ public class InfraController {
 		}catch (Exception e) {
 			e.printStackTrace();
 			return new ResponseEntity<Void>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}	
+	}
+	// param : longitude, latitude, sidoCode
+	// sample : 129.036810423903, 35.1117365125556, 부산 도경오벨리스 
+	@GetMapping("/statistics")
+	private ResponseEntity<?> getInfraGrade(@RequestParam Map<String, Object> map){
+		try {
+			InfraGradeDto infraGradeDto = infraService.getInfraGrade(map);
+			return new ResponseEntity<InfraGradeDto>(infraGradeDto, HttpStatus.OK);
+		}catch (Exception e) {
+			e.printStackTrace();
+			return new ResponseEntity<Void>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
-		
 	}
 }
