@@ -169,6 +169,25 @@ public class InfraService {
 		infraGradeDto.setSportsGrade(grades[5]);
 		infraGradeDto.setFoodGrade(grades[6]);
 		infraGradeDto.setEducationGrade(grades[7]);
+		
+		int sum = 0;
+		for (int i = 0; i < grades.length; i++) {
+			if(grades[i] == "A") {
+				sum += 100;
+			} else if(grades[i] == "B") {
+				sum += 40;
+			} else if(grades[i] == "C") {
+				sum += 30;
+			}
+		}
+		sum/=8;
+		if(sum <= 100 && sum > 70) {
+			infraGradeDto.setTotal("A");
+		} else if(sum>30) {
+			infraGradeDto.setTotal("B");
+		} else {
+			infraGradeDto.setTotal("C");
+		}
 
 		return infraGradeDto;
 	}

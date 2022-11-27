@@ -12,4 +12,5 @@ public class InfraGradeDto {
 	private String sportsGrade; // 스포츠
 	private String foodGrade; // 음식
 	private String educationGrade;// 학문/교육
+	private String total;
 }
